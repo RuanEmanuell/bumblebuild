@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  backend:
+    build: ./bumblebuild/backend
+    ports:
+      - "8080:3000"  
+    volumes:
+      - ./bumblebuild/backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build: ./bumblebuild/frontend
+    ports:
+      - "3000:80"  

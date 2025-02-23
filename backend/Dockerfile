@@ -11,7 +11,7 @@ RUN npm install
 # Copia todo o código-fonte
 COPY . .
 
-# Expõe a porta que o backend usará
+# Porta
 EXPOSE 3000
 
 # Comando para rodar o backend
