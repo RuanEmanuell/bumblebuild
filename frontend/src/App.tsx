@@ -1,12 +1,10 @@
-import './App.css'
-import logo from './assets/logo.png'
+import './App.css';
+
+import Home from './pages/Home';
 
 function App() {
   return (
-    <div className='bg-[#FEBF08] w-screen h-screen flex flex-col justify-center items-center'>
-      <img src={logo}></img>
-      <h1 className='text-4xl font-bold animate-pulse'>Em construção...</h1>
-    </div>
+    <Home></Home>
   )
 }
 
