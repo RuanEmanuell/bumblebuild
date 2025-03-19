@@ -11,7 +11,9 @@ export class UsuarioService {
     if (usuarioExistente) throw new Error("Email já cadastrado.");
 
     const senhaCriptografada = await bcrypt.hash(senha, 10);
-    return usuarioRepository.criarUsuario({ tipo_usuario, nome, email, senha: senhaCriptografada });
+
+    const novoUsuario = await usuarioRepository.criarUsuario({ tipo_usuario, nome, email, senha: senhaCriptografada });
+    return novoUsuario;
   }
 
   async login(email: string, senha: string) {
@@ -25,5 +27,14 @@ export class UsuarioService {
 
     const token = jwt.sign({ id: usuario.id, email: usuario.email }, process.env.SECRET_JWT, { expiresIn: "1h" });
     return token;
+  }
+
+  async editUsuario(id: number, tipo_usuario: string, nome: string, email: string, senha: string) {
+    const usuarioExistente = await usuarioRepository.buscarPorEmail(email);
+    if (usuarioExistente && usuarioExistente.id !== id) throw new Error("Email já cadastrado.");
+
+    const senhaCriptografada = await bcrypt.hash(senha, 10);
+
+    await usuarioRepository.buscarPorId(id);
   }
 }
