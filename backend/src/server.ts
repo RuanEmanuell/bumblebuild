@@ -11,7 +11,7 @@ app.use(express.json());
 
 // Importando as nossas rotas
 
-const usuarios = require('./routes/usuarios');
+const usuarios = require('./routes/usuarios.routes');
 
 // Usa as rotas com um prefixo
 

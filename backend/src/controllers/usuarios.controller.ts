@@ -28,6 +28,17 @@ export class UsuarioController {
     }
   };
 
+  editUsuario = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { tipo_usuario, nome, email, senha } = req.body;
+      await new UsuarioService().editUsuario(Number(id), tipo_usuario, nome, email, senha);
+      return res.status(200).json({ message: "Usuário editado com sucesso!" });
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
   async logout(req: Request, res: Response): Promise<Response> {
     const token = req.headers.authorization?.split(" ")[1];
 
