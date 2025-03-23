@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #FEBE07;
+  --secondary: #FFE700;
+  --textPrimary: #232524;
+  --textSecondary: #616161;
+  --white: #FFFFFF;
+  --accent: #F5C400;
+}
+
+@layer utilities {
+  .bg-primary {
+    background-color: var(--primary);
+  }
+  .bg-secondary {
+    background-color: var(--secondary);
+  }
+  .bg-white {
+    background-color: var(--white);
+  }
+  .bg-black {
+    color: var(--textPrimary);
+  }
+  .text-textPrimary {
+    color: var(--textPrimary);
+  }
+  .text-textSecondary {
+    color: var(--textSecondary);
+  }
+  .text-textYellow {
+    color: var(--primary);
+  }
+  .hover\\:bg-accent:hover {
+    background-color: var(--accent);
+  }
+}
