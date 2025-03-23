@@ -1,4 +1,6 @@
 import express from "express";
+import usuarios from "./routes/usuarios.routes";
+
 const env = require('dotenv').config();
 const cors = require('cors');
 
@@ -11,7 +13,6 @@ app.use(express.json());
 
 // Importando as nossas rotas
 
-const usuarios = require('./routes/usuarios.routes');
 
 // Usa as rotas com um prefixo
 
