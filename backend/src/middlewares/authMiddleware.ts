@@ -1,6 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+const blacklist: string[] = [];
+
+export function verifyToken(token: string): jwt.JwtPayload | string {
+  if (blacklist.includes(token)) {
+    throw new Error("Token inválido");
+  }
+  return jwt.verify(token, process.env.SECRET_JWT as string);
+}
+
+// Função para adicionar o token à blacklist
+export function blackListToken(token: string): void {
+  blacklist.push(token);
+}
+
 export function autenticarToken(req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(" ")[1];
 

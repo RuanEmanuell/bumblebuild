@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UsuarioService } from "../services/usuario.service";
+import { blackListToken } from "../middlewares/authMiddleware";
 
 const prisma = new PrismaClient();
 const usuarioService = new UsuarioService();
@@ -28,6 +29,24 @@ export class UsuarioController {
     }
   };
 
+  async logoutUsuario(req: Request, res: Response): Promise<Response> {
+    const token = req.headers.authorization?.split(" ")[1];
+    
+    try {
+      if (!token) {
+        return res.status(400).json({ message: "Token não fornecido. Não foi possível realizar o logout." });
+      }
+
+      const mensagem = await usuarioService.logout(token);
+
+      return res.status(200).json({ message: mensagem }); 
+    } catch (error: any) {
+      console.error(error);
+      return res.status(500).json({ message: error.message || "Erro inesperado. Tente novamente mais tarde." });
+    }
+  }
+
+
   editUsuario = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -39,20 +58,6 @@ export class UsuarioController {
     }
   }
 
-  async logout(req: Request, res: Response): Promise<Response> {
-    const token = req.headers.authorization?.split(" ")[1];
 
-    try {
-      if (token) {
-        //ainda n implementado blackListToken(token);
-        return res.status(200).json({ message: "Logout realizado com sucesso" });
-      } else {
-        return res.status(400).json({ message: "Token não fornecido" });
-      }
-    } catch (error: any) {
-      console.error(error);
-      return res.status(500).json({ message: "Erro ao deslogar" });
-    }
-  }
 }
 

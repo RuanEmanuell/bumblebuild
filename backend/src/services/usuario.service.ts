@@ -1,6 +1,7 @@
 import { UsuarioRepository } from "../repositories/usuario.repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { blackListToken } from "../middlewares/authMiddleware";
 
 
 const usuarioRepository = new UsuarioRepository();
@@ -27,6 +28,15 @@ export class UsuarioService {
 
     const token = jwt.sign({ id: usuario.id, email: usuario.email }, process.env.SECRET_JWT, { expiresIn: "1h" });
     return token;
+  }
+
+  async logout(token: string): Promise<string> {
+    try {
+      blackListToken(token);
+      return "Logout realizado com sucesso!";
+    } catch (error) {
+      throw new Error("Erro ao tentar realizar o logout. Tente novamente mais tarde.");
+    }
   }
 
   async editUsuario(id: number, tipo_usuario: string, nome: string, email: string, senha: string) {
