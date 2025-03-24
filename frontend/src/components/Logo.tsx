@@ -1,7 +1,15 @@
-import logo from '../assets/logo.png'
+import React from "react";
+import logo1 from "../assets/logo1.png";
+import logo2 from "../assets/logo2.png";
 
-export default function Logo(){
-    return (
-        <img src={logo}></img>
-    )
-}
+type LogoProps = {
+  size?: number;
+};
+
+export const LogoPrimary: React.FC<LogoProps> = ({ size = 96 }) => {
+  return <img src={logo1} alt="Logo Primary" style={{ width: size, height: size }} />;
+};
+
+export const LogoSecondary: React.FC<LogoProps> = ({ size = 96 }) => {
+  return <img src={logo2} alt="Logo Secondary" style={{ width: size, height: size }} />;
+};
