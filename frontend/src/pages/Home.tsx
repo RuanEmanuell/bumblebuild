@@ -9,7 +9,7 @@ export default function Home() {
     }, [])
 
     return (
-        <div className='bg-[#FEBF08] w-screen h-screen flex flex-col justify-center items-center'>
+        <div className='bg-primary w-screen h-screen flex flex-col justify-center items-center'>
             <LogoPrimary></LogoPrimary>
             <h1 className='text-4xl font-bold animate-pulse'>Em construção...</h1>
         </div>
