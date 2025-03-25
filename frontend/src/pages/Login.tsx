@@ -5,6 +5,7 @@ import InputField from "../components/InputField";
 import { Mail, Lock, User } from "react-feather";
 import { LogoSecondary } from "../components/Logo";
 import CustomCheckbox from "../components/CustomCheckbox";
+import axios from "axios";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,7 +13,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isChecked, setIsChecked] = useState(false); //estado do checkbox
+  const [isChecked, setIsChecked] = useState(false);
   const [logoSize, setLogoSize] = useState(window.innerWidth < 768 ? 120 : 190);
 
   useEffect(() => {
@@ -23,17 +24,49 @@ export default function Auth() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isLogin && password !== confirmPassword) {
-      alert("As senhas não coincidem");
-      return;
+  const handleLogin = async () => {
+    console.log("Realizando login com:", { email, password });
+    try {
+      const response = await axios.post("http://localhost:3000/user/login", {
+        email: email,
+        senha: password,
+    });
+      console.log("User logged in:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error logging in:", error);
+      throw error;
     }
   };
 
-  //atualizar o estado do checkbox
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(e.target.checked);
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      alert("As senhas não coincidem");
+      return;
+    }
+    
+    try {
+      const response = await axios.post("http://localhost:3000/user/create", {
+        nome: name,
+        email: email,
+        senha: password,
+      });
+      console.log("User created:", response.data);
+      return response.data;
+      
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isLogin) {
+      handleLogin();
+    } else {
+      handleRegister();
+    }
   };
 
   return (
@@ -43,7 +76,6 @@ export default function Auth() {
           <LogoSecondary size={logoSize} />
         </div>
 
-        {/*alternador Login/Cadastro */}
         <div className="flex justify-between bg-secondary p-1 rounded-full mb-6">
           <button
             className={`w-1/2 py-2 font-bold rounded-full cursor-pointer transition ${isLogin ? "bg-primary font-bold text-white" : "text-textPrimary"
@@ -62,7 +94,6 @@ export default function Auth() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           {!isLogin && (
             <InputField
               label="Nome"
@@ -108,17 +139,16 @@ export default function Auth() {
               id="terms"
               label="Aceito os termos"
               required
-              checked={isChecked} //passando o estado do checkbox
-              onChange={handleCheckboxChange} //função de alteração do estado
+              checked={isChecked}
+              onChange={(e) => setIsChecked(e.target.checked)}
             />
           )}
 
           <div className="flex flex-col items-center space-y-4">
-            <ButtonPrimary>{isLogin ? "Login" : "Cadastrar"}</ButtonPrimary>
+            <ButtonPrimary type="submit">{isLogin ? "Login" : "Cadastrar"}</ButtonPrimary>
             <GoogleLoginButton />
           </div>
 
-          {/*link "esqueci minha senha" */}
           {isLogin && (
             <div className="text-center mt-4">
               <a href="/forgot-password" className="text-primary hover:underline">
@@ -126,7 +156,6 @@ export default function Auth() {
               </a>
             </div>
           )}
-
         </form>
       </div>
     </div>
