@@ -1,13 +1,25 @@
 import express from "express";
+import usuarios from "./routes/usuarios.routes";
+
+const env = require('dotenv').config();
+const cors = require('cors');
+
 
 const app = express();
+app.use(cors());
+const PORT = 3000
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send("Olá, BumbleBuild!");
-})
+// Importando as nossas rotas
 
-app.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
+
+// Usa as rotas com um prefixo
+
+app.use('/usuarios', usuarios)
+
+// Inicia o nosso server
+
+app.listen(PORT, () => {
+    console.log("Servidor rodando na porta " + PORT);
 });
