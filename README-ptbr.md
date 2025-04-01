@@ -1,14 +1,14 @@
-# Veja a versão em Português <a href="README-ptbr.md">aqui</a>
+# Check the English version <a href="README.md">here</a>
 
 ## BumbleBuild
     
-### What is this? 🤔 
-BumbleBuild is an automated system for assembling custom PCs, making it easier to choose components and ensuring compatibility and optimal performance. Users can enter a budget, list games they want to run, and indicate parts they have already purchased. The system then suggests an optimized configuration. Administrators can register and manage parts in the database, ensuring that users always have up-to-date options.
+### O que é isso? 🤔 
+O BumbleBuild é um sistema automatizado para montagem de PCs personalizados, facilitando o processo de escolha dos componentes e garantindo compatibilidade e desempenho ideal. O usuário pode inserir um orçamento, listar jogos que pretende rodar e indicar peças já adquiridas. O sistema, então, sugere uma configuração otimizada. Administradores podem cadastrar e gerenciar peças no banco de dados, garantindo sempre opções atualizadas para os usuários.
     
-### Where can I access it? 🖥
+### Onde posso acessá-lo? 🖥
 You can access it <a href="https://www.bumblebuild.com.br/">here</a>
     
-### Which technologies were used to build it? 🚀 
+### Quais tecnologias foram usadas para construí-lo? 🚀 
 <table><tr><td style="padding: 5px;">
         <div style="background-color: #333; width: 200px; height: 50px; padding: 10px;">
             <img src='https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg' width="25" height="25" style="border-radius: 5px;">
@@ -55,6 +55,6 @@ You can access it <a href="https://www.bumblebuild.com.br/">here</a>
             <p style="color: white; padding: 5px; margin: 0;">Docker</p>
         </div>
     </td></tr></table>
-		
-### How to run in development mode 🏃
-    - Instrunctions will be provided as the project goes on
+
+### Como rodar em modo de desenvolvimento 🏃
+    - Instruções serão disponibilizadas quando o projeto for finalizado
