@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { UsuarioService } from "../services/usuario.service";
-import { blackListToken } from "../middlewares/authMiddleware";
 
 const prisma = new PrismaClient();
 const usuarioService = new UsuarioService();
