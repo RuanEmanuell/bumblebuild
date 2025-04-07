@@ -18,7 +18,7 @@ import pcIcon from "../assets/pc.png";
 // Simulação de usuários
 const usuarioLogado = {
     nome: "Ruan Emanuel",
-    tipo: "admin" // eu criei para testar, caso vcs forem usar troquem para comum ou qualquer outra coisa para nao ir para a tela de admin, implementarei logo isso com a insercao no banco
+    tipo: "comum" // eu criei para testar, caso vcs forem usar troquem para comum ou qualquer outra coisa para nao ir para a tela de admin, implementarei logo isso com a insercao no banco
 };
 
 export default function Home() {
