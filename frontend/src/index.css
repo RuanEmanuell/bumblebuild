@@ -31,6 +31,10 @@
   .text-textYellow {
     color: var(--primary);
   }
+  .text-yellowSecondary {
+    color: var(--primary);
+  }
+
   .hover\\:bg-accent:hover {
     background-color: var(--accent);
   }

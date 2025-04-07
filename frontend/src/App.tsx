@@ -1,9 +1,10 @@
 import './index.css'
 import Login from './pages/Login';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
-    <Login></Login>
+    <UserProfile></UserProfile>
   )
 }
 
