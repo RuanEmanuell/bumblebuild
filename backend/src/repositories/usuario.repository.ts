@@ -25,4 +25,33 @@ export class UsuarioRepository {
   async buscarPorId(id: number) {
     return prisma.usuario.findUnique({ where: { id } });
   }
+
+  async salvarTokenRecuperacao(usuarioId: number, token: string, experiedAt: Date) {
+    return prisma.tokenRecuperacaoSenha.create({
+      data: {
+        token,
+        usuarioId,
+        experiedAt,
+      },
+    });
+  }
+
+  async buscarTokenRecuperacao(token: string) {
+    return prisma.tokenRecuperacaoSenha.findUnique({
+      where: { token },
+      include: { usuario: true },
+    });
+  }
+
+  async deletarTokenRecuperacao(token: string) {
+    return prisma.tokenRecuperacaoSenha.delete({ where: { token } });
+  }
+
+  async atualizarSenha(usuarioId: number, novaSenha: string) {
+    return prisma.usuario.update({
+      where: { id: usuarioId },
+      data: { senha: novaSenha },
+    });
+  }
+  
 }
