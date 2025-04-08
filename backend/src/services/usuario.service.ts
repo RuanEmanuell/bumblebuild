@@ -59,7 +59,7 @@ export class UsuarioService {
 
     await usuarioRepository.salvarTokenRecuperacao(usuario.id, token, expiracao);
 
-    const link = `http://localhost:3000/redefinir-senha?token=${token}`; // ou domínio real
+    const link = `http://localhost:5173/reset-password?token=${token}`; // ou domínio real
 
     // Exemplo básico de envio de e-mail
     var transporter = nodemailer.createTransport({
