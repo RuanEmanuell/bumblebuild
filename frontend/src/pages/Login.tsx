@@ -99,7 +99,7 @@ export default function Auth() {
             <InputField
               label="Nome"
               type="text"
-              value={name}
+              value={nome}
               onChange={(e) => setNome(e.target.value)}
               required
               icon={<User size={20} />}
