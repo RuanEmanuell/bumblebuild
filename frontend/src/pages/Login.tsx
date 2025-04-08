@@ -9,7 +9,7 @@ import axios from "axios";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState("");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,7 +27,7 @@ export default function Auth() {
   const handleLogin = async () => {
     console.log("Realizando login com:", { email, password });
     try {
-      const response = await axios.post("http://localhost:3000/usuarios/login", {
+      const response = await axios.post("http://localhost:3000/user/login", {
         email: email,
         senha: password,
     });
@@ -50,9 +50,11 @@ export default function Auth() {
       email: email,
       senha: password,
     })
+    try {    
+    console.log("User created:", { nome, email, password });
     try {
-      const response = await axios.post("http://localhost:3000/usuarios/create", {
-        nome: name,
+      const response = await axios.post("http://localhost:3000/user/create", {
+        nome: nome,
         email: email,
         senha: password,
         tipo_usuario: "padrao"
@@ -106,8 +108,8 @@ export default function Auth() {
             <InputField
               label="Nome"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
               required
               icon={<User size={20} />}
             />

@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // Rotas
-app.use("/usuarios", usuarios);
+app.use("/user", usuarios);
 app.use("/pecas", pecas); 
 
 // Inicia o servidor

@@ -7,17 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id           Int       @id @default(autoincrement())
-  tipo_usuario String
-  nome         String
-  email        String    @unique
-  senha        String
-  status       Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+model TokenRecuperacaoSenha {
+  id         String   @id @default(uuid())
+  token      String   @unique
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int
+  createdAt   DateTime @default(now())
+  experiedAt  DateTime
 }
 
+model Usuario {
+    id              Int                    @id @default(autoincrement())
+    tipo_usuario    String
+    nome            String
+    email           String                 @unique
+    senha           String
+    status          Boolean                @default(true)
+    createdAt       DateTime               @default(now())
+    updatedAt       DateTime               @updatedAt
+
+    tokensRecuperacao TokenRecuperacaoSenha[]
+ }
+  
 model Peca {
   id        Int       @id @default(autoincrement())
   nome      String
