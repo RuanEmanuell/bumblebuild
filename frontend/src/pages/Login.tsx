@@ -9,7 +9,7 @@ import axios from "axios";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState("");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,7 +27,7 @@ export default function Auth() {
   const handleLogin = async () => {
     console.log("Realizando login com:", { email, password });
     try {
-      const response = await axios.post("http://localhost:3000/user/login", {
+      const response = await axios.post("http://localhost:8080/user/login", {
         email: email,
         senha: password,
     });
@@ -45,13 +45,14 @@ export default function Auth() {
       return;
     }
     
+    console.log("User created:", { nome, email, password });
     try {
-      const response = await axios.post("http://localhost:3000/user/create", {
-        nome: name,
+      const response = await axios.post("http://backend:8080/user/create", {
+        nome: nome,
         email: email,
         senha: password,
       });
-      console.log("User created:", response.data);
+
       return response.data;
       
     } catch (error) {
@@ -99,7 +100,7 @@ export default function Auth() {
               label="Nome"
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setNome(e.target.value)}
               required
               icon={<User size={20} />}
             />

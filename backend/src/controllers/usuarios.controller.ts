@@ -75,6 +75,7 @@ export class UsuarioController {
       await usuarioService.solicitarRecuperacaoSenha(email);
       res.status(200).json({message: "E-mail de recuperação enviado com sucesso."});
     } catch(error) {
+      console.error('Erro ao solicitar recuperação de senha:', error);
       res.status(500).json({error: "Ocorreu um erro ao solicitar a recuperação de senha"})
     }
   }

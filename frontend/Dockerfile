@@ -1,16 +1,17 @@
-# Usa uma imagem do Node.js para build
-FROM node:22 AS builder
+FROM node:22
 
+# Define o diretório de trabalho
 WORKDIR /app
+
+# Copia os arquivos de dependência e instala
 COPY package.json package-lock.json ./
 RUN npm install
+
+# Copia o restante do código
 COPY . .
-RUN npm run build
 
-# Usa uma imagem do Nginx para servir o frontend
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Expõe a porta do servidor de dev (React: 3000, Angular: 4200, Vite: 5173 — ajuste se necessário)
+EXPOSE 5173
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Comando para rodar o servidor de desenvolvimento
+CMD ["npm", "run", "dev"]

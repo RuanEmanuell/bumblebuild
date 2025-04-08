@@ -16,10 +16,10 @@ app.use(express.json());
 
 // Usa as rotas com um prefixo
 
-app.use('/usuarios', usuarios)
+app.use('/', usuarios)
 
 // Inicia o nosso server
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0',() => {
     console.log("Servidor rodando na porta " + PORT);
 });

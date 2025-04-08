@@ -4,6 +4,11 @@ import { UsuarioController } from "../controllers/usuarios.controller";
 const router = Router();
 const usuarioController = new UsuarioController();
 
+router.get("/", async (req: Request, res: Response) => {
+  console.log("Rota de teste de usuários");
+  res.send("Rota de teste de usuários");
+});
+
 router.post("/user/create", async (req: Request, res: Response) => {
   try {
     await usuarioController.criaUsuario(req, res);

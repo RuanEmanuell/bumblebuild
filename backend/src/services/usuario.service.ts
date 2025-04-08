@@ -62,12 +62,12 @@ export class UsuarioService {
     const link = `http://localhost:3000/redefinir-senha?token=${token}`; // ou domínio real
 
     // Exemplo básico de envio de e-mail
-    const transporter = nodemailer.createTransport({
-      host: "gmail.com",
-      port: 587,
+    var transporter = nodemailer.createTransport({
+      host: "sandbox.smtp.mailtrap.io",
+      port: 2525,
       auth: {
-        user: "bumblebuild1@gmail.com",
-        pass: "diogouber2025"
+        user: "0f26d58beca21d",
+        pass: "d75fb9092aa5df"
       }
     });
 

@@ -4,8 +4,8 @@ services:
     ports:
       - "8080:3000"
     volumes:
-      - ./backend:/app               
-      - /app/node_modules 
+      - ./backend:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
       - DB_HOST=postgres
@@ -17,9 +17,17 @@ services:
       - postgres
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
 
   postgres:
     image: postgres:16
