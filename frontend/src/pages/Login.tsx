@@ -27,11 +27,12 @@ export default function Auth() {
   const handleLogin = async () => {
     console.log("Realizando login com:", { email, password });
     try {
-      const response = await axios.post("http://localhost:8080/user/login", {
+      const response = await axios.post("http://localhost:3000/user/login", {
         email: email,
         senha: password,
     });
       console.log("User logged in:", response.data);
+      alert("Usuário fez login!");
       return response.data;
     } catch (error) {
       console.error("Error logging in:", error);
@@ -44,15 +45,23 @@ export default function Auth() {
       alert("As senhas não coincidem");
       return;
     }
-    
+    console.log({
+      nome: name,
+      email: email,
+      senha: password,
+    })
+    try {    
     console.log("User created:", { nome, email, password });
     try {
-      const response = await axios.post("http://backend:8080/user/create", {
+      const response = await axios.post("http://localhost:3000/user/create", {
         nome: nome,
         email: email,
         senha: password,
+        tipo_usuario: "padrao"
       });
 
+      console.log("User created:", response.data);
+      alert("Usuário criado!");
       return response.data;
       
     } catch (error) {

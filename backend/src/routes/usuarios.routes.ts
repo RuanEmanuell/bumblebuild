@@ -4,19 +4,14 @@ import { UsuarioController } from "../controllers/usuarios.controller";
 const router = Router();
 const usuarioController = new UsuarioController();
 
-router.get("/", async (req: Request, res: Response) => {
-  console.log("Rota de teste de usuários");
-  res.send("Rota de teste de usuários");
-});
-
-router.post("/user/create", async (req: Request, res: Response) => {
+router.post("/create", async (req: Request, res: Response) => {
   try {
     await usuarioController.criaUsuario(req, res);
   } catch (error) {
     console.error(error);
   }
 });
-router.post("/user/login", async (req: Request, res: Response) => {
+router.post("/login", async (req: Request, res: Response) => {
   try {
     await usuarioController.loginUsuario(req, res);
   } catch (error) {
@@ -24,7 +19,7 @@ router.post("/user/login", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/users/logout", async (req: Request, res: Response) => {
+router.post("/logout", async (req: Request, res: Response) => {
   try {
     await usuarioController.logoutUsuario(req, res);
   } catch (error) {
@@ -32,7 +27,7 @@ router.post("/users/logout", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/user/recuperar-senha", async(req: Request, res: Response) => {
+router.post("/recuperar-senha", async(req: Request, res: Response) => {
   try {
     await usuarioController.solicitarRecuperacaoSenha(req,res);
   }catch(error) {
@@ -40,13 +35,12 @@ router.post("/user/recuperar-senha", async(req: Request, res: Response) => {
   }
 });
 
-router.post("/user/redefinir-senha", async(req: Request, res: Response) => {
+router.post("/redefinir-senha", async(req: Request, res: Response) => {
   try {
     await usuarioController.redefinirSenha(req,res);
   }catch(error) {
     console.error(error);
   }
 });
-
 
 export default router;

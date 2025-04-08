@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,14 +17,112 @@ model TokenRecuperacaoSenha {
 }
 
 model Usuario {
-  id              Int                    @id @default(autoincrement())
-  tipo_usuario    String
-  nome            String
-  email           String                 @unique
-  senha           String
-  status          Boolean                @default(true)
-  createdAt       DateTime               @default(now())
-  updatedAt       DateTime               @updatedAt
+    id              Int                    @id @default(autoincrement())
+    tipo_usuario    String
+    nome            String
+    email           String                 @unique
+    senha           String
+    status          Boolean                @default(true)
+    createdAt       DateTime               @default(now())
+    updatedAt       DateTime               @updatedAt
 
-  tokensRecuperacao TokenRecuperacaoSenha[]
+    tokensRecuperacao TokenRecuperacaoSenha[]
+ }
+  
+model Peca {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  marca     String
+  preco     Float
+  tipo      TipoPeca
+  imagemUrl String?
+  createdAt DateTime  @default(now())
+
+  cpu       CPU?      @relation(name: "CPUToPeca")
+  gpu       GPU?      @relation(name: "GPUToPeca")
+  ram       RAM?      @relation(name: "RAMToPeca")
+  ssd       SSD?      @relation(name: "SSDToPeca")
+  fonte     Fonte?    @relation(name: "FonteToPeca")
+  gabinete  Gabinete? @relation(name: "GabineteToPeca")
+  placaMae  PlacaMae? @relation(name: "PlacaMaeToPeca")
+  cooler    Cooler?   @relation(name: "CoolerToPeca")
+}
+
+enum TipoPeca {
+  CPU
+  GPU
+  RAM
+  SSD
+  FONTE
+  GABINETE
+  PLACA_MAE
+  COOLER
+}
+
+model CPU {
+  id                 Int    @id
+  socket             String
+  nucleos            Int
+  threads            Int
+  frequencia         Float
+  tdp                Int
+  graficosIntegrados Boolean
+  peca               Peca   @relation(name: "CPUToPeca", fields: [id], references: [id])
+}
+
+model GPU {
+  id           Int    @id
+  memoriaGB    Int
+  tipoMemoria  String
+  tdp          Int
+  peca         Peca   @relation(name: "GPUToPeca", fields: [id], references: [id])
+}
+
+model RAM {
+  id           Int    @id
+  capacidadeGB Int
+  tipo         String
+  frequencia   Int
+  peca         Peca   @relation(name: "RAMToPeca", fields: [id], references: [id])
+}
+
+model SSD {
+  id           Int    @id
+  capacidadeGB Int
+  tipo         String
+  leituraMBs   Int
+  escritaMBs   Int
+  peca         Peca   @relation(name: "SSDToPeca", fields: [id], references: [id])
+}
+
+model Fonte {
+  id           Int    @id
+  potenciaW    Int
+  certificacao String
+  modular      Boolean
+  peca         Peca   @relation(name: "FonteToPeca", fields: [id], references: [id])
+}
+
+model Gabinete {
+  id               Int    @id
+  tamanhoSuportado String
+  comVidro         Boolean
+  peca             Peca   @relation(name: "GabineteToPeca", fields: [id], references: [id])
+}
+
+model Cooler {
+  id            Int    @id
+  tipo          String
+  suporteSocket String
+  peca          Peca   @relation(name: "CoolerToPeca", fields: [id], references: [id])
+}
+
+model PlacaMae {
+  id       Int    @id
+  socket   String
+  tipoRAM  String
+  slotsRAM Int
+  maxRAM   Int
+  tamanho  String
+  peca     Peca   @relation(name: "PlacaMaeToPeca", fields: [id], references: [id])
 }
