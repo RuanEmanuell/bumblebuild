@@ -1,9 +1,9 @@
 import './index.css'
-import Login from './pages/Login';
+import Routes from "./routes/Routes"
 
 function App() {
   return (
-    <Login></Login>
+    <Routes />
   )
 }
 
