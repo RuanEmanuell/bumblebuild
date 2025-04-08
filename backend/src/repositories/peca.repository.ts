@@ -1,4 +1,5 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient, Prisma, $Enums } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 export class PecaRepository {
@@ -14,7 +15,7 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-      }
+      },
     });
   }
 
@@ -29,7 +30,7 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-      }
+      },
     });
   }
 
@@ -45,13 +46,22 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-      }
+      },
     });
   }
 
   async listarPorTipo(tipo: string) {
+    const tipoUpper = tipo.toUpperCase();
+
+    // Validação opcional, mas recomendada
+    if (!Object.values($Enums.TipoPeca).includes(tipoUpper as $Enums.TipoPeca)) {
+      throw new Error("Tipo de peça inválido");
+    }
+
     return prisma.peca.findMany({
-      where: { tipo },
+      where: {
+        tipo: tipoUpper as $Enums.TipoPeca,
+      },
       include: {
         cpu: true,
         gpu: true,
@@ -61,7 +71,7 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-      }
+      },
     });
   }
 
@@ -78,7 +88,7 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-      }
+      },
     });
   }
 

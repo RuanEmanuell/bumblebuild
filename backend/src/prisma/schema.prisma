@@ -8,37 +8,33 @@ datasource db {
 }
 
 model Usuario {
-  id         Int         @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   tipo_usuario String
-  nome       String
-  email      String       @unique
-  senha      String
-  status     Boolean      @default(true)
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-
-  montagens  Montagem[]
+  nome         String
+  email        String    @unique
+  senha        String
+  status       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Peca {
-  id          Int       @id @default(autoincrement())
-  nome        String
-  marca       String
-  preco       Float
-  tipo        TipoPeca
-  imagemUrl   String?
-  createdAt   DateTime  @default(now())
+  id        Int       @id @default(autoincrement())
+  nome      String
+  marca     String
+  preco     Float
+  tipo      TipoPeca
+  imagemUrl String?
+  createdAt DateTime  @default(now())
 
-  cpu         CPU?
-  gpu         GPU?
-  ram         RAM?
-  ssd         SSD?
-  fonte       Fonte?
-  gabinete    Gabinete?
-  placaMae    PlacaMae?
-  cooler      Cooler?
-
-  usadaEm     Montagem[]
+  cpu       CPU?      @relation(name: "CPUToPeca")
+  gpu       GPU?      @relation(name: "GPUToPeca")
+  ram       RAM?      @relation(name: "RAMToPeca")
+  ssd       SSD?      @relation(name: "SSDToPeca")
+  fonte     Fonte?    @relation(name: "FonteToPeca")
+  gabinete  Gabinete? @relation(name: "GabineteToPeca")
+  placaMae  PlacaMae? @relation(name: "PlacaMaeToPeca")
+  cooler    Cooler?   @relation(name: "CoolerToPeca")
 }
 
 enum TipoPeca {
@@ -53,98 +49,69 @@ enum TipoPeca {
 }
 
 model CPU {
-  id                 Int     @id
+  id                 Int    @id
   socket             String
   nucleos            Int
   threads            Int
   frequencia         Float
   tdp                Int
   graficosIntegrados Boolean
-  Peca               Peca    @relation(fields: [id], references: [id])
+  peca               Peca   @relation(name: "CPUToPeca", fields: [id], references: [id])
 }
 
 model GPU {
-  id           Int     @id
+  id           Int    @id
   memoriaGB    Int
   tipoMemoria  String
   tdp          Int
-  Peca         Peca    @relation(fields: [id], references: [id])
+  peca         Peca   @relation(name: "GPUToPeca", fields: [id], references: [id])
 }
 
 model RAM {
-  id           Int     @id
+  id           Int    @id
   capacidadeGB Int
   tipo         String
   frequencia   Int
-  Peca         Peca    @relation(fields: [id], references: [id])
+  peca         Peca   @relation(name: "RAMToPeca", fields: [id], references: [id])
 }
 
 model SSD {
-  id           Int     @id
+  id           Int    @id
   capacidadeGB Int
   tipo         String
   leituraMBs   Int
   escritaMBs   Int
-  Peca         Peca    @relation(fields: [id], references: [id])
+  peca         Peca   @relation(name: "SSDToPeca", fields: [id], references: [id])
 }
 
 model Fonte {
-  id           Int     @id
+  id           Int    @id
   potenciaW    Int
   certificacao String
   modular      Boolean
-  Peca         Peca    @relation(fields: [id], references: [id])
+  peca         Peca   @relation(name: "FonteToPeca", fields: [id], references: [id])
 }
 
 model Gabinete {
-  id               Int     @id
+  id               Int    @id
   tamanhoSuportado String
   comVidro         Boolean
-  Peca             Peca    @relation(fields: [id], references: [id])
+  peca             Peca   @relation(name: "GabineteToPeca", fields: [id], references: [id])
 }
 
 model Cooler {
-  id           Int     @id
-  tipo         String
+  id            Int    @id
+  tipo          String
   suporteSocket String
-  Peca         Peca    @relation(fields: [id], references: [id])
+  peca          Peca   @relation(name: "CoolerToPeca", fields: [id], references: [id])
 }
 
 model PlacaMae {
-  id           Int     @id
-  socket       String
-  tipoRAM      String
-  slotsRAM     Int
-  maxRAM       Int
-  tamanho      String
-  Peca         Peca    @relation(fields: [id], references: [id])
-}
-
-model Montagem {
-  id           Int      @id @default(autoincrement())
-  nome         String
-  descricao    String?
-  precoTotal   Float
-  criadaEm     DateTime @default(now())
-
-  usuarioId    Int
-  usuario      Usuario  @relation(fields: [usuarioId], references: [id])
-
-  cpuId        Int
-  gpuId        Int
-  ramId        Int
-  ssdId        Int
-  fonteId      Int
-  gabineteId   Int
-  placaMaeId   Int
-  coolerId     Int
-
-  cpu          Peca     @relation("MontagemCPU", fields: [cpuId], references: [id])
-  gpu          Peca     @relation("MontagemGPU", fields: [gpuId], references: [id])
-  ram          Peca     @relation("MontagemRAM", fields: [ramId], references: [id])
-  ssd          Peca     @relation("MontagemSSD", fields: [ssdId], references: [id])
-  fonte        Peca     @relation("MontagemFonte", fields: [fonteId], references: [id])
-  gabinete     Peca     @relation("MontagemGabinete", fields: [gabineteId], references: [id])
-  placaMae     Peca     @relation("MontagemPlacaMae", fields: [placaMaeId], references: [id])
-  cooler       Peca     @relation("MontagemCooler", fields: [coolerId], references: [id])
+  id       Int    @id
+  socket   String
+  tipoRAM  String
+  slotsRAM Int
+  maxRAM   Int
+  tamanho  String
+  peca     Peca   @relation(name: "PlacaMaeToPeca", fields: [id], references: [id])
 }

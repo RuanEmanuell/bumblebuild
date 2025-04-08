@@ -5,7 +5,7 @@ import { verifyToken } from "../middlewares/authMiddleware";
 const router = Router();
 const pecaController = new PecaController();
 
-router.post("/pecas/create", verifyToken, async (req: Request, res: Response) => {
+router.post("/create", async (req: Request, res: Response) => {
   try {
     await pecaController.criarPeca(req, res);
   } catch (error) {
@@ -13,7 +13,7 @@ router.post("/pecas/create", verifyToken, async (req: Request, res: Response) =>
   }
 });
 
-router.get("/pecas", async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     await pecaController.listarPecas(req, res);
   } catch (error) {
@@ -21,7 +21,7 @@ router.get("/pecas", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/pecas/:id", async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response) => {
   try {
     await pecaController.buscarPorId(req, res);
   } catch (error) {
@@ -29,7 +29,7 @@ router.get("/pecas/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/pecas/tipo/:tipo", async (req: Request, res: Response) => {
+router.get("/tipo/:tipo", async (req: Request, res: Response) => {
   try {
     await pecaController.listarPorTipo(req, res);
   } catch (error) {
@@ -37,7 +37,7 @@ router.get("/pecas/tipo/:tipo", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/pecas/:id", verifyToken, async (req: Request, res: Response) => {
+router.put("/:id", async (req: Request, res: Response) => {
   try {
     await pecaController.atualizarPeca(req, res);
   } catch (error) {
@@ -45,7 +45,7 @@ router.put("/pecas/:id", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/pecas/:id", verifyToken, async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   try {
     await pecaController.deletarPeca(req, res);
   } catch (error) {

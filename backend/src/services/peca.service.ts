@@ -9,7 +9,7 @@ export class PecaService {
       const novaPeca = await pecaRepository.criarPeca(dados);
       return novaPeca;
     } catch (err) {
-      throw new Error("Erro ao criar peça: " + err.message);
+      throw new Error("Erro ao criar peça");
     }
   }
 
