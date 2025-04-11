@@ -1,10 +1,9 @@
 import './index.css'
-import Login from './pages/Login';
-import UserProfile from './pages/UserProfile';
+import Routes from "./routes/Routes"
 
 function App() {
   return (
-    <UserProfile></UserProfile>
+    <Routes />
   )
 }
 
