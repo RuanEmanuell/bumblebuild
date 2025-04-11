@@ -15,6 +15,7 @@
     "typescript": "^5.8.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.4",
     "prisma": "^6.5.0"
   }
 }
