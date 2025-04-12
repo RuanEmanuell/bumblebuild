@@ -1,25 +1,21 @@
 import express from "express";
 import usuarios from "./routes/usuarios.routes";
+import pecas from "./routes/pecas.routes"; 
 
-const env = require('dotenv').config();
-const cors = require('cors');
-
+const env = require("dotenv").config();
+const cors = require("cors");
 
 const app = express();
-app.use(cors());
-const PORT = 3000
+const PORT = 3000;
 
+app.use(cors());
 app.use(express.json());
 
-// Importando as nossas rotas
+// Rotas
+app.use("/user", usuarios);
+app.use("/pecas", pecas); 
 
-
-// Usa as rotas com um prefixo
-
-app.use('/usuarios', usuarios)
-
-// Inicia o nosso server
-
+// Inicia o servidor
 app.listen(PORT, () => {
-    console.log("Servidor rodando na porta " + PORT);
+  console.log("Servidor rodando na porta " + PORT);
 });

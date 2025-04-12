@@ -9,7 +9,7 @@ import axios from "axios";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState("");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,6 +32,7 @@ export default function Auth() {
         senha: password,
     });
       console.log("User logged in:", response.data);
+      alert("Usuário fez login!");
       return response.data;
     } catch (error) {
       console.error("Error logging in:", error);
@@ -44,14 +45,23 @@ export default function Auth() {
       alert("As senhas não coincidem");
       return;
     }
-    
+    console.log({
+      nome: name,
+      email: email,
+      senha: password,
+    })
+    try {    
+    console.log("User created:", { nome, email, password });
     try {
       const response = await axios.post("http://localhost:3000/user/create", {
-        nome: name,
+        nome: nome,
         email: email,
         senha: password,
+        tipo_usuario: "padrao"
       });
+
       console.log("User created:", response.data);
+      alert("Usuário criado!");
       return response.data;
       
     } catch (error) {
@@ -98,8 +108,8 @@ export default function Auth() {
             <InputField
               label="Nome"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
               required
               icon={<User size={20} />}
             />

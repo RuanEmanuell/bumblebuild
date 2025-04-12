@@ -1,4 +1,3 @@
-// src/components/Categorias.tsx
 import React from "react";
 
 import processadorIcon from "../assets/icons/cpu.png";
@@ -9,12 +8,12 @@ import placaMaeIcon from "../assets/icons/motherboard.png";
 import coolerIcon from "../assets/icons/cooler.png";
 
 const categorias = [
-  { nome: "Processador", icon: processadorIcon },
-  { nome: "Placa de vídeo", icon: gpuIcon },
-  { nome: "Memória RAM", icon: ramIcon },
-  { nome: "SSD", icon: ssdIcon },
-  { nome: "Placa mãe", icon: placaMaeIcon },
-  { nome: "Cooler", icon: coolerIcon },
+  { nome: "Processador", valor: "CPU", icon: processadorIcon },
+  { nome: "Placa de vídeo", valor: "GPU", icon: gpuIcon },
+  { nome: "Memória RAM", valor: "RAM", icon: ramIcon },
+  { nome: "SSD", valor: "SSD", icon: ssdIcon },
+  { nome: "Placa mãe", valor: "PLACA_MAE", icon: placaMaeIcon },
+  { nome: "Cooler", valor: "COOLER", icon: coolerIcon },
 ];
 
 interface CategoriasProps {
@@ -38,12 +37,13 @@ export const Categorias: React.FC<CategoriasProps> = ({
         >
           Todas
         </button>
+
         {categorias.map((cat, index) => (
           <button
             key={index}
-            onClick={() => setCategoriaSelecionada(cat.nome)}
+            onClick={() => setCategoriaSelecionada(cat.valor)}
             className={`flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg shadow-sm hover:bg-yellow-100 transition-all text-sm ${
-              categoriaSelecionada === cat.nome ? "ring-2 ring-yellow-400" : ""
+              categoriaSelecionada === cat.valor ? "ring-2 ring-yellow-400" : ""
             }`}
           >
             <img src={cat.icon} alt={cat.nome} className="w-5 h-5" />
