@@ -50,7 +50,6 @@ export default function Auth() {
       email: email,
       senha: password,
     })
-    try {    
     console.log("User created:", { nome, email, password });
     try {
       const response = await axios.post("http://localhost:3000/user/create", {
