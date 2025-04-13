@@ -1,17 +1,19 @@
 FROM node:22
 
-# Define o diretório de trabalho
 WORKDIR /app
 
-# Copia os arquivos de dependência e instala
-COPY package.json package-lock.json ./
+# Copia apenas os arquivos de dependência primeiro
+COPY package.json ./
+
+# Instala dependências do zero (sem cache prévio do host)
 RUN npm install
 
-# Copia o restante do código
+# Garante que dependências nativas sejam recompiladas corretamente no ambiente Linux
+RUN npm rebuild
+
+# Copia o restante do código-fonte
 COPY . .
 
-# Expõe a porta do servidor de dev (React: 3000, Angular: 4200, Vite: 5173 — ajuste se necessário)
 EXPOSE 5173
 
-# Comando para rodar o servidor de desenvolvimento
 CMD ["npm", "run", "dev"]

@@ -8,7 +8,6 @@ import ResetPassword from "../pages/ResetPassword";
 
 export default function AppRoutes() {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -17,6 +16,5 @@ export default function AppRoutes() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
        </Routes>
-    </BrowserRouter>
   );
 }
