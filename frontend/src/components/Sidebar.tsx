@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { LogoPrimary, LogoSecondary, LogoTertiary } from "./Logo";
 
 export default function SidebarMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,14 +25,14 @@ export default function SidebarMenu() {
         />
       )}
 
-      {/* Menu lateral */}
       <div
         className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-4 border-b">
-          <h2 className="text-xl font-bold">BumbleBuild</h2>
+        <div className="flex items-center p-4 border-b">
+          <LogoTertiary size={50}/>
+          <h1 className="ml-2 font-bold">BUMBLEBUILD</h1>
         </div>
         <nav className="flex flex-col p-4 gap-4">
           <Link to="/" onClick={toggleMenu} className="text-gray-800 hover:text-black">

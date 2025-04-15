@@ -2,33 +2,15 @@ import { LogoPrimary } from "./Logo";
 
 export default function Footer() {
     return (
-        <footer className="bg-yellow-300 px-6 py-8 text-center text-black text-sm mt-auto">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-left max-w-5xl mx-auto mb-6">
-                <div>
-                    <h4 className="font-bold mb-2">Sobre nós</h4>
-                    <ul>
-                        <li><a href="#">Quem somos</a></li>
-                        <li><a href="#">Parcerias</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 className="font-bold mb-2">Atendimento</h4>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Contato</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 className="font-bold mb-2">Políticas</h4>
-                    <ul>
-                        <li><a href="#">Termos de uso</a></li>
-                        <li><a href="#">Privacidade</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-                <LogoPrimary size={24} />
-                <p className="mt-2">©BumbleBuild 2025</p>
+        <footer className="bg-primary flex items-center px-4 py-6 text-center text-black text-sm mt-auto">
+            <div className="text-left max-w-5xl mx-auto flex flex-col justify-center items-center">
+                <LogoPrimary size={90} />
+                <ul className="flex flex-row gap-6 my-2">
+                    <li className="transition-all duration-250 ease-in-out hover:font-bold"><a href="#">Quem somos</a></li>
+                    <li className="transition-all duration-250 ease-in-out hover:font-bold"><a href="#">Contato</a></li>
+                    <li className="transition-all duration-250 ease-in-out hover:font-bold"><a href="#">Termos de uso</a></li>
+                </ul>
+                <p className="text opacity-60 ">©BumbleBuild 2025</p>
             </div>
         </footer>
     );
