@@ -5,7 +5,6 @@ import { userService } from '../service/userService';
 import { motion } from "framer-motion";
 
 import { ButtonHome } from "../components/ButtonHome";
-import Navbar from '../components/Navbar';
 import { ProductCard } from "../components/ProductCard";
 import Footer from '../components/Footer';
 import { Categorias } from "../components/Categorias";
@@ -14,6 +13,7 @@ import { Categorias } from "../components/Categorias";
 import setupExemplo from "../assets/setupexemplo.jpg";
 import setupZe from "../assets/pc_do_ze.jpg";
 import pcIcon from "../assets/pc.png";
+import HeaderCustom from '../components/Header';
 
 // Simulação de usuários
 const usuarioLogado = {
@@ -47,7 +47,7 @@ export default function Home() {
 
     return (
         <div className="bg-white text-black min-h-screen">
-            <Navbar />
+            <HeaderCustom/>
 
             <div className="px-6 py-4 text-lg md:text-xl font-medium">
                  Olá, {usuarioLogado.nome}! Bem-vindo de volta.

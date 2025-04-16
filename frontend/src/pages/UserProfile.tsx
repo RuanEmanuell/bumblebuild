@@ -2,6 +2,7 @@ import { useState } from "react";
 import HeaderCustom from "../components/Header";
 import { Plus } from "react-feather";
 import { ButtonPrimary, ButtonSecondary } from "../components/Button";
+import Footer from "../components/Footer";
 
 //formatar data para exibir
 const formatData = (isoDate: string) => {
@@ -79,10 +80,11 @@ export default function UserProfile() {
 
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <HeaderCustom />
-      <main className="max-w-4xl mx-auto mt-10 px-4 sm:px-6 md:px-8">
+      <main className="flex-grow max-w-4xl mx-auto mt-10 px-4 sm:px-6 md:px-8">
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:items-start">
+          {/*div para a foto*/}
           <div className="relative w-50 h-50 sm:w-36 sm:h-36 md:w-44 md:h-44">
             {previewFoto || user.foto ? (
               //se houver foto do usuário exibe 
@@ -205,7 +207,9 @@ export default function UserProfile() {
         <div className="my-12">
           <h1 className="font-bold text-2xl">Histórico de compras</h1>
         </div>
+        
       </main>
+      <Footer />
     </div>
   );
 }

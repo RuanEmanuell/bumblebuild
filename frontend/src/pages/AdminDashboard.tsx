@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { ButtonHome } from "../components/ButtonHome";
 import { BarChart, Users, Settings, Cpu } from "lucide-react";
+import HeaderCustom from "../components/Header";
 
 export default function AdminDashboard() {
     const [dados, setDados] = useState({
@@ -17,8 +17,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="flex flex-col min-h-screen bg-white text-black">
-            <Navbar />
-
+            <HeaderCustom/>
            
             <main className="flex-1">
              

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LogoSecondary } from "../components/Logo";
+import { LogoTertiary } from "../components/Logo";
 import { Heart, User, Menu, X } from "react-feather";
 import { Link } from "react-router-dom";
 import CartIcon from "./CartIcon";
@@ -17,7 +17,8 @@ const HeaderCustom: React.FC<HeaderProps> = ({ user }) => {
     return (
         <header className="flex justify-between items-center px-12 py-5 bg-primary sticky top-0 z-20">
             <div className="flex items-center">
-                <LogoSecondary size={90} />
+                <LogoTertiary size={50} />
+                <h1 className="ml-2 font-bold">BUMBLEBUILD</h1>
             </div>
 
             {/*ícones no mobile*/}
@@ -69,7 +70,13 @@ const HeaderCustom: React.FC<HeaderProps> = ({ user }) => {
                         <X size={28} />
                     </button>
 
+                    <div className="flex items-center p-4 border-b">
+                        <LogoTertiary size={50} />
+                        <h1 className="ml-2 font-bold">BUMBLEBUILD</h1>
+                    </div>
+
                     <Link to="/" className="font-bold hover:underline">Home</Link>
+
 
                     {user ? (
                         <div className="flex items-center gap-2">
@@ -77,7 +84,7 @@ const HeaderCustom: React.FC<HeaderProps> = ({ user }) => {
                             <span>Olá, <span className="font-bold">{user.name.split(' ')[0]}</span></span>
                         </div>
                     ) : (
-                        <div className="flex flex-col">
+                        <div className="flex gap-1">
                             <span>Olá, </span>
                             <Link to="/login" className="font-bold hover:underline">Entre</Link>
                             <span> ou </span>
