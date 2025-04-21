@@ -6,6 +6,7 @@ import PartDashboard from "../pages/PartDashboard";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import UserProfile from "../pages/UserProfile";
+import PcConfigForm from "../pages/PcConfigForm";
 
 export default function AppRoutes() {
   return (
@@ -17,6 +18,7 @@ export default function AppRoutes() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/user-profile" element={<UserProfile />} />
+        <Route path="/pc-registration" element={<PcConfigForm />} />
        </Routes>
   );
 }

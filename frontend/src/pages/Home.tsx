@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../service/userService';
+import { Link } from 'react-router-dom';
 
 import { motion } from "framer-motion";
 
@@ -14,6 +15,7 @@ import setupExemplo from "../assets/setupexemplo.jpg";
 import setupZe from "../assets/pc_do_ze.jpg";
 import pcIcon from "../assets/pc.png";
 import HeaderCustom from '../components/Header';
+import PcConfigForm from './PcConfigForm';
 
 // Simulação de usuários
 const usuarioLogado = {
@@ -33,12 +35,12 @@ export default function Home() {
     }, []);
 
     const produtosExemplos = [
-        { nome: "Pc do Ruan Emanuel", preco: "R$ 5993", estrelas: 4.6, imagem: setupExemplo, categoria: "Placa de vídeo" },
+        { nome: "Pc do Ruan Emanuel", preco: "R$ 5993", estrelas: 4.6, imagem: setupExemplo, categoria: "GPU" },
         { nome: "Pc da Alyne", preco: "R$ 3992", estrelas: 4.2, imagem: setupExemplo, categoria: "SSD" },
-        { nome: "Pc Do Gabriel", preco: "R$ 4920", estrelas: 4.4, imagem: setupExemplo, categoria: "Processador" },
-        { nome: "Pc do Maurao", preco: "R$ 6000", estrelas: 5.0, imagem: setupExemplo, categoria: "Placa mãe" },
-        { nome: "Pc do Ze Patolino", preco: "R$ 0", estrelas: 0.5, imagem: setupZe, categoria: "Cooler" },
-        { nome: "PC do Bolsonaro", preco: "R$ 2230", estrelas: 3.3, imagem: setupExemplo, categoria: "Memória RAM" }
+        { nome: "Pc Do Gabriel", preco: "R$ 4920", estrelas: 4.4, imagem: setupExemplo, categoria: "CPU" },
+        { nome: "Pc do Maurao", preco: "R$ 6000", estrelas: 5.0, imagem: setupExemplo, categoria: "RAM" },
+        { nome: "Pc do Ze Patolino", preco: "R$ 0", estrelas: 0.5, imagem: setupZe, categoria: "COOLER" },
+        { nome: "PC do Bolsonaro", preco: "R$ 2230", estrelas: 3.3, imagem: setupExemplo, categoria: "MOTHERBOARD" }
     ];
 
     const produtosFiltrados = categoriaSelecionada
@@ -47,10 +49,10 @@ export default function Home() {
 
     return (
         <div className="bg-white text-black min-h-screen">
-            <HeaderCustom/>
+            <HeaderCustom />
 
             <div className="px-6 py-4 text-lg md:text-xl font-medium">
-                 Olá, {usuarioLogado.nome}! Bem-vindo de volta.
+                Olá, {usuarioLogado.nome}! Bem-vindo de volta.
             </div>
 
             <section className="flex flex-col md:flex-row items-center justify-center gap-8 px-6 py-12">
@@ -58,9 +60,15 @@ export default function Home() {
                     <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-snug mb-4">
                         Encontre as <br /> melhores peças <br /> para seu PC!
                     </h2>
-                    <ButtonHome className="bg-black text-white px-6 py-3 rounded-xl text-sm">
-                        Montar meu PC →
-                    </ButtonHome>
+                    <Link
+                        to="/pc-registration"
+                        state={{ pecasDisponiveis: produtosExemplos }}
+                    >
+                        <ButtonHome className="bg-black text-white px-6 py-3 rounded-xl text-sm font-bold hover:underline">
+                            Montar meu PC →
+                        </ButtonHome>
+                    </Link>
+
                 </div>
                 <img
                     src={pcIcon}
