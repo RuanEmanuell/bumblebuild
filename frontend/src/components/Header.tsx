@@ -72,7 +72,8 @@ const HeaderCustom: React.FC<HeaderProps> = () => {
                         ) : ( */}
                         <User size={20} className="text-textPrimary" />
                         {/* )} */}
-                        <span>Olá, <span className="font-bold">{user.nome}</span></span>
+                        <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.nome}</Link></span>
+
                     </div>
                 ) : (
                     <div className="flex gap-1">
