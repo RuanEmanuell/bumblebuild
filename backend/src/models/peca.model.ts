@@ -1,3 +1,10 @@
+import { CPU } from "./cpu.model";
+import { Fonte } from "./fonte.model";
+import { Gabinete } from "./gabinete.model";
+import { GPU } from "./gpu.model";
+import { PlacaMae } from "./placaMae.model";
+import { RAM } from "./ram.model";
+
 // Tipo de peça (enum textual)
 export type TipoPeca =
   | 'CPU'
@@ -27,30 +34,6 @@ export interface Peca {
   cooler?: Cooler;
 }
 
-export interface CPU {
-  id: number;
-  socket: string;
-  nucleos: number;
-  threads: number;
-  frequencia: number; 
-  tdp: number; 
-  graficosIntegrados: boolean;
-}
-
-export interface GPU {
-  id: number;
-  memoriaGB: number;
-  tipoMemoria: string;
-  tdp: number;
-}
-
-export interface RAM {
-  id: number;
-  capacidadeGB: number;
-  tipo: string; 
-  frequencia: number; 
-}
-
 export interface SSD {
   id: number;
   capacidadeGB: number;
@@ -59,30 +42,11 @@ export interface SSD {
   escritaMBs: number;
 }
 
-export interface Fonte {
-  id: number;
-  potenciaW: number;
-  certificacao: string; 
-  modular: boolean;
-}
-
-export interface Gabinete {
-  id: number;
-  tamanhoSuportado: string; 
-  comVidro: boolean;
-}
-
-export interface PlacaMae {
-  id: number;
-  socket: string;
-  tipoRAM: string;
-  slotsRAM: number;
-  maxRAM: number;
-  tamanho: string; 
-}
 
 export interface Cooler {
   id: number;
   tipo: string;
   suporteSocket: string;
 }
+export { CPU, Fonte, Gabinete, GPU, PlacaMae, RAM };
+
