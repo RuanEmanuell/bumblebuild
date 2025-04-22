@@ -6,6 +6,7 @@ import { Mail, Lock, User } from "react-feather";
 import { LogoSecondary } from "../components/Logo";
 import CustomCheckbox from "../components/CustomCheckbox";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,6 +16,7 @@ export default function Auth() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [logoSize, setLogoSize] = useState(window.innerWidth < 768 ? 120 : 190);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -22,6 +24,14 @@ export default function Auth() {
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  //verificando se o usuario ja esta logado
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
   }, []);
 
   const handleLogin = async () => {
@@ -33,6 +43,12 @@ export default function Auth() {
     });
       console.log("User logged in:", response.data);
       alert("Usuário fez login!");
+      const { token } = response.data;
+      console.log("Token recebido:", token);
+
+      //salavndo token no localStorage
+      localStorage.setItem("token", token);
+      navigate("/");
       return response.data;
     } catch (error) {
       console.error("Error logging in:", error);
@@ -46,7 +62,7 @@ export default function Auth() {
       return;
     }
     console.log({
-      nome: name,
+      nome: nome,
       email: email,
       senha: password,
     })
@@ -61,8 +77,8 @@ export default function Auth() {
 
       console.log("User created:", response.data);
       alert("Usuário criado!");
+      setIsLogin(true);
       return response.data;
-      
     } catch (error) {
       console.error("Error creating user:", error);
       throw error;

@@ -32,3 +32,18 @@ export function autenticarToken(req: Request, res: Response, next: NextFunction)
     return res.status(401).json({ message: "Token inválido" });
   }
 }
+
+export const autenticarUsuario = (req: Request, res: Response, next: NextFunction): void => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    res.status(401).json({ message: "Token não fornecido" });
+    return;
+  }
+
+  try {
+    jwt.verify(token, process.env.SECRET_JWT as string);
+    next(); // token válido, continua a requisição
+  } catch (err) {
+    res.status(401).json({ message: "Token inválido ou expirado" });
+  }
+};

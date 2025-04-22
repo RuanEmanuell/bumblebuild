@@ -94,5 +94,20 @@ export class UsuarioController {
       }
     }
   }
+
+  async getUsuarioLogado(req: Request, res: Response) {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(400).json({ message: "Token não fornecido." });
+    }
+
+    try {
+      const usuario = await usuarioService.buscarUsuarioLogado(token);
+      return res.status(200).json(usuario); //retorna os dados do usuário
+    } catch (error: any) {
+      console.error(error);
+      return res.status(401).json({ message: error.message || "Erro ao buscar usuário" });
+    }
+  }
   
 }
