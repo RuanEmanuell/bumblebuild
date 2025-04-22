@@ -2,37 +2,44 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../service/userService';
 import { Link } from 'react-router-dom';
-
 import { motion } from "framer-motion";
-
 import { ButtonHome } from "../components/ButtonHome";
 import { ProductCard } from "../components/ProductCard";
 import Footer from '../components/Footer';
 import { Categorias } from "../components/Categorias";
 
-// Imagens dos produtos
+//imagens dos produtos
 import setupExemplo from "../assets/setupexemplo.jpg";
 import setupZe from "../assets/pc_do_ze.jpg";
 import pcIcon from "../assets/pc.png";
 import HeaderCustom from '../components/Header';
 import PcConfigForm from './PcConfigForm';
 
-// Simulação de usuários
-const usuarioLogado = {
-    nome: "Ruan Emanuel",
-    tipo: "comum" // eu criei para testar, caso vcs forem usar troquem para comum ou qualquer outra coisa para nao ir para a tela de admin, implementarei logo isso com a insercao no banco
-};
-
 export default function Home() {
     const navigate = useNavigate();
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
-
-    useEffect(() => {
-        // Redireciona admin para o dashboard
-        if (usuarioLogado.tipo === "admin") {
-            navigate("/admin");
-        }
-    }, []);
+    const [user, setUser] = useState<{ nome: string } | null>(null);
+    
+        useEffect(() => {
+            const token = localStorage.getItem("token");
+    
+            if (token) {
+                fetch("http://localhost:3000/user/logado", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.nome) {
+                            setUser(data);
+                        } else {
+                            console.log("Usuário não encontrado");
+                        }
+                    })
+                    .catch((err) => console.error("Erro ao buscar usuário:", err));
+            }
+        }, []);
 
     const produtosExemplos = [
         { nome: "Pc do Ruan Emanuel", preco: "R$ 5993", estrelas: 4.6, imagem: setupExemplo, categoria: "GPU" },
@@ -52,7 +59,7 @@ export default function Home() {
             <HeaderCustom />
 
             <div className="px-6 py-4 text-lg md:text-xl font-medium">
-                Olá, {usuarioLogado.nome}! Bem-vindo de volta.
+                {user ? `Olá, ${user.nome}! Bem-vindo de volta.` : "Olá! Faça login para aproveitar melhor a experiência."}
             </div>
 
             <section className="flex flex-col md:flex-row items-center justify-center gap-8 px-6 py-12">

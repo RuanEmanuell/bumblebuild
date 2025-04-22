@@ -97,4 +97,15 @@ export class UsuarioService {
     return "Senha redefinida com sucesso!";
   }
   
+  //buscar usuário pelo token
+  async buscarUsuarioLogado(token: string) {
+    if (!process.env.SECRET_JWT) throw new Error("SECRET_JWT não definido!");
+
+    const decoded = jwt.verify(token, process.env.SECRET_JWT as string) as { id: number };
+    const usuario = await usuarioRepository.buscarPorId(decoded.id);
+    if (!usuario) throw new Error("Usuário não encontrado");
+
+    return usuario;
+  }
+
 }
