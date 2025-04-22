@@ -5,4 +5,6 @@ export interface PlacaMae {
   chipset: string;
   compatibilidadeLinhaCpu: string[];
   tipoRAM:  string
+  tamanho: string;
+  slots: number;
 }

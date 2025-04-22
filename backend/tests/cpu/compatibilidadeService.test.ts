@@ -1,4 +1,4 @@
-import { verificarCompatibilidadeCpuPlacaMae } from "../src/services/compatibilidade.service";
+import { verificarCompatibilidadeCpuPlacaMae } from "../../src/services/compatibilidade.service";
 
 describe("Compatibilidade CPU e Placa-mãe", () => {
   it("deve retornar true para CPU e placa-mãe compatíveis", () => {
@@ -10,6 +10,8 @@ describe("Compatibilidade CPU e Placa-mãe", () => {
       chipset: "B550",
       compatibilidadeLinhaCpu: ["Ryzen"],
       tipoRAM: "DDR4",
+      tamanho: "ATX",
+      slots: 4,
     };
 
     expect(verificarCompatibilidadeCpuPlacaMae(cpu, placaMae)).toBe(true);
@@ -24,6 +26,8 @@ describe("Compatibilidade CPU e Placa-mãe", () => {
       chipset: "Z690",
       compatibilidadeLinhaCpu: ["Core i"],
       tipoRAM: "DDR4",
+      tamanho: "ATX",
+      slots: 4,
     };
 
     expect(verificarCompatibilidadeCpuPlacaMae(cpu, placaMae)).toBe(false);

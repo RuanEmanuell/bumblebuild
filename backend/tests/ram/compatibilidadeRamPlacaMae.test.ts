@@ -1,6 +1,6 @@
-import { verificarCompatibilidadeRamPlacaMae } from "../src/services/compatibilidade.service";
-import { RAM } from "../src/models/ram.model"; 
-import { PlacaMae } from "../src/models/placaMae.model";
+import { verificarCompatibilidadeRamPlacaMae } from "../../src/services/compatibilidade.service";
+import { RAM } from "../../src/models/ram.model"; 
+import { PlacaMae } from "../../src/models/placaMae.model";
 
 describe("Compatibilidade RAM e Placa-mãe", () => {
   it("deve retornar true para tipo de RAM compatível", () => {
@@ -18,6 +18,8 @@ describe("Compatibilidade RAM e Placa-mãe", () => {
       chipset: "B450",
       compatibilidadeLinhaCpu: ["Ryzen"],
       tipoRAM: "DDR4",
+      tamanho: "ATX",
+      slots: 4,
     };
 
     expect(verificarCompatibilidadeRamPlacaMae(ram, placaMae)).toBe(true);
@@ -38,6 +40,8 @@ describe("Compatibilidade RAM e Placa-mãe", () => {
       chipset: "B450",
       compatibilidadeLinhaCpu: ["Ryzen"],
       tipoRAM: "DDR4",
+      tamanho: "ATX",
+      slots: 4,
     };
 
     expect(verificarCompatibilidadeRamPlacaMae(ram, placaMae)).toBe(false);
