@@ -38,6 +38,8 @@ model Peca {
   imagemUrl String?
   createdAt DateTime  @default(now())
 
+  linksPreco LinkPreco[]
+
   cpu       CPU?      @relation(name: "CPUToPeca")
   gpu       GPU?      @relation(name: "GPUToPeca")
   ram       RAM?      @relation(name: "RAMToPeca")
@@ -47,6 +49,16 @@ model Peca {
   placaMae  PlacaMae? @relation(name: "PlacaMaeToPeca")
   cooler    Cooler?   @relation(name: "CoolerToPeca")
 }
+
+model LinkPreco {
+  id        Int      @id @default(autoincrement())
+  url       String
+  preco     Float?  
+  atualizadoEm DateTime? 
+  peca      Peca     @relation(fields: [pecaId], references: [id])
+  pecaId    Int
+}
+
 
 enum TipoPeca {
   CPU
