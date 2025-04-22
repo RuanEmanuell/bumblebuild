@@ -8,7 +8,8 @@ describe("Compatibilidade CPU e Placa-mãe", () => {
       nome: "ASUS B550",
       socket: "AM4",
       chipset: "B550",
-      compatibilidadeLinhaCpu: ["Ryzen"]
+      compatibilidadeLinhaCpu: ["Ryzen"],
+      tipoRAM: "DDR4",
     };
 
     expect(verificarCompatibilidadeCpuPlacaMae(cpu, placaMae)).toBe(true);
@@ -21,7 +22,8 @@ describe("Compatibilidade CPU e Placa-mãe", () => {
       nome: "ASUS Z690",
       socket: "LGA1700",
       chipset: "Z690",
-      compatibilidadeLinhaCpu: ["Core i"]
+      compatibilidadeLinhaCpu: ["Core i"],
+      tipoRAM: "DDR4",
     };
 
     expect(verificarCompatibilidadeCpuPlacaMae(cpu, placaMae)).toBe(false);
