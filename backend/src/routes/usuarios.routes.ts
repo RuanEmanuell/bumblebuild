@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { UsuarioController } from "../controllers/usuarios.controller";
+import { autenticarUsuario } from "../middlewares/authMiddleware";
 
 const router = Router();
 const usuarioController = new UsuarioController();
@@ -42,5 +43,14 @@ router.post("/redefinir-senha", async(req: Request, res: Response) => {
     console.error(error);
   }
 });
+
+router.get("/logado", autenticarUsuario, async (req: Request, res: Response) => {
+  try {
+    await usuarioController.getUsuarioLogado(req, res);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 
 export default router;
