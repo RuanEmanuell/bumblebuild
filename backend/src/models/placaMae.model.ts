@@ -1,5 +1,5 @@
 export interface PlacaMae {
-  id: string;
+  id: number;
   nome: string;
   socket: string;
   chipset: string;

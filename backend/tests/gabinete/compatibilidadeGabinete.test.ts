@@ -6,13 +6,13 @@ import { GPU } from "../../src/models/gpu.model";
 describe("Compatibilidade Gabinete com Placa-mãe e GPU", () => {
   it("deve retornar true para tamanhos e comprimentos compatíveis", () => {
     const gabinete: Gabinete = {
-      id: "1",
+      id: 1,
       tamanhoSuportado: ["ATX", "mATX"],
       comprimentoMaximoGpuMM: 330
     };
 
     const placaMae: PlacaMae = {
-      id: "1",
+      id: 1,
       nome: "ASUS Prime B550",
       socket: "AM4",
       chipset: "B550",
@@ -23,7 +23,7 @@ describe("Compatibilidade Gabinete com Placa-mãe e GPU", () => {
     };
 
     const gpu: GPU = {
-      id: "1",
+      id: 1,
       memoriaGB: 12,
       tipoMemoria: "GDDR6",
       tdp: 250,
@@ -35,13 +35,13 @@ describe("Compatibilidade Gabinete com Placa-mãe e GPU", () => {
 
   it("deve retornar false para placa-mãe incompatível", () => {
     const gabinete: Gabinete = {
-      id: "1",
+      id: 1,
       tamanhoSuportado: ["mATX"],
       comprimentoMaximoGpuMM: 330
     };
 
     const placaMae: PlacaMae = {
-      id: "1",
+      id: 1,
       nome: "ASUS Prime B550",
       socket: "AM4",
       chipset: "B550",
@@ -52,7 +52,7 @@ describe("Compatibilidade Gabinete com Placa-mãe e GPU", () => {
     };
 
     const gpu: GPU = {
-      id: "1",
+      id: 1,
       memoriaGB: 12,
       tipoMemoria: "GDDR6",
       tdp: 250,
@@ -64,13 +64,13 @@ describe("Compatibilidade Gabinete com Placa-mãe e GPU", () => {
 
   it("deve retornar false para GPU muito grande", () => {
     const gabinete: Gabinete = {
-      id: "1",
+      id: 1,
       tamanhoSuportado: ["ATX", "mATX"],
       comprimentoMaximoGpuMM: 290
     };
 
     const placaMae: PlacaMae = {
-      id: "1",
+      id: 1,
       nome: "ASUS Prime B550",
       socket: "AM4",
       chipset: "B550",
@@ -81,7 +81,7 @@ describe("Compatibilidade Gabinete com Placa-mãe e GPU", () => {
     };
 
     const gpu: GPU = {
-      id: "1",
+      id: 1,
       memoriaGB: 12,
       tipoMemoria: "GDDR6",
       tdp: 250,

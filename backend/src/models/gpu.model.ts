@@ -1,5 +1,5 @@
 export interface GPU {
-    id: string;
+    id: number;
     memoriaGB: number;
     tipoMemoria: string;
     tdp: number;

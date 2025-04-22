@@ -1,5 +1,5 @@
 export interface Gabinete {
-    id: string;
+    id: number;
     tamanhoSuportado: string[]; 
     comprimentoMaximoGpuMM: number;
   }

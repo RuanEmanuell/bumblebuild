@@ -1,5 +1,5 @@
 export interface Fonte {
-    id: string;
+    id: number;
     potenciaW: number;
     certificacao: string;
     modular: boolean;

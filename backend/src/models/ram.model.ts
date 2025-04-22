@@ -1,5 +1,5 @@
 export interface RAM {
-    id: string;
+    id: number;
     capacidadeGB: number;
     tipo: string;
     frequencia: number;
