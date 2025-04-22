@@ -9,6 +9,7 @@ export class PecaController {
       const novaPeca = await pecaService.criarPeca(req.body);
       return res.status(201).json({ message: "Peça criada com sucesso!", peca: novaPeca });
     } catch (error: any) {
+      console.error(error);
       return res.status(400).json({ error: error.message });
     }
   }

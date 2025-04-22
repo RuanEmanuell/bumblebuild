@@ -52,51 +52,59 @@ export default function PartDashboard() {
     ? pecas.filter(p => p.tipo === categoriaSelecionada)
     : pecas;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const form = e.currentTarget;
-    const novaPeca = {
-      nome: form.nome.value,
-      preco: Number(form.preco.value),
-      marca: form.marca.value,
-      tipo: form.tipo.value,
-    };
-
-    const url = pecaEmEdicao
-      ? `http://localhost:3000/pecas/${pecaEmEdicao.id}`
-      : "http://localhost:3000/pecas/create";
-
-    const method = pecaEmEdicao ? "PUT" : "POST";
-
-    try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(novaPeca)
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        fecharModal();
-        form.reset();
-        fetchPecas();
-
-        if (method === "POST") {
-          setPecas(prev => [...prev, data]);
-          setDados(prev => ({ ...prev, totalPecas: prev.totalPecas + 1 }));
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+    
+      const form = e.currentTarget;
+      const novaPeca = {
+        nome: form.nome.value,
+        marca: form.marca.value,
+        tipo: form.tipo.value,
+        preco: null,
+        linksPreco: [
+          form.link1.value || null, 
+          null,
+          null,
+        ].filter(Boolean), 
+      };
+    
+      const url = pecaEmEdicao
+        ? `http://localhost:3000/pecas/${pecaEmEdicao.id}`
+        : "http://localhost:3000/pecas/create";
+    
+      const method = pecaEmEdicao ? "PUT" : "POST";
+    
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(novaPeca),
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          fecharModal();
+          form.reset();
+          fetchPecas();
+    
+          if (method === "POST") {
+            setPecas((prev) => [...prev, data]);
+            setDados((prev) => ({ ...prev, totalPecas: prev.totalPecas + 1 }));
+          } else {
+            setPecas((prev) =>
+              prev.map((p) => (p.id === data.id ? data : p))
+            );
+          }
         } else {
-          setPecas(prev => prev.map(p => (p.id === data.id ? data : p)));
+          console.error("Erro ao salvar peça");
         }
-      } else {
-        console.error("Erro ao salvar peça");
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    };
+    
 
   const removerPeca = async (id: number) => {
     if (!confirm("Tem certeza que deseja excluir esta peça?")) return;
@@ -163,6 +171,7 @@ export default function PartDashboard() {
                     preco={`R$ ${peca.preco}`}
                     estrelas={peca.estrelas || 0}
                     imagem={setupExemplo}
+                    link={peca.link}  
                   />
                   <div className="flex justify-between mt-2">
                     <ButtonSecondary onClick={() => abrirModal(peca)}>Editar</ButtonSecondary>
@@ -179,10 +188,25 @@ export default function PartDashboard() {
 
       <Modal isOpen={isModalOpen} onClose={fecharModal} title={pecaEmEdicao ? "Editar Peça" : "Adicionar nova peça"}>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <input name="nome" type="text" placeholder="Nome da peça" defaultValue={pecaEmEdicao?.nome || ""} className="border border-gray-300 rounded p-2" />
-          <input name="preco" type="number" placeholder="Preço" defaultValue={pecaEmEdicao?.preco || ""} className="border border-gray-300 rounded p-2" />
-          <input name="marca" type="text" placeholder="Marca" defaultValue={pecaEmEdicao?.marca || ""} className="border border-gray-300 rounded p-2" />
-          <select name="tipo" className="border border-gray-300 rounded p-2" defaultValue={pecaEmEdicao?.tipo || ""}>
+          <input
+            name="nome"
+            type="text"
+            placeholder="Nome da peça"
+            defaultValue={pecaEmEdicao?.nome || ""}
+            className="border border-gray-300 rounded p-2"
+          />
+          <input
+            name="marca"
+            type="text"
+            placeholder="Marca"
+            defaultValue={pecaEmEdicao?.marca || ""}
+            className="border border-gray-300 rounded p-2"
+          />
+          <select
+            name="tipo"
+            className="border border-gray-300 rounded p-2"
+            defaultValue={pecaEmEdicao?.tipo || ""}
+          >
             <option value="">Selecione o tipo</option>
             <option value="CPU">CPU</option>
             <option value="GPU">GPU</option>
@@ -193,6 +217,13 @@ export default function PartDashboard() {
             <option value="PLACA_MAE">Placa Mãe</option>
             <option value="COOLER">Cooler</option>
           </select>
+          <input
+            name="link1"
+            type="text"
+            placeholder="Link do produto (ex: Kabum, Amazon)"
+            defaultValue={pecaEmEdicao?.link || ""}
+            className="border border-gray-300 rounded p-2"
+          />
 
           <div className="flex justify-end gap-4">
             <ButtonPrimary type="submit">Salvar</ButtonPrimary>

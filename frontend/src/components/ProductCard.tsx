@@ -6,9 +6,10 @@ interface ProductProps {
   preco: string;
   estrelas: number;
   imagem: string;
+  link?: string;  // Novo campo link
 }
 
-export function ProductCard({ nome, preco, estrelas, imagem }: ProductProps) {
+export function ProductCard({ nome, preco, estrelas, imagem, link }: ProductProps) {
   return (
     <Card className="p-0 flex flex-col">
       <img
@@ -29,6 +30,17 @@ export function ProductCard({ nome, preco, estrelas, imagem }: ProductProps) {
             )}
             <span className="ml-1 text-sm text-gray-500">{estrelas.toFixed(1)}</span>
           </div>
+          {/* Verificando se o link existe para mostrar o botão */}
+          {link && (
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 text-blue-600 hover:underline text-sm"
+            >
+              Ver no site
+            </a>
+          )}
         </div>
       </CardContent>
     </Card>
