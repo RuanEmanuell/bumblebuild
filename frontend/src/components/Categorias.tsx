@@ -12,7 +12,7 @@ const categorias = [
   { nome: "Placa de vídeo", valor: "GPU", icon: gpuIcon },
   { nome: "Memória RAM", valor: "RAM", icon: ramIcon },
   { nome: "SSD", valor: "SSD", icon: ssdIcon },
-  { nome: "Placa mãe", valor: "PLACA_MAE", icon: placaMaeIcon },
+  { nome: "Placa mãe", valor: "MOTHERBOARD", icon: placaMaeIcon },
   { nome: "Cooler", valor: "COOLER", icon: coolerIcon },
 ];
 
