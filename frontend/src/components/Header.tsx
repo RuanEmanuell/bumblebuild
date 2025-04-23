@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
 import { LogoTertiary } from "../components/Logo";
 import { Heart, User, Menu, X } from "react-feather";
 import { Link } from "react-router-dom";
 import CartIcon from "./CartIcon";
+import { useAuth } from "../hooks/useAuth";
 
 interface HeaderProps {
     user?: {
@@ -14,38 +14,7 @@ interface HeaderProps {
 
 const HeaderCustom: React.FC<HeaderProps> = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [user, setUser] = useState<{ nome: string } | null>(null);
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-
-        if (token) {
-            fetch("http://localhost:3000/user/logado", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-                .then(async (res) => {
-                    if (!res.ok) {
-                        if (res.status === 401 || res.status === 403) {
-                            localStorage.removeItem("token");
-                            setUser(null);
-                            console.warn("Token expirado ou inválido. Redirecionando ou limpando estado...");
-                        }
-                        return;
-                    }
-
-                    const data = await res.json();
-                    if (data.nome) {
-                        setUser(data);
-                    } else {
-                        console.warn("Usuário não encontrado");
-                    }
-                })
-                .catch((err) => console.error("Erro ao buscar usuário:", err));
-
-        }
-    }, []);
+    const { user } = useAuth();
 
     return (
         <header className="flex justify-between items-center px-12 py-5 bg-primary sticky top-0 z-20">

@@ -1,0 +1,35 @@
+import { useEffect, useState } from "react";
+import { Usuario } from "../models/Usuario";
+
+export const useAuth = () => {
+    const [user, setUser] = useState<Usuario | null>(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            fetch("http://localhost:3000/user/logado", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(async (res) => {
+                    if (!res.ok) {
+                        if (res.status === 401 || res.status === 403) {
+                            localStorage.removeItem("token");
+                            setUser(null);
+                        }
+                        return;
+                    }
+
+                    const data = await res.json();
+                    if (data.nome) {
+                        setUser(data);
+                    }
+                })
+                .catch((err) => console.error("Erro ao buscar usuário:", err));
+        }
+    }, []);
+
+    return { user, setUser };
+};
