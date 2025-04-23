@@ -19,27 +19,37 @@ export default function Home() {
     const navigate = useNavigate();
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
     const [user, setUser] = useState<{ nome: string } | null>(null);
-    
-        useEffect(() => {
-            const token = localStorage.getItem("token");
-    
-            if (token) {
-                fetch("http://localhost:3000/user/logado", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        if (data.nome) {
-                            setUser(data);
-                        } else {
-                            console.log("Usuário não encontrado");
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            fetch("http://localhost:3000/user/logado", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(async (res) => {
+                    if (!res.ok) {
+                        if (res.status === 401 || res.status === 403) {
+                            localStorage.removeItem("token");
+                            setUser(null);
+                            console.warn("Token expirado ou inválido. Redirecionando ou limpando estado...");
                         }
-                    })
-                    .catch((err) => console.error("Erro ao buscar usuário:", err));
-            }
-        }, []);
+                        return;
+                    }
+
+                    const data = await res.json();
+                    if (data.nome) {
+                        setUser(data);
+                    } else {
+                        console.warn("Usuário não encontrado");
+                    }
+                })
+                .catch((err) => console.error("Erro ao buscar usuário:", err));
+
+        }
+    }, []);
 
     const produtosExemplos = [
         { nome: "Pc do Ruan Emanuel", preco: "R$ 5993", estrelas: 4.6, imagem: setupExemplo, categoria: "GPU" },

@@ -25,19 +25,27 @@ const HeaderCustom: React.FC<HeaderProps> = () => {
                     Authorization: `Bearer ${token}`,
                 },
             })
-                .then((res) => res.json())
-                .then((data) => {
+                .then(async (res) => {
+                    if (!res.ok) {
+                        if (res.status === 401 || res.status === 403) {
+                            localStorage.removeItem("token");
+                            setUser(null);
+                            console.warn("Token expirado ou inválido. Redirecionando ou limpando estado...");
+                        }
+                        return;
+                    }
+
+                    const data = await res.json();
                     if (data.nome) {
                         setUser(data);
                     } else {
-                        console.log("Usuário não encontrado");
+                        console.warn("Usuário não encontrado");
                     }
                 })
                 .catch((err) => console.error("Erro ao buscar usuário:", err));
+
         }
     }, []);
-
-    console.log(user);
 
     return (
         <header className="flex justify-between items-center px-12 py-5 bg-primary sticky top-0 z-20">
@@ -112,7 +120,7 @@ const HeaderCustom: React.FC<HeaderProps> = () => {
                     {user ? (
                         <div className="flex items-center gap-2">
                             <User size={20} className="text-textPrimary" />
-                            <span>Olá, <span className="font-bold">{user.nome.split(' ')[0]}</span></span>
+                            <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.nome}</Link></span>
                         </div>
                     ) : (
                         <div className="flex gap-1">
