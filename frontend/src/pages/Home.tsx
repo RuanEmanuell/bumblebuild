@@ -14,32 +14,12 @@ import setupZe from "../assets/pc_do_ze.jpg";
 import pcIcon from "../assets/pc.png";
 import HeaderCustom from '../components/Header';
 import PcConfigForm from './PcConfigForm';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Home() {
     const navigate = useNavigate();
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
-    const [user, setUser] = useState<{ nome: string } | null>(null);
-    
-        useEffect(() => {
-            const token = localStorage.getItem("token");
-    
-            if (token) {
-                fetch("http://localhost:3000/user/logado", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        if (data.nome) {
-                            setUser(data);
-                        } else {
-                            console.log("Usuário não encontrado");
-                        }
-                    })
-                    .catch((err) => console.error("Erro ao buscar usuário:", err));
-            }
-        }, []);
+    const {user} = useAuth();
 
     const produtosExemplos = [
         { nome: "Pc do Ruan Emanuel", preco: "R$ 5993", estrelas: 4.6, imagem: setupExemplo, categoria: "GPU" },

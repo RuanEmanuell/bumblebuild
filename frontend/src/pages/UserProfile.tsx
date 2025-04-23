@@ -1,37 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderCustom from "../components/Header";
 import { Plus } from "react-feather";
 import { ButtonPrimary, ButtonSecondary } from "../components/Button";
 import Footer from "../components/Footer";
+import { useAuth } from "../hooks/useAuth";
 
 //formatar data para exibir
-const formatData = (isoDate: string) => {
+const formatData = (isoDate?: string | Date) => {
+  if (!isoDate) return "Data desconhecida";
+
   const data = new Date(isoDate);
+  if (isNaN(data.getTime())) return "Data inválida";
+
   const dia = String(data.getDate()).padStart(2, "0");
   const mes = String(data.getMonth() + 1).padStart(2, "0");
   const ano = data.getFullYear();
   return `${dia}/${mes}/${ano}`;
 };
 
-export default function UserProfile() {
-  //use state com dados mock para teste
-  const [user, setUser] = useState({
-    nome: "Millie Teste",
-    email: "millie@email.com",
-    createdAt: "2024-04-01T10:00:00Z",
-    foto: "",
-  });
 
+export default function UserProfile() {
   //variaveis de controle de estado
+  const { user } = useAuth();
   const [previewFoto, setPreviewFoto] = useState<string | null>(null);
-  const [nomeEditado, setNomeEditado] = useState(user.nome);
-  const [emailEditado, setEmailEditado] = useState(user.email);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [mensagem, setMensagem] = useState<string | null>(null);
   const [editando, setEditando] = useState(false);
   const [editandoSenha, setEditandoSenha] = useState(false);
+  const [nomeEditado, setNomeEditado] = useState("");
+  const [emailEditado, setEmailEditado] = useState("");
+
+  // Atualiza os dados quando o user for carregado
+  useEffect(() => {
+    if (user) {
+      setNomeEditado(user.nome ?? "");
+      setEmailEditado(user.email ?? "");
+    }
+  }, [user]);
+
 
   //metodo para mudança de foto
   const handleFotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,13 +58,6 @@ export default function UserProfile() {
       return;
     }
 
-    setUser((prev) => ({
-      ...prev,
-      nome: nomeEditado,
-      email: emailEditado,
-      foto: previewFoto || prev.foto,
-    }));
-
     setMensagem("Informações salvas com sucesso!");
     setSenhaAtual("");
     setNovaSenha("");
@@ -65,10 +66,9 @@ export default function UserProfile() {
     setEditandoSenha(false);
   };
 
-  //cancelar edição
   const handleCancelar = () => {
-    setNomeEditado(user.nome);
-    setEmailEditado(user.email);
+    setNomeEditado(user?.nome || "");
+    setEmailEditado(user?.email || "");
     setPreviewFoto(null);
     setSenhaAtual("");
     setNovaSenha("");
@@ -79,6 +79,7 @@ export default function UserProfile() {
   };
 
 
+
   return (
     <div className="min-h-screen flex flex-col">
       <HeaderCustom />
@@ -86,14 +87,14 @@ export default function UserProfile() {
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:items-start">
           {/*div para a foto*/}
           <div className="relative w-50 h-50 sm:w-36 sm:h-36 md:w-44 md:h-44">
-            {previewFoto || user.foto ? (
+            {/*previewFoto || user.foto ? (
               //se houver foto do usuário exibe 
               <img
                 src={previewFoto || user.foto}
                 alt="Foto do usuário"
                 className="rounded-full object-cover w-full h-full border"
               />
-            ) : (
+            ) : (*/
               //se não houver foto do usuário exibe icone para adicionar
               <label
                 htmlFor="foto"
@@ -102,7 +103,7 @@ export default function UserProfile() {
                 <Plus size={24} className="text-textYellow" />
                 <span className="text-xs text-textSecondary mt-1">Adicionar imagem</span>
               </label>
-            )}
+            /*)*/}
             <input
               id="foto"
               type="file"
@@ -114,13 +115,13 @@ export default function UserProfile() {
 
           <div className="text-center sm:text-left space-y-1">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-textPrimary">
-              {user.nome}
+              {user?.nome}
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-textPrimary">
-              {user.email}
+              {user?.email}
             </p>
             <p className="text-sm sm:text-base text-textSecondary">
-              Desde {formatData(user.createdAt)}
+              Desde {formatData(user?.createdAt)}
             </p>
           </div>
 
@@ -207,7 +208,7 @@ export default function UserProfile() {
         <div className="my-12">
           <h1 className="font-bold text-2xl">Histórico de compras</h1>
         </div>
-        
+
       </main>
       <Footer />
     </div>
