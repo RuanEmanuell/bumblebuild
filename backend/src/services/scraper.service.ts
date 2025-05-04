@@ -66,8 +66,6 @@ export class ScraperService {
       if (page) await page.close();
       if (browser) await browser.close();
 
-      console.log(currentPrice);
-
       return currentPrice;
     } catch (error) {
       console.error("Erro ao pegar o preço:", error);

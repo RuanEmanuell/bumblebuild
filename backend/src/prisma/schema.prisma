@@ -30,35 +30,24 @@ model Usuario {
  }
   
 model Peca {
-  id        Int       @id @default(autoincrement())
-  nome      String
-  marca     String
-  preco     Float
-  tipo      TipoPeca
-  imagemUrl String?
-  createdAt DateTime  @default(now())
+  id         Int       @id @default(autoincrement())
+  nome       String
+  marca      String
+  preco      Float
+  tipo       TipoPeca
+  imagemUrl  String?
+  linkPreco  String?   
+  createdAt  DateTime  @default(now())
 
-  linksPreco LinkPreco[]
-
-  cpu       CPU?      @relation(name: "CPUToPeca")
-  gpu       GPU?      @relation(name: "GPUToPeca")
-  ram       RAM?      @relation(name: "RAMToPeca")
-  ssd       SSD?      @relation(name: "SSDToPeca")
-  fonte     Fonte?    @relation(name: "FonteToPeca")
-  gabinete  Gabinete? @relation(name: "GabineteToPeca")
-  placaMae  PlacaMae? @relation(name: "PlacaMaeToPeca")
-  cooler    Cooler?   @relation(name: "CoolerToPeca")
+  cpu        CPU?      @relation(name: "CPUToPeca")
+  gpu        GPU?      @relation(name: "GPUToPeca")
+  ram        RAM?      @relation(name: "RAMToPeca")
+  ssd        SSD?      @relation(name: "SSDToPeca")
+  fonte      Fonte?    @relation(name: "FonteToPeca")
+  gabinete   Gabinete? @relation(name: "GabineteToPeca")
+  placaMae   PlacaMae? @relation(name: "PlacaMaeToPeca")
+  cooler     Cooler?   @relation(name: "CoolerToPeca")
 }
-
-model LinkPreco {
-  id        Int      @id @default(autoincrement())
-  url       String
-  preco     Float?  
-  atualizadoEm DateTime? 
-  peca      Peca     @relation(fields: [pecaId], references: [id])
-  pecaId    Int
-}
-
 
 enum TipoPeca {
   CPU

@@ -7,39 +7,31 @@ export class PecaRepository {
   private scraperService: ScraperService;
 
   constructor() {
-    this.scraperService = new ScraperService(); // Instanciando o ScraperService
+    this.scraperService = new ScraperService(); 
   }
 
   async criarPeca(dados: Prisma.PecaCreateInput) {
     try {
-      // Verificando se temos o link de preço (caso seja um único link)
-      const linkData : any = dados.linksPreco;
+      let link = '';
 
-      console.log(dados.linksPreco);
-
-      let link = linkData[0] || '';
-
-
+      link = dados.linkPreco || ''; 
+  
+      console.log(link);
+  
       let preco = null;
       if (link) {
         preco = await this.scraperService.pegarPrecoPeca([link]);
       }
-
-      console.log(link);
-
+  
       const precoNumerico = preco
-                          ? parseFloat(preco.replace(/[^\d,.-]/g, "").replace(",", "."))
-                          : 0;
-
-
-      // Criar a peça com o preço já obtido
+        ? parseFloat(preco.replace(/[^\d,.-]/g, "").replace(",", "."))
+        : 0;
+  
       return prisma.peca.create({
         data: {
           ...dados,
-          preco: precoNumerico, // Preço já incluído
-          linksPreco: {
-            create: dados.linksPreco?.create ?? [], // Criando o link de preço
-          },
+          preco: precoNumerico,
+          linkPreco: link, // Atribuindo o link diretamente
         },
         include: {
           cpu: true,
@@ -50,7 +42,6 @@ export class PecaRepository {
           gabinete: true,
           placaMae: true,
           cooler: true,
-          linksPreco: true,
         },
       });
     } catch (error) {
@@ -70,7 +61,6 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-        linksPreco: true,
       },
     });
   }
@@ -87,7 +77,6 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-        linksPreco: true,
       },
     });
   }
@@ -112,23 +101,14 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-        linksPreco: true,
       },
     });
   }
 
   async atualizarPeca(id: number, dados: Prisma.PecaUpdateInput) {
-    const { linksPreco, ...dadosRestantes } = dados;
-
     return prisma.peca.update({
       where: { id },
-      data: {
-        ...dadosRestantes,
-        linksPreco: {
-          deleteMany: {},
-          create: linksPreco?.create ?? [],
-        },
-      },
+      data: dados,
       include: {
         cpu: true,
         gpu: true,
@@ -138,12 +118,40 @@ export class PecaRepository {
         gabinete: true,
         placaMae: true,
         cooler: true,
-        linksPreco: true,
       },
     });
   }
 
   async deletarPeca(id: number) {
     return prisma.peca.delete({ where: { id } });
+  }
+
+  async atualizarPrecosAutomaticamente() {
+    try {
+      const pecas = await prisma.peca.findMany();
+
+      console.log(`Número de peças: ${pecas.length}`)
+  
+      for (const peca of pecas) {
+        const link = peca.linkPreco; 
+  
+        if (!link) continue;
+  
+        const precoString = await this.scraperService.pegarPrecoPeca([link]);
+  
+        if (!precoString) continue;
+  
+        const precoNumerico = parseFloat(precoString.replace(/[^\d,.-]/g, "").replace(",", "."));
+        if (!isNaN(precoNumerico)) {
+          await prisma.peca.update({
+            where: { id: peca.id },
+            data: { preco: precoNumerico },
+          });
+          console.log(`Preço da peça ${peca.nome} atualizado para R$ ${precoNumerico}`);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar preços automaticamente:", error);
+    }
   }
 }

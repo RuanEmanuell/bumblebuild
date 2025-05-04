@@ -61,11 +61,7 @@ export default function PartDashboard() {
         marca: form.marca.value,
         tipo: form.tipo.value,
         preco: null,
-        linksPreco: [
-          form.link1.value || null, 
-          null,
-          null,
-        ].filter(Boolean), 
+        linkPreco: form.link1.value
       };
     
       const url = pecaEmEdicao
