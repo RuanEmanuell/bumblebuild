@@ -6,6 +6,12 @@ import usuarios from "./routes/usuarios.routes";
 import pecas from "./routes/pecas.routes";
 import montagens from "./routes/montagem.routes"; 
 import cpu from "./routes/cpu.routes";
+import gpu from "./routes/gpu.routes";
+import ram from "./routes/ram.routes";
+import placaMae from "./routes/placaMae.routes";
+import fonte from "./routes/fonte.routes";
+import ssd from "./routes/ssd.routes";
+import cooler from "./routes/cooler.routes";
 
 const env = require("dotenv").config();
 const cors = require("cors");
@@ -20,7 +26,14 @@ app.use(express.json());
 app.use("/user", usuarios);
 app.use("/pecas", pecas); 
 app.use("/montagens", montagens);
-app.use("/cpu", cpu)
+app.use("/cpu", cpu);
+app.use("/gpu", gpu);
+app.use("/ram", ram);
+app.use("/placaMae", placaMae);
+app.use("/fonte", fonte);
+app.use("/ssd", ssd);
+app.use("/cooler", cooler);
+
 
 // Inicia o servidor
 app.listen(PORT, () => {
