@@ -4,11 +4,14 @@ import jwt from "jsonwebtoken";
 import { blackListToken } from "../middlewares/authMiddleware";
 import { randomUUID } from "crypto";
 import nodemailer from "nodemailer";
-
+import { Prisma } from "@prisma/client";
+import fs from "fs";
+import path from "path";
 
 const usuarioRepository = new UsuarioRepository();
 
 export class UsuarioService {
+
   async criarUsuario(tipo_usuario: string, nome: string, email: string, senha: string) {
     const usuarioExistente = await usuarioRepository.buscarPorEmail(email);
     if (usuarioExistente) throw new Error("Email já cadastrado.");
@@ -41,13 +44,38 @@ export class UsuarioService {
     }
   }
 
-  async editUsuario(id: number, tipo_usuario: string, nome: string, email: string, senha: string) {
-    const usuarioExistente = await usuarioRepository.buscarPorEmail(email);
-    if (usuarioExistente && usuarioExistente.id !== id) throw new Error("Email já cadastrado.");
+  async editUsuario(id: number, dados: Prisma.UsuarioUpdateInput, arquivo?: Express.Multer.File) {
+    if (dados.email) {
+      const usuarioExistente = await usuarioRepository.buscarPorEmail(dados.email as string);
+      if (usuarioExistente && usuarioExistente.id !== id) {
+        throw new Error("Email já cadastrado.");
+      }
+    }
 
-    const senhaCriptografada = await bcrypt.hash(senha, 10);
+    if (dados.senha) {
+      await this.editSenha(id, dados.senha as string);
+      delete dados.senha;
+    }
 
-    await usuarioRepository.buscarPorId(id);
+    if(arquivo) {
+      const userAtual = await usuarioRepository.buscarPorId(id);
+      if (userAtual?.fotoPerfilUrl) {
+        dados.fotoPerfilUrl = userAtual.fotoPerfilUrl;
+      } else {
+        dados.fotoPerfilUrl = arquivo.filename;
+      }
+    }
+
+    dados.updatedAt = new Date();
+
+    const usuarioAtualizado = await usuarioRepository.atualizarUsuario(id, dados);
+    return usuarioAtualizado;
+  }
+
+
+  async editSenha(id: number, novaSenha: string) {
+    const senhaCriptografada = await bcrypt.hash(novaSenha, 10);
+    return await usuarioRepository.atualizarSenha(id, senhaCriptografada);
   }
 
   async solicitarRecuperacaoSenha(email: string) {
@@ -61,7 +89,7 @@ export class UsuarioService {
 
     const link = `http://localhost:5173/reset-password?token=${token}`; // ou domínio real
 
-    // Exemplo básico de envio de e-mail
+    //exemplo básico de envio de e-mail
     var transporter = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,
@@ -84,19 +112,19 @@ export class UsuarioService {
   async redefinirSenha(token: string, novaSenha: string) {
     const tokenInfo = await usuarioRepository.buscarTokenRecuperacao(token);
     if (!tokenInfo) throw new Error("Token inválido ou expirado.");
-  
+
     const agora = new Date();
     if (tokenInfo.experiedAt < agora) throw new Error("Token expirado.");
-  
+
     const senhaCriptografada = await bcrypt.hash(novaSenha, 10);
-  
+
     await usuarioRepository.atualizarSenha(tokenInfo.usuarioId, senhaCriptografada);
-  
+
     await usuarioRepository.deletarTokenRecuperacao(token);
-  
+
     return "Senha redefinida com sucesso!";
   }
-  
+
   //buscar usuário pelo token
   async buscarUsuarioLogado(token: string) {
     if (!process.env.SECRET_JWT) throw new Error("SECRET_JWT não definido!");
