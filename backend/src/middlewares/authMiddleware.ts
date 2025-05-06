@@ -15,60 +15,47 @@ export function blackListToken(token: string): void {
   blacklist.push(token);
 }
 
-// export function autenticarToken(req: Request, res: Response, next: NextFunction): void {
-//   const token = req.headers.authorization?.split(" ")[1];
-
-//   if (!token) {
-//    res.status(401).json({ message: "Token não fornecido" });
-//    return;
-//   }
-
-//   try {
-//     if (!process.env.SECRET_JWT) throw new Error("SECRET_JWT não definido!");
-
-//     const decoded = jwt.verify(token, process.env.SECRET_JWT as string) as {
-//       id: number;
-//       email: string;
-//       tipo_usuario: string;
-//       nome: string;
-//     };
-
-//     req.usuario = decoded;
-//     next();
-//   } catch (error) {
-//     res.status(401).json({ message: "Token inválido" });
-//     return ;
-//   }
-// }
-
-export const autenticarUsuario = (req: Request, res: Response, next: NextFunction): void => {
+export function autenticarToken(req: Request, res: Response, next: NextFunction): void {
   const token = req.headers.authorization?.split(" ")[1];
+
   if (!token) {
-    res.status(401).json({ message: "Token não fornecido" });
-    return;
+   res.status(401).json({ message: "Token não fornecido" });
+   return;
   }
 
   try {
-    jwt.verify(token, process.env.SECRET_JWT as string);
-    next(); // token válido, continua a requisição
-  } catch (err) {
-    res.status(401).json({ message: "Token inválido ou expirado" });
+    if (!process.env.SECRET_JWT) throw new Error("SECRET_JWT não definido!");
+
+    const decoded = jwt.verify(token, process.env.SECRET_JWT as string) as {
+      id: number;
+      email: string;
+      tipo_usuario: string;
+      nome: string;
+    };
+
+    req.usuario = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Token inválido" });
+    return ;
   }
-};
+}
 
-// export function isAdmin(req: Request, res: Response, next: NextFunction): void {
-//   const usuario = req.usuario;
 
-//   if(!usuario) {
-//     res.status(401).json({ message: "Usuário não autenticado" });
-//     return 
-//   }
 
-//   if(usuario.tipo_usuario !== "ADMIN") {
-//     res.status(403).json({ message: "Acesso negado" });
-//     return 
-//   }
-//   next();
-// }
+export function isAdmin(req: Request, res: Response, next: NextFunction): void {
+  const usuario = req.usuario;
+  console.log(usuario);
+  if(!usuario) {
+    res.status(401).json({ message: "Usuário não autenticado" });
+    return 
+  }
+
+  if(usuario.tipo_usuario !== "ADMIN") {
+    res.status(403).json({ message: "Acesso negado" });
+    return 
+  }
+  next();
+}
 
 

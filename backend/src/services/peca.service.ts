@@ -1,7 +1,7 @@
 import { PecaRepository } from "../repositories/peca.repository";
 import { Prisma } from "@prisma/client";
 
-const pecaRepository = new PecaRepository();
+const pecaRepository = new PecaRepository();''
 
 export class PecaService {
   async criarPeca(dados: Prisma.PecaCreateInput) {
