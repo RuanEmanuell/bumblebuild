@@ -33,23 +33,23 @@ model Usuario {
 }
 
 model Peca {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   nome       String
   marca      String
   preco      Float
   tipo       TipoPeca
   imagemUrl  String?
   linkPreco  String?   
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 
-  cpu      CPU?      @relation(name: "CPUToPeca")
-  gpu      GPU?      @relation(name: "GPUToPeca")
-  ram      RAM?      @relation(name: "RAMToPeca")
-  ssd      SSD?      @relation(name: "SSDToPeca")
-  fonte    Fonte?    @relation(name: "FonteToPeca")
-  gabinete Gabinete? @relation(name: "GabineteToPeca")
-  placaMae PlacaMae? @relation(name: "PlacaMaeToPeca")
-  cooler   Cooler?   @relation(name: "CoolerToPeca")
+  cpu        CPU?      @relation(name: "CPUToPeca")
+  gpu        GPU?      @relation(name: "GPUToPeca")
+  ram        RAM?      @relation(name: "RAMToPeca")
+  ssd        SSD?      @relation(name: "SSDToPeca")
+  fonte      Fonte?    @relation(name: "FonteToPeca")
+  gabinete   Gabinete? @relation(name: "GabineteToPeca")
+  placaMae   PlacaMae? @relation(name: "PlacaMaeToPeca")
+  cooler     Cooler?   @relation(name: "CoolerToPeca")
 
   // 🔧 Relações com Montagem (opostos)
   montagensCpu      Montagem[] @relation("MontagemCpu")
@@ -60,16 +60,6 @@ model Peca {
   montagensSsd      Montagem[] @relation("MontagemSsd")
   montagensGabinete Montagem[] @relation("MontagemGabinete")
 
-  LinkPreco LinkPreco[]
-}
-
-model LinkPreco {
-  id           Int       @id @default(autoincrement())
-  url          String
-  preco        Float?
-  atualizadoEm DateTime?
-  peca         Peca      @relation(fields: [pecaId], references: [id])
-  pecaId       Int
 }
 
 enum TipoPeca {
