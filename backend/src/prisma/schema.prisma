@@ -25,6 +25,7 @@ model Usuario {
     status          Boolean                @default(true)
     createdAt       DateTime               @default(now())
     updatedAt       DateTime               @updatedAt
+    fotoPerfilUrl   String?
 
     tokensRecuperacao TokenRecuperacaoSenha[]
  }
@@ -128,26 +129,26 @@ model PlacaMae {
   peca     Peca   @relation(name: "PlacaMaeToPeca", fields: [id], references: [id])
 }
 
-model Montagem {
-  id              Int       @id @default(autoincrement())
-  usuarioId       Int
-  cpuId           Int
-  gpuId           Int
-  placaMaeId      Int
-  ramId           Int
-  fonteId         Int
-  ssdId           Int
-  gabineteId      Int
-  quantidadeRAM   Int
-  quantidadeSSD   Int
-  dataMontagem    DateTime @default(now())
+// model Montagem {
+//   id              Int       @id @default(autoincrement())
+//   usuarioId       Int
+//   cpuId           Int
+//   gpuId           Int
+//   placaMaeId      Int
+//   ramId           Int
+//   fonteId         Int
+//   ssdId           Int
+//   gabineteId      Int
+//   quantidadeRAM   Int
+//   quantidadeSSD   Int
+//   dataMontagem    DateTime @default(now())
 
-  usuario         Usuario   @relation(fields: [usuarioId], references: [id])
-  cpu             Peca      @relation(fields: [cpuId], references: [id])
-  gpu             Peca      @relation(fields: [gpuId], references: [id])
-  placaMae       Peca      @relation(fields: [placaMaeId], references: [id])
-  ram             Peca      @relation(fields: [ramId], references: [id])
-  fonte           Peca      @relation(fields: [fonteId], references: [id])
-  ssd             Peca      @relation(fields: [ssdId], references: [id])
-  gabinete        Peca      @relation(fields: [gabineteId], references: [id])
-}
+//   usuario         Usuario   @relation(fields: [usuarioId], references: [id])
+//   cpu             Peca      @relation(fields: [cpuId], references: [id])
+//   gpu             Peca      @relation(fields: [gpuId], references: [id])
+//   placaMae       Peca      @relation(fields: [placaMaeId], references: [id])
+//   ram             Peca      @relation(fields: [ramId], references: [id])
+//   fonte           Peca      @relation(fields: [fonteId], references: [id])
+//   ssd             Peca      @relation(fields: [ssdId], references: [id])
+//   gabinete        Peca      @relation(fields: [gabineteId], references: [id])
+// }

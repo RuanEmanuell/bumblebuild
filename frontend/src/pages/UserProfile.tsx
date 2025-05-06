@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import HeaderCustom from "../components/Header";
-import { Plus } from "react-feather";
+import { Plus, User } from "react-feather";
 import { ButtonPrimary, ButtonSecondary } from "../components/Button";
 import Footer from "../components/Footer";
 import { useAuth } from "../hooks/useAuth";
+import axios from "axios";
+import ImageCropper from "../components/ImageCropper";
 
 //formatar data para exibir
 const formatData = (isoDate?: string | Date) => {
@@ -21,7 +23,7 @@ const formatData = (isoDate?: string | Date) => {
 
 export default function UserProfile() {
   //variaveis de controle de estado
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [previewFoto, setPreviewFoto] = useState<string | null>(null);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
@@ -31,8 +33,10 @@ export default function UserProfile() {
   const [editandoSenha, setEditandoSenha] = useState(false);
   const [nomeEditado, setNomeEditado] = useState("");
   const [emailEditado, setEmailEditado] = useState("");
+  const [fotoFile, setFotoFile] = useState<File | null>(null);
+  const [cropperModal, setCropperModal] = useState(false);
 
-  // Atualiza os dados quando o user for carregado
+  //atualiza os dados quando o user for carregado
   useEffect(() => {
     if (user) {
       setNomeEditado(user.nome ?? "");
@@ -40,36 +44,82 @@ export default function UserProfile() {
     }
   }, [user]);
 
-
   //metodo para mudança de foto
   const handleFotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const imgUrl = URL.createObjectURL(file);
       setPreviewFoto(imgUrl);
-      setMensagem(null);
+      setFotoFile(file);
+      setCropperModal(true);
     }
+  };
+
+  const handleSaveCroppedImage = (croppedImage: File) => {
+    const imgUrl = URL.createObjectURL(croppedImage);
+    setPreviewFoto(imgUrl);
+    setFotoFile(croppedImage); //salva a imagem recortada
+  };
+
+  const handleCloseModal = () => {
+    setCropperModal(false); //fecha o modal
   };
 
   //salvar alterações
-  const handleSalvar = () => {
-    if (novaSenha && novaSenha !== confirmarSenha) {
-      setMensagem("As senhas não coincidem.");
-      return;
-    }
+  const handleSalvar = async () => {
+    try {
+      if (novaSenha && novaSenha !== confirmarSenha) {
+        setMensagem("As senhas não coincidem.");
+        return;
+      }
 
-    setMensagem("Informações salvas com sucesso!");
-    setSenhaAtual("");
-    setNovaSenha("");
-    setConfirmarSenha("");
-    setEditando(false);
-    setEditandoSenha(false);
+      const id = user?.id;
+      if (!id) {
+        setMensagem("Usuário não identificado.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("nome", nomeEditado);
+      formData.append("email", emailEditado);
+      if (novaSenha) {
+        formData.append("senha", novaSenha);
+      }
+      if (fotoFile) {
+        formData.append("foto", fotoFile);
+      }
+
+      const response = await axios.put(
+        `http://localhost:3000/user/edit/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMensagem("Informações salvas com sucesso!");
+      setSenhaAtual("");
+      setNovaSenha("");
+      setConfirmarSenha("");
+      setEditando(false);
+      setEditandoSenha(false);
+      setFotoFile(null);
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      setMensagem("Erro ao salvar alterações.");
+    }
   };
+
 
   const handleCancelar = () => {
     setNomeEditado(user?.nome || "");
     setEmailEditado(user?.email || "");
-    setPreviewFoto(null);
+    setPreviewFoto(user?.fotoPerfilUrl || null);
     setSenhaAtual("");
     setNovaSenha("");
     setConfirmarSenha("");
@@ -87,31 +137,55 @@ export default function UserProfile() {
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:items-start">
           {/*div para a foto*/}
           <div className="relative w-50 h-50 sm:w-36 sm:h-36 md:w-44 md:h-44">
-            {/*previewFoto || user.foto ? (
-              //se houver foto do usuário exibe 
+            {editando ? (
+              <>
+                <label
+                  htmlFor="foto"
+                  className="flex flex-col items-center justify-center w-full h-full border-2 border-dashed border-yellow-400 text-textYellow rounded-full text-center cursor-pointer hover:border-yellow-300 transition relative overflow-hidden"
+                >
+                  {previewFoto || user?.fotoPerfilUrl ? (
+                    <img
+                      src={previewFoto || `http://localhost:3000/uploads/${user?.fotoPerfilUrl}`}
+                      alt="Foto do usuário"
+                      className="absolute top-0 left-0 w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <>
+                      <Plus size={24} className="text-textYellow" />
+                      <span className="text-xs text-textSecondary mt-1">Adicionar imagem</span>
+                    </>
+                  )}
+                </label>
+                <input
+                  id="foto"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFotoChange}
+                  className="hidden"
+                />
+              </>
+            ) : previewFoto || user?.fotoPerfilUrl ? (
               <img
-                src={previewFoto || user.foto}
+                src={previewFoto || `http://localhost:3000/uploads/${user?.fotoPerfilUrl}`}
                 alt="Foto do usuário"
                 className="rounded-full object-cover w-full h-full border"
               />
-            ) : (*/
-              //se não houver foto do usuário exibe icone para adicionar
-              <label
-                htmlFor="foto"
-                className="flex flex-col items-center justify-center w-full h-full border-2 border-dashed text-textYellow rounded-full text-center cursor-pointer hover:border-yellow-200 transition"
-              >
-                <Plus size={24} className="text-textYellow" />
-                <span className="text-xs text-textSecondary mt-1">Adicionar imagem</span>
-              </label>
-            /*)*/}
-            <input
-              id="foto"
-              type="file"
-              accept="image/*"
-              onChange={handleFotoChange}
-              className="hidden"
-            />
+            ) : (
+              <div className="w-full h-full rounded-full border border-black flex items-center justify-center">
+                <User size={150} />
+              </div>
+            )}
+
+
           </div>
+
+          {cropperModal && (
+            <ImageCropper
+              image={previewFoto}
+              onClose={handleCloseModal}
+              onSave={handleSaveCroppedImage}
+            />
+          )}
 
           <div className="text-center sm:text-left space-y-1">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-textPrimary">
