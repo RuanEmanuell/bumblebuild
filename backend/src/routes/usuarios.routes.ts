@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { UsuarioController } from "../controllers/usuarios.controller";
 import { autenticarToken } from "../middlewares/authMiddleware";
+import { upload } from "../config/upload";
 
 const router = Router();
 const usuarioController = new UsuarioController();
@@ -12,6 +13,7 @@ router.post("/create", async (req: Request, res: Response) => {
     console.error(error);
   }
 });
+
 router.post("/login", async (req: Request, res: Response) => {
   try {
     await usuarioController.loginUsuario(req, res);
@@ -51,6 +53,20 @@ router.get("/logado", autenticarToken, async (req: Request, res: Response) => {
     console.error(error);
   }
 });
+
+router.put(
+  "/edit/:id",
+  autenticarToken,
+  upload.single("foto"),
+  async (req: Request, res: Response) => {
+    try {
+      await usuarioController.editUsuario(req, res);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
 
 
 export default router;

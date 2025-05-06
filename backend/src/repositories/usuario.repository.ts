@@ -2,6 +2,7 @@ import { PrismaClient, Prisma } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class UsuarioRepository {
+
   async criarUsuario(dados: Prisma.UsuarioCreateInput) {
     return prisma.usuario.create({
       data: {
@@ -13,6 +14,7 @@ export class UsuarioRepository {
       }
     });
   }
+
   async buscarPorEmail(email: string) {
     return prisma.usuario.findUnique({ where: { email } });
   }
@@ -52,5 +54,15 @@ export class UsuarioRepository {
       data: { senha: novaSenha },
     });
   }
-  
+
+  async atualizarUsuario(id: number, dados: Partial<Prisma.UsuarioUpdateInput>) {
+    return prisma.usuario.update ({
+      where: {id},
+      data: {
+        ...dados,
+        updatedAt: new Date()
+      }
+    });
+  }
+
 }

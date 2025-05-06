@@ -5,14 +5,7 @@ import { Link } from "react-router-dom";
 import CartIcon from "./CartIcon";
 import { useAuth } from "../hooks/useAuth";
 
-interface HeaderProps {
-    user?: {
-        name: string;
-        photo?: string;
-    };
-}
-
-const HeaderCustom: React.FC<HeaderProps> = () => {
+const HeaderCustom: React.FC = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const { user } = useAuth();
 
@@ -40,15 +33,17 @@ const HeaderCustom: React.FC<HeaderProps> = () => {
 
                 {user ? (
                     <div className="flex items-center gap-2">
-                        {/* {user?.photo ? (
-                        <img
-                            src={user.photo}
-                            alt="Foto usuário"
-                            className="w-8 h-8 rounded-full object-cover"
-                        />
-                        ) : ( */}
-                        <User size={20} className="text-textPrimary" />
-                        {/* )} */}
+                        {user?.fotoPerfilUrl ? (
+                            <img
+                                src={`http://localhost:3000/uploads/${user?.fotoPerfilUrl}`}
+                                alt="Foto usuário"
+                                className="w-8 h-8 rounded-full object-cover border"
+                            />
+                        ) : (
+                            <div className="w-full h-full rounded-full border border-black flex items-center justify-center">
+                                <User size={20} />
+                            </div>
+                        )}
                         <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.nome}</Link></span>
 
                     </div>

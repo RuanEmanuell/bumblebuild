@@ -3,11 +3,13 @@ import { Usuario } from "../models/Usuario";
 
 export const useAuth = () => {
     const [user, setUser] = useState<Usuario | null>(null);
+    const [token, setToken] = useState<string | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
 
         if (token) {
+            setToken(token);
             fetch("http://localhost:3000/user/logado", {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -31,5 +33,5 @@ export const useAuth = () => {
         }
     }, []);
 
-    return { user, setUser };
+    return { user, setUser, token };
 };

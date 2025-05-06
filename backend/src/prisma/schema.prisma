@@ -25,6 +25,7 @@ model Usuario {
   status       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+    fotoPerfilUrl   String?
 
   tokensRecuperacao TokenRecuperacaoSenha[]
 
@@ -32,15 +33,14 @@ model Usuario {
 }
 
 model Peca {
-  id        Int      @id @default(autoincrement())
-  nome      String
-  marca     String
-  preco     Float
-  tipo      TipoPeca
-  imagemUrl String?
-  createdAt DateTime @default(now())
-
-  linksPreco LinkPreco[]
+  id         Int      @id @default(autoincrement())
+  nome       String
+  marca      String
+  preco      Float
+  tipo       TipoPeca
+  imagemUrl  String?
+  linkPreco  String?   
+  createdAt  DateTime @default(now())
 
   cpu      CPU?      @relation(name: "CPUToPeca")
   gpu      GPU?      @relation(name: "GPUToPeca")

@@ -40,7 +40,7 @@ export default function Auth() {
       const response = await axios.post("http://localhost:3000/user/login", {
         email: email,
         senha: password,
-    });
+      });
       console.log("User logged in:", response.data);
       alert("Usuário fez login!");
       const { token } = response.data;

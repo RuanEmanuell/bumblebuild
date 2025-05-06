@@ -6,5 +6,6 @@ export interface Usuario {
   senha: string;
   status?: boolean;
   createdAt?: Date;
+  fotoPerfilUrl?: string;
   updatedAt?: Date;
 }
