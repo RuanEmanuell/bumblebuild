@@ -59,6 +59,8 @@ model Peca {
   montagensFonte    Montagem[] @relation("MontagemFonte")
   montagensSsd      Montagem[] @relation("MontagemSsd")
   montagensGabinete Montagem[] @relation("MontagemGabinete")
+
+  LinkPreco LinkPreco[]
 }
 
 model LinkPreco {
