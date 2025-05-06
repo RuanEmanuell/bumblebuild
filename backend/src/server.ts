@@ -1,6 +1,7 @@
 import express from "express";
 import usuarios from "./routes/usuarios.routes";
 import pecas from "./routes/pecas.routes";
+import "./utils/cron";
 import path from "path";
 // import montagens from "./routes/montagem.routes"; 
 
