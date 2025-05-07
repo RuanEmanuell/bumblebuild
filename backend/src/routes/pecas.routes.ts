@@ -7,6 +7,7 @@ const pecaController = new PecaController();
 
 router.post("/create", async (req: Request, res: Response) => {
   try {
+
     await pecaController.criarPeca(req, res);
   } catch (error) {
     console.error(error);

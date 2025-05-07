@@ -31,7 +31,7 @@ export class UsuarioService {
 
     if (!process.env.SECRET_JWT) throw new Error("SECRET_JWT não definido!");
 
-    const token = jwt.sign({ id: usuario.id, email: usuario.email }, process.env.SECRET_JWT, { expiresIn: "1h" });
+    const token = jwt.sign({ id: usuario.id, email: usuario.email, tipo_usuario: usuario.tipo_usuario }, process.env.SECRET_JWT, { expiresIn: "1h" });
     return token;
   }
 

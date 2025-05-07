@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { UsuarioController } from "../controllers/usuarios.controller";
-import { autenticarUsuario } from "../middlewares/authMiddleware";
+import { autenticarToken } from "../middlewares/authMiddleware";
 import { upload } from "../config/upload";
 
 const router = Router();
@@ -46,7 +46,7 @@ router.post("/redefinir-senha", async(req: Request, res: Response) => {
   }
 });
 
-router.get("/logado", autenticarUsuario, async (req: Request, res: Response) => {
+router.get("/logado", autenticarToken, async (req: Request, res: Response) => {
   try {
     await usuarioController.getUsuarioLogado(req, res);
   } catch (error) {
@@ -56,7 +56,7 @@ router.get("/logado", autenticarUsuario, async (req: Request, res: Response) => 
 
 router.put(
   "/edit/:id",
-  autenticarUsuario,
+  autenticarToken,
   upload.single("foto"),
   async (req: Request, res: Response) => {
     try {

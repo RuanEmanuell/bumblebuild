@@ -141,7 +141,6 @@ export default function PartDashboard() {
             <p className="text-2xl font-bold">{dados.totalPecas}</p>
           </div>
         </section>
-
         <div className="px-6 md:px-12 py-4 flex justify-end">
           <ButtonPrimary onClick={() => abrirModal()}>Adicionar Peça</ButtonPrimary>
         </div>
