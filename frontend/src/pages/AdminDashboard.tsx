@@ -5,7 +5,7 @@ import { BarChart, Users, Settings, Cpu } from "lucide-react";
 import HeaderCustom from "../components/Header";
 
 export default function AdminDashboard() {
-    const [dados, setDados] = useState({
+    const [dados] = useState({
         totalUsuarios: 82,
         totalPecas: 145,
         totalMontagens: 37

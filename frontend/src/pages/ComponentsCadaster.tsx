@@ -18,7 +18,7 @@ export default function ComponentsCadaster() {
   const [formData, setFormData] = useState<Record<string, any>>({});
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<any>
   ) => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
@@ -299,7 +299,7 @@ export default function ComponentsCadaster() {
                   <option value="RAM">RAM</option>
                 </select>
 
-                <ButtonHome type="button" onClick={handleNext} disabled={!type}>
+                <ButtonHome type="button" onClick={handleNext}>
                   Avançar →
                 </ButtonHome>
               </motion.div>
@@ -328,7 +328,7 @@ export default function ComponentsCadaster() {
         </form>
       </main>
 
-      <Footer className="mt-auto" />
+      <Footer />
     </div>
   );
 }

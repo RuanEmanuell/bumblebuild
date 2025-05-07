@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, KeyboardEvent, FormEvent } from 'react';
+import React, { useState, KeyboardEvent, FormEvent } from 'react';
 import { useLocation } from 'react-router-dom';
 import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';

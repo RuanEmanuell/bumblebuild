@@ -37,7 +37,7 @@ export default function Auth() {
   const handleLogin = async () => {
     console.log("Realizando login com:", { email, password });
     try {
-      const response = await axios.post("http://localhost:3000/user/login", {
+      const response : any = await axios.post("http://localhost:3000/user/login", {
         email: email,
         senha: password,
       });

@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { userService } from '../service/userService';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { ButtonHome } from "../components/ButtonHome";
@@ -13,11 +11,9 @@ import setupExemplo from "../assets/setupexemplo.jpg";
 import setupZe from "../assets/pc_do_ze.jpg";
 import pcIcon from "../assets/pc.png";
 import HeaderCustom from '../components/Header';
-import PcConfigForm from './PcConfigForm';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Home() {
-    const navigate = useNavigate();
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
     const {user} = useAuth();
 
