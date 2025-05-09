@@ -8,7 +8,7 @@ const cpuController = new CPUController();
 router.post("/create",autenticarToken, isAdmin, async (req: Request, res: Response) => {
   try {
 
-    await cpuController.criar(req, res);
+    await cpuController.create(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -16,7 +16,7 @@ router.post("/create",autenticarToken, isAdmin, async (req: Request, res: Respon
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    await cpuController.listar(req, res);
+    await cpuController.list(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -24,7 +24,7 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/:id", async (req: Request, res: Response) => {
   try {
-    await cpuController.buscar(req, res);
+    await cpuController.search(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -32,7 +32,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.put("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) => {
   try {
-    await cpuController.atualizar(req, res);
+    await cpuController.update(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -40,7 +40,7 @@ router.put("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) 
 
 router.delete("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) => {
   try {
-    await cpuController.deletar(req, res);
+    await cpuController.delete(req, res);
   } catch (error) {
     console.error(error);
   }

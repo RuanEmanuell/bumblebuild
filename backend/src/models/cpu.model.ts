@@ -1,6 +1,6 @@
 export interface CPU {
     id: number;
-    nome: string;
+    name: string;
     socket: string;
     linha: string;
   }

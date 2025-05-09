@@ -23,22 +23,22 @@ export class CPUService {
       },
     };
 
-    return cpuRepository.criar(cpuData);
+    return cpuRepository.create(cpuData);
   }
 
   listarCPUs() {
-    return cpuRepository.listar();
+    return cpuRepository.list();
   }
 
   buscarCPU(id: number) {
-    return cpuRepository.buscarPorId(id);
+    return cpuRepository.searchById(id);
   }
 
   atualizarCPU(id: number, data: any) {
-    return cpuRepository.atualizar(id, data);
+    return cpuRepository.update(id, data);
   }
 
   deletarCPU(id: number) {
-    return cpuRepository.deletar(id);
+    return cpuRepository.delete(id);
   }
 }
