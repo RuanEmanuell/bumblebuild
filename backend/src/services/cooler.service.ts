@@ -3,23 +3,23 @@ import { COOLERRepository } from '../repositories/cooler.repository';
 const coolerRepository = new COOLERRepository();
 
 export class CoolerService {
-  criarCooler(data: any) {
+  createCooler(data: any) {
     return coolerRepository.criar(data);
   }
 
-  listarCoolers() {
+  listCoolers() {
     return coolerRepository.listar();
   }
 
-  buscarCooler(id: number) {
+  searchCooler(id: number) {
     return coolerRepository.buscarPorId(id);
   }
 
-  atualizarCooler(id: number, data: any) {
+  updateCooler(id: number, data: any) {
     return coolerRepository.atualizar(id, data);
   }
 
-  deletarCooler(id: number) {
+  deleteCooler(id: number) {
     return coolerRepository.deletar(id);
   }
 }

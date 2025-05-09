@@ -2,7 +2,7 @@
 
 
 import express from "express";
-import usuarios from "./routes/usuarios.routes";
+import users from "./routes/usuarios.routes";
 import pecas from "./routes/pecas.routes";
 import cpu from "./routes/cpu.routes";
 import gpu from "./routes/gpu.routes";
@@ -25,7 +25,7 @@ app.use(cors());
 app.use(express.json());
 
 // Rotas
-app.use("/user", usuarios);
+app.use("/user", users);
 app.use("/pecas", pecas); 
 app.use("/cpu", cpu);
 app.use("/gpu", gpu);
