@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ButtonHome } from "../components/ButtonHome";
 import { ProductCard } from "../components/ProductCard";
 import Footer from '../components/Footer';
-import { Categorias } from "../components/Categorias";
+import { Categories } from "../components/Categories";
 
 //imagens dos produtos
 import setupExemplo from "../assets/setupexemplo.jpg";
@@ -14,28 +14,29 @@ import HeaderCustom from '../components/Header';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Home() {
-    const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
-    const {user} = useAuth();
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const { user } = useAuth();
 
-    const produtosExemplos = [
-        { nome: "Pc do Ruan Emanuel", preco: "R$ 5993", estrelas: 4.6, imagem: setupExemplo, categoria: "GPU" },
-        { nome: "Pc da Alyne", preco: "R$ 3992", estrelas: 4.2, imagem: setupExemplo, categoria: "SSD" },
-        { nome: "Pc Do Gabriel", preco: "R$ 4920", estrelas: 4.4, imagem: setupExemplo, categoria: "CPU" },
-        { nome: "Pc do Maurao", preco: "R$ 6000", estrelas: 5.0, imagem: setupExemplo, categoria: "RAM" },
-        { nome: "Pc do Ze Patolino", preco: "R$ 0", estrelas: 0.5, imagem: setupZe, categoria: "COOLER" },
-        { nome: "PC do Bolsonaro", preco: "R$ 2230", estrelas: 3.3, imagem: setupExemplo, categoria: "MOTHERBOARD" }
+    const sampleProducts = [
+        { name: "Pc do Ruan Emanuel", price: "R$ 5993", stars: 4.6, image: setupExemplo, category: "GPU" },
+        { name: "Pc da Alyne", price: "R$ 3992", stars: 4.2, image: setupExemplo, category: "SSD" },
+        { name: "Pc Do Gabriel", price: "R$ 4920", stars: 4.4, image: setupExemplo, category: "CPU" },
+        { name: "Pc do Maurao", price: "R$ 6000", stars: 5.0, image: setupExemplo, category: "RAM" },
+        { name: "Pc do Ze Patolino", price: "R$ 0", stars: 0.5, image: setupZe, category: "COOLER" },
+        { name: "PC do Bolsonaro", price: "R$ 2230", stars: 3.3, image: setupExemplo, category: "MOTHERBOARD" }
     ];
 
-    const produtosFiltrados = categoriaSelecionada
-        ? produtosExemplos.filter(p => p.categoria === categoriaSelecionada)
-        : produtosExemplos;
+    const filteredProducts = selectedCategory
+        ? sampleProducts.filter(p => p.category === selectedCategory)
+        : sampleProducts;
+
 
     return (
         <div className="bg-white text-black min-h-screen">
             <HeaderCustom />
 
             <div className="px-6 py-4 text-lg md:text-xl font-medium">
-                {user ? `Olá, ${user.nome}! Bem-vindo de volta.` : "Olá! Faça login para aproveitar melhor a experiência."}
+                {user ? `Olá, ${user.name}! Bem-vindo de volta.` : "Olá! Faça login para aproveitar melhor a experiência."}
             </div>
 
             <section className="flex flex-col md:flex-row items-center justify-center gap-8 px-6 py-12">
@@ -45,7 +46,7 @@ export default function Home() {
                     </h2>
                     <Link
                         to="/pc-registration"
-                        state={{ pecasDisponiveis: produtosExemplos }}
+                        state={{ pecasDisponiveis: sampleProducts }}
                     >
                         <ButtonHome className="bg-black text-white px-6 py-3 rounded-xl text-sm font-bold hover:underline">
                             Montar meu PC →
@@ -60,23 +61,23 @@ export default function Home() {
                 />
             </section>
 
-            <Categorias
-                categoriaSelecionada={categoriaSelecionada}
-                setCategoriaSelecionada={setCategoriaSelecionada}
+            <Categories
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
             />
 
             <section className="px-6 md:px-12 py-8">
                 <h3 className="text-xl font-semibold mb-6">
-                    {categoriaSelecionada ? `Produtos de ${categoriaSelecionada}` : "Em destaque"}
+                    {selectedCategory ? `Produtos de ${selectedCategory}` : "Em destaque"}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {produtosFiltrados.map((produto, index) => (
+                    {filteredProducts.map((product, index) => (
                         <motion.div key={index} whileHover={{ scale: 1.03 }}>
                             <ProductCard
-                                nome={produto.nome}
-                                preco={produto.preco}
-                                estrelas={produto.estrelas}
-                                imagem={produto.imagem}
+                                name={product.name}
+                                price={product.price}
+                                stars={product.stars}
+                                image={product.image}
                             />
                         </motion.div>
                     ))}

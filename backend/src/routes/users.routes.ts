@@ -1,14 +1,14 @@
 import { Router, Request, Response } from "express";
-import { UsuarioController } from "../controllers/user.controller";
+import { UserController } from "../controllers/user.controller";
 import { authenticateToken } from "../middlewares/authMiddleware";
 import { upload } from "../config/upload";
 
 const router = Router();
-const usuarioController = new UsuarioController();
+const userController = new UserController();
 
 router.post("/create", async (req: Request, res: Response) => {
   try {
-    await usuarioController.create(req, res);
+    await userController.create(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -16,7 +16,7 @@ router.post("/create", async (req: Request, res: Response) => {
 
 router.post("/login", async (req: Request, res: Response) => {
   try {
-    await usuarioController.login(req, res);
+    await userController.login(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -24,7 +24,7 @@ router.post("/login", async (req: Request, res: Response) => {
 
 router.post("/logout", async (req: Request, res: Response) => {
   try {
-    await usuarioController.logout(req, res);
+    await userController.logout(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -32,7 +32,7 @@ router.post("/logout", async (req: Request, res: Response) => {
 
 router.post("/recuperar-senha", async(req: Request, res: Response) => {
   try {
-    await usuarioController.requestPasswordReset(req,res);
+    await userController.requestPasswordReset(req,res);
   }catch(error) {
     console.error(error);
   }
@@ -40,7 +40,7 @@ router.post("/recuperar-senha", async(req: Request, res: Response) => {
 
 router.post("/redefinir-senha", async(req: Request, res: Response) => {
   try {
-    await usuarioController.resetPassword(req,res);
+    await userController.resetPassword(req,res);
   }catch(error) {
     console.error(error);
   }
@@ -48,7 +48,7 @@ router.post("/redefinir-senha", async(req: Request, res: Response) => {
 
 router.get("/logado", authenticateToken, async (req: Request, res: Response) => {
   try {
-    await usuarioController.getLoggedUser(req, res);
+    await userController.getLoggedUser(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -60,7 +60,7 @@ router.put(
   upload.single("foto"),
   async (req: Request, res: Response) => {
     try {
-      await usuarioController.update(req, res);
+      await userController.update(req, res);
     } catch (error) {
       console.error(error);
     }

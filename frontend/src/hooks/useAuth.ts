@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Usuario } from "../models/Usuario";
+import { User } from "../models/User";
 
 export const useAuth = () => {
-    const [user, setUser] = useState<Usuario | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
 
     useEffect(() => {

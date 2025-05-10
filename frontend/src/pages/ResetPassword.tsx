@@ -22,9 +22,9 @@ export default function ResetPassword() {
     }
 
     try {
-      await axios.post("http://localhost:8080/user/redefinir-senha", {
+      await axios.post("http://localhost:8080/user/reset-password", {
         token,
-        novaSenha: password,
+        newPassword: password,
       });
       setMessage("Senha alterada com sucesso!");
       setError("");

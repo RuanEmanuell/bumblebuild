@@ -33,9 +33,9 @@ const HeaderCustom: React.FC = () => {
 
                 {user ? (
                     <div className="flex items-center gap-2">
-                        {user?.fotoPerfilUrl ? (
+                        {user?.profilePictureUrl ? (
                             <img
-                                src={`http://localhost:3000/uploads/${user?.fotoPerfilUrl}`}
+                                src={`http://localhost:3000/uploads/${user?.profilePictureUrl}`}
                                 alt="Foto usuário"
                                 className="w-8 h-8 rounded-full object-cover border"
                             />
@@ -44,7 +44,7 @@ const HeaderCustom: React.FC = () => {
                                 <User size={20} />
                             </div>
                         )}
-                        <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.nome}</Link></span>
+                        <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.name}</Link></span>
 
                     </div>
                 ) : (
@@ -84,7 +84,7 @@ const HeaderCustom: React.FC = () => {
                     {user ? (
                         <div className="flex items-center gap-2">
                             <User size={20} className="text-textPrimary" />
-                            <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.nome}</Link></span>
+                            <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.name}</Link></span>
                         </div>
                     ) : (
                         <div className="flex gap-1">

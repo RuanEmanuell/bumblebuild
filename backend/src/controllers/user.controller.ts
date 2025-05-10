@@ -3,12 +3,12 @@ import { UserService } from "../services/user.service";
 
 const userService = new UserService();
 
-export class UsuarioController {
+export class UserController {
   
   create = async (req: Request, res: Response) => {
     try {
-      const { type_user, name, email, password } = req.body;
-      await userService.createUser(type_user, name, email, password);
+      const { userType, name, email, password } = req.body;
+      await userService.createUser(userType, name, email, password);
       return res.status(201).json({ message: "Usuário criado com sucesso!" });
     } catch (error: any) {
       return res.status(400).json({ error: error.message });
