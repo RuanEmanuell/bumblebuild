@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { LogoTertiary } from "../components/Logo";
 import { Heart, User, Menu, X } from "react-feather";
 import { Link } from "react-router-dom";
-import CartIcon from "./CartIcon";
 import { useAuth } from "../hooks/useAuth";
 
 const HeaderCustom: React.FC = () => {
@@ -20,7 +19,6 @@ const HeaderCustom: React.FC = () => {
             <div className="flex items-center gap-4 md:hidden">
                 <Heart size={22} className="hover:cursor-pointer hover:opacity-80" />
                 <div className="relative">
-                    <CartIcon></CartIcon>
                 </div>
                 <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
                     {menuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -60,10 +58,6 @@ const HeaderCustom: React.FC = () => {
 
                 <Heart size={22} className="hover:cursor-pointer hover:opacity-80" />
 
-                {/*cart com contador */}
-                <div className="relative">
-                    <CartIcon></CartIcon>
-                </div>
             </nav>
 
             {/*menu mobile*/}
