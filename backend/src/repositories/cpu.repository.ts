@@ -7,11 +7,11 @@ export class CPURepository {
   }
 
   async list() {
-    return prisma.cPU.findMany({ include: { peca: true } });
+    return prisma.cPU.findMany({ include: { part: true } });
   }
 
   async searchById(id: number) {
-    return prisma.cPU.findUnique({ where: { id }, include: { peca: true } });
+    return prisma.cPU.findUnique({ where: { id }, include: { part: true } });
   }
 
   async update(id: number, data: Prisma.CPUUpdateInput) {

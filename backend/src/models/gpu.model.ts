@@ -1,8 +1,7 @@
 export interface GPU {
-    id: number;
-    memoriaGB: number;
-    tipoMemoria: string;
-    tdp: number;
-    comprimentoMM: number;
-  }
-  
+  id: number;
+  memoryGB: number;
+  memoryType: string;
+  tdp: number;
+  lengthMM: number;
+}

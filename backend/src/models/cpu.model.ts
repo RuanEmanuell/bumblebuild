@@ -1,6 +1,11 @@
 export interface CPU {
-    id: number;
-    name: string;
-    socket: string;
-    linha: string;
-  }
+  id: number;
+  socket: string;
+  name: string;
+  line: string;
+  cores: number;  
+  threads: number;
+  frequency: number;
+  tdp: number;
+  integratedGraphics: boolean;
+}

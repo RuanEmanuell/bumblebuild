@@ -1,11 +1,11 @@
 import { Router, Request, Response } from "express";
 import { CoolerController } from "../controllers/cooler.controller";
-import { autenticarToken, isAdmin, verifyToken } from "../middlewares/authMiddleware";
+import { authenticateToken, isAdmin, verifyToken } from "../middlewares/authMiddleware";
 
 const router = Router();
 const coolerController = new CoolerController();
 
-router.post("/create",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.post("/create", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
 
     await coolerController.create(req, res);
@@ -30,7 +30,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.put("/:id", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
     await coolerController.update(req, res);
   } catch (error) {
@@ -38,7 +38,7 @@ router.put("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) 
   }
 });
 
-router.delete("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.delete("/:id", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
     await coolerController.delete(req, res);
   } catch (error) {

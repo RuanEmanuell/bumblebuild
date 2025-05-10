@@ -1,14 +1,14 @@
 import { Router, Request, Response } from "express";
 import { GPUController } from "../controllers/gpu.controller";
-import { autenticarToken, isAdmin, verifyToken } from "../middlewares/authMiddleware";
+import { authenticateToken, isAdmin, verifyToken } from "../middlewares/authMiddleware";
 
 const router = Router();
 const gpuController = new GPUController();
 
-router.post("/create",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.post("/create", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
 
-    await gpuController.criar(req, res);
+    await gpuController.create(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -16,7 +16,7 @@ router.post("/create",autenticarToken, isAdmin, async (req: Request, res: Respon
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    await gpuController.listar(req, res);
+    await gpuController.list(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -24,23 +24,23 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/:id", async (req: Request, res: Response) => {
   try {
-    await gpuController.buscar(req, res);
+    await gpuController.search(req, res);
   } catch (error) {
     console.error(error);
   }
 });
 
-router.put("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.put("/:id", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
-    await gpuController.atualizar(req, res);
+    await gpuController.update(req, res);
   } catch (error) {
     console.error(error);
   }
 });
 
-router.delete("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.delete("/:id", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
-    await gpuController.deletar(req, res);
+    await gpuController.delete(req, res);
   } catch (error) {
     console.error(error);
   }

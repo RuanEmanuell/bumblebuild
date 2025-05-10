@@ -1,25 +1,25 @@
-import { COOLERRepository } from '../repositories/cooler.repository';
+import { CoolerRepository } from '../repositories/cooler.repository';
 
-const coolerRepository = new COOLERRepository();
+const coolerRepository = new CoolerRepository();
 
 export class CoolerService {
   createCooler(data: any) {
-    return coolerRepository.criar(data);
+    return coolerRepository.create(data);
   }
 
   listCoolers() {
-    return coolerRepository.listar();
+    return coolerRepository.list();
   }
 
   searchCooler(id: number) {
-    return coolerRepository.buscarPorId(id);
+    return coolerRepository.searchById(id);
   }
 
   updateCooler(id: number, data: any) {
-    return coolerRepository.atualizar(id, data);
+    return coolerRepository.update(id, data);
   }
 
   deleteCooler(id: number) {
-    return coolerRepository.deletar(id);
+    return coolerRepository.delete(id);
   }
 }

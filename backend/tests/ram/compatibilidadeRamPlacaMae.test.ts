@@ -1,49 +1,49 @@
-import { verificarCompatibilidadeRamPlacaMae } from "../../src/services/compatibilidade.service";
+import { checkRamMotherboardCompatibility } from "../../src/services/compatibility.service";
 import { RAM } from "../../src/models/ram.model"; 
-import { PlacaMae } from "../../src/models/placaMae.model";
+import { Motherboard } from "../../src/models/motherboard.model";
 
 describe("Compatibilidade RAM e Placa-mãe", () => {
-  it("deve retornar true para tipo de RAM compatível", () => {
+  it("deve retornar true para type de RAM compatível", () => {
     const ram: RAM = {
       id: 1,
-      capacidadeGB: 16,
-      tipo: "DDR4",
-      frequencia: 3200,
+      capacityGB: 16,
+      type: "DDR4",
+      frequency: 3200,
     };
 
-    const placaMae: PlacaMae = {
+    const motherboard: Motherboard = {
       id: 1,
-      nome: "Gigabyte B450",
+      name: "Gigabyte B450",
       socket: "AM4",
       chipset: "B450",
-      compatibilidadeLinhaCpu: ["Ryzen"],
-      tipoRAM: "DDR4",
-      tamanho: "ATX",
+      cpuCompatibilityLine: ["Ryzen"],
+      ramType: "DDR4",
+      size: "ATX",
       slots: 4,
     };
 
-    expect(verificarCompatibilidadeRamPlacaMae(ram, placaMae)).toBe(true);
+    expect(checkRamMotherboardCompatibility(ram, motherboard)).toBe(true);
   });
 
-  it("deve retornar false para tipo de RAM incompatível", () => {
+  it("deve retornar false para type de RAM incompatível", () => {
     const ram: RAM = {
       id: 1,
-      capacidadeGB: 16,
-      tipo: "DDR5",
-      frequencia: 5200,
+      capacityGB: 16,
+      type: "DDR5",
+      frequency: 5200,
     };
 
-    const placaMae: PlacaMae = {
+    const motherboard: Motherboard = {
       id: 1,
-      nome: "Gigabyte B450",
+      name: "Gigabyte B450",
       socket: "AM4",
       chipset: "B450",
-      compatibilidadeLinhaCpu: ["Ryzen"],
-      tipoRAM: "DDR4",
-      tamanho: "ATX",
+      cpuCompatibilityLine: ["Ryzen"],
+      ramType: "DDR4",
+      size: "ATX",
       slots: 4,
     };
 
-    expect(verificarCompatibilidadeRamPlacaMae(ram, placaMae)).toBe(false);
+    expect(checkRamMotherboardCompatibility(ram, motherboard)).toBe(false);
   });
 });

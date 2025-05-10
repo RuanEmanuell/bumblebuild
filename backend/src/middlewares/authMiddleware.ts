@@ -15,7 +15,7 @@ export function blackListToken(token: string): void {
   blacklist.push(token);
 }
 
-export function autenticarToken(req: Request, res: Response, next: NextFunction): void {
+export function authenticateToken(req: Request, res: Response, next: NextFunction): void {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
@@ -29,11 +29,11 @@ export function autenticarToken(req: Request, res: Response, next: NextFunction)
     const decoded = jwt.verify(token, process.env.SECRET_JWT as string) as {
       id: number;
       email: string;
-      tipo_usuario: string;
-      nome: string;
+      userType: string;
+      name: string;
     };
 
-    req.usuario = decoded;
+    req.user = decoded;
     next();
   } catch (error) {
     res.status(401).json({ message: "Token inválido" });
@@ -44,14 +44,14 @@ export function autenticarToken(req: Request, res: Response, next: NextFunction)
 
 
 export function isAdmin(req: Request, res: Response, next: NextFunction): void {
-  const usuario = req.usuario;
-  console.log(usuario);
-  if(!usuario) {
+  const user = req.user;
+  console.log(user);
+  if(!user) {
     res.status(401).json({ message: "Usuário não autenticado" });
     return 
   }
 
-  if(usuario.tipo_usuario !== "ADMIN") {
+  if(user.userType !== "ADMIN") {
     res.status(403).json({ message: "Acesso negado" });
     return 
   }

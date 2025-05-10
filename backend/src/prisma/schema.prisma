@@ -7,128 +7,133 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model TokenRecuperacaoSenha {
+model PasswordRecoveryToken { 
   id         String   @id @default(uuid())
   token      String   @unique
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
-  usuarioId  Int
+  user       User     @relation(fields: [userId], references: [id]) 
+  userId     Int     
   createdAt  DateTime @default(now())
-  experiedAt DateTime
+  expiredAt  DateTime 
 }
 
-model Usuario {
-  id           Int      @id @default(autoincrement())
-  tipo_usuario String
-  nome         String
-  email        String   @unique
-  senha        String
-  status       Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  fotoPerfilUrl   String?
+model User { 
+  id                 Int      @id @default(autoincrement())
+  userType           String   
+  name               String   
+  email              String   @unique
+  password           String   
+  status             Boolean  @default(true)
+  profilePictureUrl  String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
-  tokensRecuperacao TokenRecuperacaoSenha[]
+  passwordRecoveryTokens PasswordRecoveryToken[] 
 }
 
-model Peca {
-  id         Int       @id @default(autoincrement())
-  nome       String
-  marca      String
-  preco      Float
-  tipo       TipoPeca
-  imagemUrl  String?
-  linkPreco  String?   
-  createdAt  DateTime  @default(now())
+model Part { 
+  id          Int           @id @default(autoincrement())
+  name        String    
+  brand       String    
+  price       Float     
+  type        PartType  
+  imageUrl    String?   
+  priceLink   String?  
+  createdAt   DateTime      @default(now())
 
-  cpu        CPU?      @relation(name: "CPUToPeca")
-  gpu        GPU?      @relation(name: "GPUToPeca")
-  ram        RAM?      @relation(name: "RAMToPeca")
-  ssd        SSD?      @relation(name: "SSDToPeca")
-  fonte      Fonte?    @relation(name: "FonteToPeca")
-  gabinete   Gabinete? @relation(name: "GabineteToPeca")
-  placaMae   PlacaMae? @relation(name: "PlacaMaeToPeca")
-  cooler     Cooler?   @relation(name: "CoolerToPeca")
-
-
+  cpu         CPU?          @relation(name: "CPUToPart") 
+  gpu         GPU?          @relation(name: "GPUToPart") 
+  ram         RAM?          @relation(name: "RAMToPart") 
+  ssd         SSD?          @relation(name: "SSDToPart")
+  psu         PSU?          @relation(name: "PSUToPart") 
+  case        Case?         @relation(name: "CaseToPart")
+  motherboard Motherboard?  @relation(name: "MotherboardToPart") 
+  cooler      Cooler?       @relation(name: "CoolerToPart")
 }
 
-enum TipoPeca {
+enum PartType { 
   CPU
   GPU
   RAM
   SSD
-  FONTE
-  GABINETE
-  PLACA_MAE
+  PSU
+  CASE           
+  MOTHERBOARD   
   COOLER
 }
 
-model CPU {
+model CPU { 
   id                 Int     @id
+  name               String
   socket             String
-  nucleos            Int
+  line               String
+  cores              Int     
   threads            Int
-  frequencia         Float
+  frequency          Float   
   tdp                Int
-  graficosIntegrados Boolean
-  peca               Peca    @relation(name: "CPUToPeca", fields: [id], references: [id])
+  integratedGraphics Boolean 
+  part               Part    @relation(name: "CPUToPart", fields: [id], references: [id])
 }
 
 model GPU {
   id          Int    @id
-  memoriaGB   Int
-  tipoMemoria String
+  memoryGB    Int
+  memoryType  String
   tdp         Int
-  peca        Peca   @relation(name: "GPUToPeca", fields: [id], references: [id])
+  lengthMM    Float
+  part        Part  @relation(name: "GPUToPart", fields: [id], references: [id])
 }
 
 model RAM {
   id           Int    @id
-  capacidadeGB Int
-  tipo         String
-  frequencia   Int
-  peca         Peca   @relation(name: "RAMToPeca", fields: [id], references: [id])
+  capacityGB Int
+  type         String
+  frequency   Int
+  part         Part   @relation(name: "RAMToPart", fields: [id], references: [id])
 }
 
 model SSD {
   id           Int    @id
-  capacidadeGB Int
-  tipo         String
-  leituraMBs   Int
-  escritaMBs   Int
-  peca         Peca   @relation(name: "SSDToPeca", fields: [id], references: [id])
+  capacityGB   Int
+  type         String
+  readMBs      Int   
+  writeMBs     Int    
+  part         Part   @relation(name: "SSDToPart", fields: [id], references: [id])
 }
 
-model Fonte {
-  id           Int     @id
-  potenciaW    Int
-  certificacao String
-  modular      Boolean
-  peca         Peca    @relation(name: "FonteToPeca", fields: [id], references: [id])
+model PSU { 
+  id            Int     @id
+  powerW        Int     
+  certification String  
+  modular       Boolean
+  part          Part    @relation(name: "PSUToPart", fields: [id], references: [id]) 
 }
 
-model Gabinete {
+model Case {
   id               Int     @id
-  tamanhoSuportado String
-  comVidro         Boolean
-  peca             Peca    @relation(name: "GabineteToPeca", fields: [id], references: [id])
+  supportedSizes   String
+  maxGpuLengthMM   Int
+  part             Part    @relation(name: "CaseToPart", fields: [id], references: [id])
 }
 
 model Cooler {
   id            Int    @id
-  tipo          String
-  suporteSocket String
-  peca          Peca   @relation(name: "CoolerToPeca", fields: [id], references: [id])
+  type          String
+  socketSupport String
+  part          Part   @relation(name: "CoolerToPart", fields: [id], references: [id])
 }
 
-model PlacaMae {
-  id       Int    @id
-  socket   String
-  tipoRAM  String
-  slotsRAM Int
-  maxRAM   Int
-  tamanho  String
-  peca     Peca   @relation(name: "PlacaMaeToPeca", fields: [id], references: [id])
+model Motherboard {
+  id                   Int     @id
+  name                 String
+  socket               String
+  chipset              String
+  ramType              String
+  slots                Int
+  maxRAM               Int
+  size                 String
+  cpuCompatibilityLine String
+
+  part     Part        @relation(name: "MotherboardToPart", fields: [id], references: [id])
 }
 
 

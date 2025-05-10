@@ -1,54 +1,54 @@
-import { sugerirConfiguracaoComOrcamento } from "../../src/services/sugestao.service";
-import { TipoPeca } from "../../src/utils/distribuicaoOrcamento";
-import { Peca } from "../../src/models/peca.model";
+import { suggestConfigurationWithBudget } from "../../src/services/suggest.service";
+import { PartType } from "../../src/utils/distributeBudget";
+import { Part } from "../../src/models/part.model";
 
-describe("sugerirConfiguracaoComOrcamento", () => {
-    const pecasMock: Peca[] = [
+describe("suggestConfigurationWithBudget", () => {
+    const pecasMock: Part[] = [
         // CPUs
         {
-          nome: "Ryzen 5 5600",
-          preco: 700,
-          tipo: "CPU",
+          name: "Ryzen 5 5600",
+          price: 700,
+          type: "CPU",
           marca: "AMD",
-          cpu: { socket: "AM4", linha: "Ryzen", id: 1, nome: "" }
+          cpu: { socket: "AM4", line: "Ryzen", id: 1, name: "" }
         },
         {
-          nome: "Intel i5 10400F",
-          preco: 650,
-          tipo: "CPU",
+          name: "Intel i5 10400F",
+          price: 650,
+          type: "CPU",
           marca: "Intel",
-          cpu: { socket: "LGA1200", linha: "Core", id: 2, nome: "" }
+          cpu: { socket: "LGA1200", line: "Core", id: 2, name: "" }
         },
       
         // Placas-Mãe
         {
-          nome: "Placa-Mãe B450",
-          preco: 500,
-          tipo: "PLACA_MAE",
+          name: "Placa-Mãe B450",
+          price: 500,
+          type: "MOTHERBOARD",
           marca: "ASUS",
           placaMae: {
             socket: "AM4",
-            compatibilidadeLinhaCpu: ["Ryzen"],
-            tipoRAM: "DDR5",
+            compatibilidadelineCpu: ["Ryzen"],
+            typeRAM: "DDR5",
             tamanho: "ATX",
             id: 1,
-            nome: "",
+            name: "",
             chipset: "",
             slots: 0
           }
         },
         {
-          nome: "Placa-Mãe H410",
-          preco: 350,
-          tipo: "PLACA_MAE",
+          name: "Placa-Mãe H410",
+          price: 350,
+          type: "MOTHERBOARD",
           marca: "Gigabyte",
           placaMae: {
             socket: "LGA1200",
-            compatibilidadeLinhaCpu: ["Core"],
-            tipoRAM: "DDR4",
+            compatibilidadelineCpu: ["Core"],
+            typeRAM: "DDR4",
             tamanho: "mATX",
             id: 2,
-            nome: "",
+            name: "",
             chipset: "",
             slots: 0
           }
@@ -56,102 +56,102 @@ describe("sugerirConfiguracaoComOrcamento", () => {
       
         // RAM
         {
-          nome: "Memória DDR4 16GB",
-          preco: 300,
-          tipo: "RAM",
+          name: "Memória DDR4 16GB",
+          price: 300,
+          type: "RAM",
           marca: "Kingston",
-          ram: { tipo: "DDR4", frequencia: 3200, id: 1, capacidadeGB: 16 }
+          ram: { type: "DDR4", frequency: 3200, id: 1, capacityGB: 16 }
         },
         {
-          nome: "Memória DDR5 16GB",
-          preco: 500,
-          tipo: "RAM",
+          name: "Memória DDR5 16GB",
+          price: 500,
+          type: "RAM",
           marca: "Corsair",
-          ram: { tipo: "DDR5", frequencia: 4800, id: 2, capacidadeGB: 16 }
+          ram: { type: "DDR5", frequency: 4800, id: 2, capacityGB: 16 }
         },
       
         // GPU
         {
-          nome: "GeForce RTX 3060",
-          preco: 1400,
-          tipo: "GPU",
+          name: "GeForce RTX 3060",
+          price: 1400,
+          type: "GPU",
           marca: "NVIDIA",
           gpu: {
             tdp: 170,
-            comprimentoMM: 240,
+            lengthMM: 240,
             id: 1,
-            memoriaGB: 12,
-            tipoMemoria: "GDDR6"
+            memoryGB: 12,
+            memoryType: "GDDR6"
           }
         },
         {
-          nome: "GeForce GTX 1650",
-          preco: 900,
-          tipo: "GPU",
+          name: "GeForce GTX 1650",
+          price: 900,
+          type: "GPU",
           marca: "NVIDIA",
           gpu: {
             tdp: 75,
-            comprimentoMM: 180,
+            lengthMM: 180,
             id: 2,
-            memoriaGB: 4,
-            tipoMemoria: "GDDR5"
+            memoryGB: 4,
+            memoryType: "GDDR5"
           }
         },
       
         // Fonte
         {
-          nome: "Fonte 600W",
-          preco: 300,
-          tipo: "FONTE",
+          name: "Fonte 600W",
+          price: 300,
+          type: "FONTE",
           marca: "Corsair",
           fonte: { potenciaW: 650, id: 1, certificacao: "80 Plus Bronze", modular: false }
         },
         {
-          nome: "Fonte 450W",
-          preco: 150,
-          tipo: "FONTE",
+          name: "Fonte 450W",
+          price: 150,
+          type: "FONTE",
           marca: "EVGA",
           fonte: { potenciaW: 450, id: 2, certificacao: "80 Plus White", modular: false }
         },
       
         // Gabinete
         {
-          nome: "Gabinete ATX",
-          preco: 200,
-          tipo: "GABINETE",
+          name: "Gabinete ATX",
+          price: 200,
+          type: "GABINETE",
           marca: "CoolerMaster",
           gabinete: { tamanhoSuportado: ["ATX"], comprimentoMaximoGpuMM: 300, id: 1 }
         },
         {
-          nome: "Gabinete Mini-ITX",
-          preco: 180,
-          tipo: "GABINETE",
+          name: "Gabinete Mini-ITX",
+          price: 180,
+          type: "GABINETE",
           marca: "Thermaltake",
           gabinete: { tamanhoSuportado: ["Mini-ITX"], comprimentoMaximoGpuMM: 200, id: 2 }
         },
       
         // SSD
         {
-          nome: "SSD 512GB",
-          preco: 150,
-          tipo: "SSD",
+          name: "SSD 512GB",
+          price: 150,
+          type: "SSD",
           marca: "Crucial",
           ssd: {
-            capacidadeGB: 512,
-            tipo: "SATA",
+            capacityGB: 512,
+            type: "SATA",
             leituraMBs: 500,
             escritaMBs: 450,
             id: 1
           }
         },
         {
-          nome: "SSD NVMe 1TB",
-          preco: 400,
-          tipo: "SSD",
+          name: "SSD NVMe 1TB",
+          price: 400,
+          type: "SSD",
           marca: "Samsung",
           ssd: {
-            capacidadeGB: 1000,
-            tipo: "NVMe",
+            capacityGB: 1000,
+            type: "NVMe",
             leituraMBs: 3500,
             escritaMBs: 3000,
             id: 2
@@ -163,7 +163,7 @@ describe("sugerirConfiguracaoComOrcamento", () => {
   it("deve retornar uma configuração válida dentro do orçamento", () => {
     const orcamento = 5000;
 
-    const resultado = sugerirConfiguracaoComOrcamento(pecasMock, orcamento);
+    const resultado = suggestConfigurationWithBudget(pecasMock, orcamento);
 
     expect(resultado.configuracao.length).toBeGreaterThan(0);
     expect(resultado.mensagem).toBeUndefined();
@@ -172,7 +172,7 @@ describe("sugerirConfiguracaoComOrcamento", () => {
   it("deve retornar mensagem de erro se passar do orçamento", () => {
     const orcamento = 1000; 
 
-    const resultado = sugerirConfiguracaoComOrcamento(pecasMock, orcamento);
+    const resultado = suggestConfigurationWithBudget(pecasMock, orcamento);
 
     expect(resultado.configuracao).toHaveLength(0);
     expect(resultado.mensagem).toContain("Não há");
@@ -188,7 +188,7 @@ describe("sugerirConfiguracaoComOrcamento", () => {
       }
     };
 
-    const resultado = sugerirConfiguracaoComOrcamento(pecasIncompativeis, 4000);
+    const resultado = suggestConfigurationWithBudget(pecasIncompativeis, 4000);
 
     expect(resultado.configuracao).toHaveLength(0);
     expect(resultado.mensagem).toBe("CPU e Placa-Mãe incompatíveis");

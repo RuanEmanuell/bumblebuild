@@ -17,14 +17,14 @@ export class CoolerController {
   async search(req: Request, res: Response) {
     const id = Number(req.params.id);
     const cooler = await coolerService.searchCooler(id);
-    if (!cooler) return res.status(404).json({ erro: 'ram não encontrada' });
+    if (!cooler) return res.status(404).json({ erro: 'cooler não encontrado' });
     res.json(cooler);
   }
 
   async update(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const atualizada = await coolerService.updateCooler(id, req.body);
-    res.json(atualizada);
+    const updated = await coolerService.updateCooler(id, req.body);
+    res.json(updated);
   }
 
   async delete(req: Request, res: Response) {

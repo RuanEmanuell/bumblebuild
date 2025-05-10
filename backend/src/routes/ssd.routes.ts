@@ -1,14 +1,14 @@
 import { Router, Request, Response } from "express";
 import { SSDController } from "../controllers/ssd.controller";
-import { autenticarToken, isAdmin, verifyToken } from "../middlewares/authMiddleware";
+import { authenticateToken, isAdmin } from "../middlewares/authMiddleware";
 
 const router = Router();
 const ssdController = new SSDController();
 
-router.post("/create",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.post("/create", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
 
-    await ssdController.criar(req, res);
+    await ssdController.create(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -16,7 +16,7 @@ router.post("/create",autenticarToken, isAdmin, async (req: Request, res: Respon
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    await ssdController.listar(req, res);
+    await ssdController.list(req, res);
   } catch (error) {
     console.error(error);
   }
@@ -24,23 +24,23 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/:id", async (req: Request, res: Response) => {
   try {
-    await ssdController.buscar(req, res);
+    await ssdController.search(req, res);
   } catch (error) {
     console.error(error);
   }
 });
 
-router.put("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.put("/:id", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
-    await ssdController.atualizar(req, res);
+    await ssdController.update(req, res);
   } catch (error) {
     console.error(error);
   }
 });
 
-router.delete("/:id",autenticarToken, isAdmin, async (req: Request, res: Response) => {
+router.delete("/:id", authenticateToken, isAdmin, async (req: Request, res: Response) => {
   try {
-    await ssdController.deletar(req, res);
+    await ssdController.delete(req, res);
   } catch (error) {
     console.error(error);
   }
