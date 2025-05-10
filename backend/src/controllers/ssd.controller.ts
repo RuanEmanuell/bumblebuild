@@ -4,32 +4,32 @@ import { SSDService } from '../services/ssd.service';
 const ssdService = new SSDService();
 
 export class SSDController {
-  async criar(req: Request, res: Response) {
-    const ssd = await ssdService.criarSSD(req.body);
+  async create(req: Request, res: Response) {
+    const ssd = await ssdService.createSSD(req.body);
     res.status(201).json(ssd);
   }
 
-  async listar(req: Request, res: Response) {
-    const ssds = await ssdService.listarSSDs();
+  async list(req: Request, res: Response) {
+    const ssds = await ssdService.listSSDs();
     res.json(ssds);
   }
 
-  async buscar(req: Request, res: Response) {
+  async search(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const ssd = await ssdService.buscarSSD(id);
-    if (!ssd) return res.status(404).json({ erro: 'ram não encontrada' });
+    const ssd = await ssdService.searchSSD(id);
+    if (!ssd) return res.status(404).json({ erro: 'ssd não encontrada' });
     res.json(ssd);
   }
 
-  async atualizar(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const atualizada = await ssdService.atualizarSSD(id, req.body);
-    res.json(atualizada);
+    const updated = await ssdService.updateSSD(id, req.body);
+    res.json(updated);
   }
 
-  async deletar(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
-    await ssdService.deletarSSD(id);
+    await ssdService.deleteSSD(id);
     res.status(204).send();
   }
 }

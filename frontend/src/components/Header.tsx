@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { LogoTertiary } from "../components/Logo";
 import { Heart, User, Menu, X } from "react-feather";
 import { Link } from "react-router-dom";
-import CartIcon from "./CartIcon";
 import { useAuth } from "../hooks/useAuth";
 
 const HeaderCustom: React.FC = () => {
@@ -20,7 +19,6 @@ const HeaderCustom: React.FC = () => {
             <div className="flex items-center gap-4 md:hidden">
                 <Heart size={22} className="hover:cursor-pointer hover:opacity-80" />
                 <div className="relative">
-                    <CartIcon></CartIcon>
                 </div>
                 <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
                     {menuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -33,9 +31,9 @@ const HeaderCustom: React.FC = () => {
 
                 {user ? (
                     <div className="flex items-center gap-2">
-                        {user?.fotoPerfilUrl ? (
+                        {user?.profilePictureUrl ? (
                             <img
-                                src={`http://localhost:3000/uploads/${user?.fotoPerfilUrl}`}
+                                src={`http://localhost:3000/uploads/${user?.profilePictureUrl}`}
                                 alt="Foto usuário"
                                 className="w-8 h-8 rounded-full object-cover border"
                             />
@@ -44,7 +42,7 @@ const HeaderCustom: React.FC = () => {
                                 <User size={20} />
                             </div>
                         )}
-                        <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.nome}</Link></span>
+                        <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.name}</Link></span>
 
                     </div>
                 ) : (
@@ -60,10 +58,6 @@ const HeaderCustom: React.FC = () => {
 
                 <Heart size={22} className="hover:cursor-pointer hover:opacity-80" />
 
-                {/*cart com contador */}
-                <div className="relative">
-                    <CartIcon></CartIcon>
-                </div>
             </nav>
 
             {/*menu mobile*/}
@@ -84,7 +78,7 @@ const HeaderCustom: React.FC = () => {
                     {user ? (
                         <div className="flex items-center gap-2">
                             <User size={20} className="text-textPrimary" />
-                            <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.nome}</Link></span>
+                            <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.name}</Link></span>
                         </div>
                     ) : (
                         <div className="flex gap-1">

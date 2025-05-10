@@ -1,7 +1,7 @@
 import puppeteer, { Page, Browser } from "puppeteer";
 
 export class ScraperService {
-    async pegarPrecoPeca(partLinks: string[]): Promise<string | null> {
+    async getPartPrice(partLinks: string[]): Promise<string | null> {
     let browser: Browser | undefined; 
     let page: Page | undefined; 
 

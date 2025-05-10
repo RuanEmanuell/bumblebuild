@@ -4,32 +4,32 @@ import { RAMService } from '../services/ram.service';
 const ramService = new RAMService();
 
 export class RAMController {
-  async criar(req: Request, res: Response) {
-    const ram = await ramService.criarRAM(req.body);
+  async create(req: Request, res: Response) {
+    const ram = await ramService.createRAM(req.body);
     res.status(201).json(ram);
   }
 
-  async listar(req: Request, res: Response) {
-    const rams = await ramService.listarRAMs();
+  async list(req: Request, res: Response) {
+    const rams = await ramService.listRAMs();
     res.json(rams);
   }
 
-  async buscar(req: Request, res: Response) {
+  async search(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const ram = await ramService.buscarRAM(id);
+    const ram = await ramService.searchRAM(id);
     if (!ram) return res.status(404).json({ erro: 'ram não encontrada' });
     res.json(ram);
   }
 
-  async atualizar(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const atualizada = await ramService.atualizarRAM(id, req.body);
-    res.json(atualizada);
+    const updated = await ramService.updateRAM(id, req.body);
+    res.json(updated);
   }
 
-  async deletar(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
-    await ramService.deletarRAM(id);
+    await ramService.deleteRAM(id);
     res.status(204).send();
   }
 }

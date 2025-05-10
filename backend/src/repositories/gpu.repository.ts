@@ -2,23 +2,23 @@ import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class GPURepository {
-  async criar(data: Prisma.GPUCreateInput) {
+  async create(data: Prisma.GPUCreateInput) {
     return prisma.gPU.create({ data });
   }
 
-  async listar() {
-    return prisma.gPU.findMany({ include: { peca: true } });
+  async list() {
+    return prisma.gPU.findMany({ include: { part: true } });
   }
 
-  async buscarPorId(id: number) {
-    return prisma.gPU.findUnique({ where: { id }, include: { peca: true } });
+  async searchById(id: number) {
+    return prisma.gPU.findUnique({ where: { id }, include: { part: true } });
   }
 
-  async atualizar(id: number, data: Prisma.GPUUpdateInput) {
+  async update(id: number, data: Prisma.GPUUpdateInput) {
     return prisma.gPU.update({ where: { id }, data });
   }
 
-  async deletar(id: number) {
+  async delete(id: number) {
     return prisma.gPU.delete({ where: { id } });
   }
 }

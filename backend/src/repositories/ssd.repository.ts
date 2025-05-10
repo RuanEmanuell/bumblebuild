@@ -2,23 +2,23 @@ import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class SSDRepository {
-  async criar(data: Prisma.SSDCreateInput) {
+  async create(data: Prisma.SSDCreateInput) {
     return prisma.sSD.create({ data });
   }
 
-  async listar() {
-    return prisma.sSD.findMany({ include: { peca: true } });
+  async list() {
+    return prisma.sSD.findMany({ include: { part: true } });
   }
 
-  async buscarPorId(id: number) {
-    return prisma.sSD.findUnique({ where: { id }, include: { peca: true } });
+  async searchById(id: number) {
+    return prisma.sSD.findUnique({ where: { id }, include: { part: true } });
   }
 
-  async atualizar(id: number, data: Prisma.SSDUpdateInput) {
+  async update(id: number, data: Prisma.SSDUpdateInput) {
     return prisma.sSD.update({ where: { id }, data });
   }
 
-  async deletar(id: number) {
+  async delete(id: number) {
     return prisma.sSD.delete({ where: { id } });
   }
 }

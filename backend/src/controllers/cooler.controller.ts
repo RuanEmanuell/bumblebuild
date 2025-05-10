@@ -4,32 +4,32 @@ import { CoolerService } from '../services/cooler.service';
 const coolerService = new CoolerService();
 
 export class CoolerController {
-  async criar(req: Request, res: Response) {
-    const cooler = await coolerService.criarCooler(req.body);
+  async create(req: Request, res: Response) {
+    const cooler = await coolerService.createCooler(req.body);
     res.status(201).json(cooler);
   }
 
-  async listar(req: Request, res: Response) {
-    const coolers = await coolerService.listarCoolers();
+  async list(req: Request, res: Response) {
+    const coolers = await coolerService.listCoolers();
     res.json(coolers);
   }
 
-  async buscar(req: Request, res: Response) {
+  async search(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const cooler = await coolerService.buscarCooler(id);
-    if (!cooler) return res.status(404).json({ erro: 'ram não encontrada' });
+    const cooler = await coolerService.searchCooler(id);
+    if (!cooler) return res.status(404).json({ erro: 'cooler não encontrado' });
     res.json(cooler);
   }
 
-  async atualizar(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const atualizada = await coolerService.atualizarCooler(id, req.body);
-    res.json(atualizada);
+    const updated = await coolerService.updateCooler(id, req.body);
+    res.json(updated);
   }
 
-  async deletar(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
-    await coolerService.deletarCooler(id);
+    await coolerService.deleteCooler(id);
     res.status(204).send();
   }
 }

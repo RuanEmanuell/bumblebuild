@@ -1,10 +1,10 @@
 import cron from "node-cron";
-import { PecaRepository } from "../repositories/peca.repository";
+import { PartRepository } from "../repositories/part.repository";
 
-const pecaRepository = new PecaRepository();
+const partRepository = new PartRepository();
 
 cron.schedule("0 3 * * *", async () => {
   console.log("Executando atualização de preços de peças...");
-  await pecaRepository.atualizarPrecosAutomaticamente();
+  await partRepository.autoUpdatePrices();
   console.log("Finalizada atualização de preços de peças...");
 });

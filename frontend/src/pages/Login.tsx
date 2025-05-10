@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
-  const [nome, setNome] = useState("");
+  const [name, setname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -39,7 +39,7 @@ export default function Auth() {
     try {
       const response : any = await axios.post("http://localhost:3000/user/login", {
         email: email,
-        senha: password,
+        password: password,
       });
       console.log("User logged in:", response.data);
       alert("Usuário fez login!");
@@ -62,17 +62,17 @@ export default function Auth() {
       return;
     }
     console.log({
-      nome: nome,
+      name: name,
       email: email,
-      senha: password,
+      password: password,
     })
-    console.log("User created:", { nome, email, password });
+    console.log("User created:", { name, email, password });
     try {
       const response = await axios.post("http://localhost:3000/user/create", {
-        nome: nome,
+        name: name,
         email: email,
-        senha: password,
-        tipo_usuario: "padrao"
+        password: password,
+        userType: "padrao"
       });
 
       console.log("User created:", response.data);
@@ -123,8 +123,8 @@ export default function Auth() {
             <InputField
               label="Nome"
               type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              value={name}
+              onChange={(e) => setname(e.target.value)}
               required
               icon={<User size={20} />}
             />
@@ -150,7 +150,7 @@ export default function Auth() {
 
           {!isLogin && (
             <InputField
-              label="Confirmar Senha"
+              label="Confirmar senha"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

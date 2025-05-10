@@ -4,11 +4,11 @@ import { Request } from "express";
 declare global {
   namespace Express {
     interface Request {
-      usuario?: {
+      user?: {
         id: number;
         email: string;
-        tipo_usuario: string;
-        nome: string;
+        userType: string;
+        name: string;
       };
     }
   }

@@ -3,23 +3,23 @@ import { RAMRepository } from '../repositories/ram.repository';
 const ramRepository = new RAMRepository();
 
 export class RAMService {
-  criarRAM(data: any) {
-    return ramRepository.criar(data);
+  createRAM(data: any) {
+    return ramRepository.create(data);
   }
 
-  listarRAMs() {
-    return ramRepository.listar();
+  listRAMs() {
+    return ramRepository.list();
   }
 
-  buscarRAM(id: number) {
-    return ramRepository.buscarPorId(id);
+  searchRAM(id: number) {
+    return ramRepository.searchById(id);
   }
 
-  atualizarRAM(id: number, data: any) {
-    return ramRepository.atualizar(id, data);
+  updateRAM(id: number, data: any) {
+    return ramRepository.update(id, data);
   }
 
-  deletarRAM(id: number) {
-    return ramRepository.deletar(id);
+  deleteRAM(id: number) {
+    return ramRepository.delete(id);
   }
 }

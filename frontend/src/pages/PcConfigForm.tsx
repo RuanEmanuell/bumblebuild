@@ -3,85 +3,86 @@ import { useLocation } from 'react-router-dom';
 import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';
 
-interface Produto {
-  nome: string;
-  preco: string;
-  estrelas: number;
-  imagem: string;
-  categoria: string;
+interface Product {
+  name: string;
+  price: string;
+  stars: number;
+  image: string;
+  category: string;
 }
 
-interface ErrosFormulario {
-  orcamento?: string;
-  jogos?: string;
+interface FormErrors {
+  budget?: string;
+  games?: string;
 }
 
-const jogosSugeridos = [
+const suggestedGames = [
   'League of Legends', 'Valorant', 'CS:GO', 'Fortnite', 'GTA V', 'Elden Ring',
   'Call of Duty: Warzone', 'Minecraft', 'The Witcher 3', 'Cyberpunk 2077'
 ];
 
 const PcConfigForm: React.FC = () => {
   const location = useLocation();
-  const produtosCadastrados: Produto[] = location.state?.pecasDisponiveis || [];
+  const registeredProducts: Product[] = location.state?.availableParts || [];
 
-  const [orcamento, setOrcamento] = useState('');
-  const [jogos, setJogos] = useState<string[]>([]);
-  const [jogoInput, setJogoInput] = useState('');
-  const [pecasSelecionadas, setPecasSelecionadas] = useState<string[]>([]);
-  const [pecaInput, setPecaInput] = useState('');
-  const [pecasManuais, setPecasManuais] = useState<string[]>([]);
-  const [errors, setErrors] = useState<ErrosFormulario>({});
-  const [sucesso, setSucesso] = useState(false);
+  const [budget, setBudget] = useState('');
+  const [games, setGames] = useState<string[]>([]);
+  const [gameInput, setGameInput] = useState('');
+  const [selectedParts, setSelectedParts] = useState<string[]>([]);
+  const [partInput, setPartInput] = useState('');
+  const [manualParts, setManualParts] = useState<string[]>([]);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [success, setSuccess] = useState(false);
 
-  const handleAddJogo = (jogo: string) => {
-    if (jogo && !jogos.includes(jogo)) {
-      setJogos([...jogos, jogo]);
+
+  const handleAddGame = (game: string) => {
+    if (game && !games.includes(game)) {
+      setGames([...games, game]);
     }
-    setJogoInput('');
+    setGameInput('');
   };
 
-  const handleAddPecaManual = () => {
-    if (pecaInput && !pecasManuais.includes(pecaInput)) {
-      setPecasManuais([...pecasManuais, pecaInput]);
+  const handleAddManualPart = () => {
+    if (partInput && !manualParts.includes(partInput)) {
+      setManualParts([...manualParts, partInput]);
     }
-    setPecaInput('');
+    setPartInput('');
   };
 
-  const togglePecaSelecionada = (nome: string) => {
-    setPecasSelecionadas((prev) =>
-      prev.includes(nome) ? prev.filter(p => p !== nome) : [...prev, nome]
+  const toggleSelectedPart = (name: string) => {
+    setSelectedParts((prev) =>
+      prev.includes(name) ? prev.filter(p => p !== name) : [...prev, name]
     );
   };
 
-  const validar = (): boolean => {
-    const novosErros: ErrosFormulario = {};
-    const orc = parseFloat(orcamento);
-    if (!orcamento || orc <= 0) {
-      novosErros.orcamento = 'Informe um orçamento válido.';
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+    const orc = parseFloat(budget);
+    if (!budget || orc <= 0) {
+      newErrors.budget = 'Informe um orçamento válido.';
     }
-    if (jogos.length === 0 && jogoInput.trim() === '') {
-      novosErros.jogos = 'Adicione pelo menos um jogo.';
+    if (games.length === 0 && gameInput.trim() === '') {
+      newErrors.games = 'Adicione pelo menos um game.';
     }
 
-    setErrors(novosErros);
-    return Object.keys(novosErros).length === 0;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const jogosFinal = jogoInput && !jogos.includes(jogoInput) ? [...jogos, jogoInput] : jogos;
+    const gamesFinal = gameInput && !games.includes(gameInput) ? [...games, gameInput] : games;
 
-    if (!validar()) {
-      setSucesso(false);
+    if (!validate()) {
+      setSuccess(false);
       return;
     }
 
-    const pecasFinal = [...pecasSelecionadas, ...pecasManuais];
+    const finalParts = [...selectedParts, ...manualParts];
 
-    console.log({ orcamento, jogos: jogosFinal, pecas: pecasFinal });
-    setJogos(jogosFinal);
-    setSucesso(true);
+    console.log({ budget, games: gamesFinal, pecas: finalParts });
+    setGames(gamesFinal);
+    setSuccess(true);
   };
 
   return (
@@ -91,66 +92,66 @@ const PcConfigForm: React.FC = () => {
         <h2 className="text-3xl font-bold mb-6">Montar PC Personalizado</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Orçamento */}
+          {/*orçamento */}
           <div>
             <label className="block text-sm font-medium">Orçamento (R$)</label>
             <input
               type="number"
-              className={`w-full border px-4 py-2 rounded-lg ${errors.orcamento ? 'border-red-500' : 'border-gray-300'}`}
-              value={orcamento}
-              onChange={(e) => setOrcamento(e.target.value)}
+              className={`w-full border px-4 py-2 rounded-lg ${errors.budget ? 'border-red-500' : 'border-gray-300'}`}
+              value={budget}
+              onChange={(e) => setBudget(e.target.value)}
             />
-            {errors.orcamento && <p className="text-red-600 text-sm">{errors.orcamento}</p>}
+            {errors.budget && <p className="text-red-600 text-sm">{errors.budget}</p>}
           </div>
 
-          {/* Jogos */}
+          {/* games */}
           <div>
-            <label className="block text-sm font-medium">Jogos Desejados</label>
+            <label className="block text-sm font-medium">games Desejados</label>
             <input
               type="text"
-              list="jogos-list"
-              value={jogoInput}
-              onChange={(e) => setJogoInput(e.target.value)}
+              list="games-list"
+              value={gameInput}
+              onChange={(e) => setGameInput(e.target.value)}
               onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
-                  handleAddJogo(jogoInput);
+                  handleAddGame(gameInput);
                 }
               }}
               className="w-full border px-4 py-2 rounded-lg"
               placeholder="Digite e pressione Enter"
             />
-            <datalist id="jogos-list">
-              {jogosSugeridos.map((jogo, idx) => (
-                <option key={idx} value={jogo} />
+            <datalist id="games-list">
+              {suggestedGames.map((game, idx) => (
+                <option key={idx} value={game} />
               ))}
             </datalist>
             <div className="flex flex-wrap gap-2 mt-2">
-              {jogos.map((jogo, i) => (
+              {games.map((game, i) => (
                 <span
                   key={i}
                   className="bg-gray-200 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-red-200"
-                  onClick={() => setJogos(jogos.filter(j => j !== jogo))}
+                  onClick={() => setGames(games.filter(j => j !== game))}
                 >
-                  {jogo} ✕
+                  {game} ✕
                 </span>
               ))}
             </div>
-            {errors.jogos && <p className="text-red-600 text-sm">{errors.jogos}</p>}
+            {errors.games && <p className="text-red-600 text-sm">{errors.games}</p>}
           </div>
 
           {/* Peças Cadastradas */}
           <div>
             <label className="block text-sm font-medium mb-2">Peças Já Adquiridas (Cadastradas)</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {produtosCadastrados.map((peca, i) => (
+              {registeredProducts.map((peca, i) => (
                 <label key={i} className="flex items-center gap-2 border px-3 py-2 rounded-md cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={pecasSelecionadas.includes(peca.nome)}
-                    onChange={() => togglePecaSelecionada(peca.nome)}
+                    checked={selectedParts.includes(peca.name)}
+                    onChange={() => toggleSelectedPart(peca.name)}
                   />
-                  <span>{peca.nome} ({peca.categoria})</span>
+                  <span>{peca.name} ({peca.category})</span>
                 </label>
               ))}
             </div>
@@ -161,23 +162,23 @@ const PcConfigForm: React.FC = () => {
             <label className="block text-sm font-medium mb-2">Adicionar Peças Manualmente</label>
             <input
               type="text"
-              value={pecaInput}
-              onChange={(e) => setPecaInput(e.target.value)}
+              value={partInput}
+              onChange={(e) => setPartInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
-                  handleAddPecaManual();
+                  handleAddManualPart();
                 }
               }}
               className="w-full border px-4 py-2 rounded-lg"
               placeholder="Digite e pressione Enter"
             />
             <div className="flex flex-wrap gap-2 mt-2">
-              {pecasManuais.map((p, i) => (
+              {manualParts.map((p, i) => (
                 <span
                   key={i}
                   className="bg-gray-200 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-red-200"
-                  onClick={() => setPecasManuais(pecasManuais.filter(x => x !== p))}
+                  onClick={() => setManualParts(manualParts.filter(x => x !== p))}
                 >
                   {p} ✕
                 </span>
@@ -185,14 +186,14 @@ const PcConfigForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Submit */}
+          {/*submit */}
           <button
             type="submit"
             className="w-full bg-yellow-400 text-black font-semibold py-3 rounded-lg hover:bg-yellow-500 transition"
           >
             Enviar
           </button>
-          {sucesso && <p className="text-green-600 text-sm mt-2">Pc enviado para montagem com sucesso!</p>}
+          {success && <p className="text-green-600 text-sm mt-2">Pc enviado para montagem com sucesso!</p>}
         </form>
       </main>
       <Footer />

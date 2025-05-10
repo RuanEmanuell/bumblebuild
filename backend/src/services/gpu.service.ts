@@ -3,23 +3,23 @@ import { GPURepository } from '../repositories/gpu.repository';
 const gpuRepository = new GPURepository();
 
 export class GPUService {
-  criarGPU(data: any) {
-    return gpuRepository.criar(data);
+  createGPU(data: any) {
+    return gpuRepository.create(data);
   }
 
-  listarGPUs() {
-    return gpuRepository.listar();
+  listGPUs() {
+    return gpuRepository.list();
   }
 
-  buscarGPU(id: number) {
-    return gpuRepository.buscarPorId(id);
+  searchGPU(id: number) {
+    return gpuRepository.searchById(id);
   }
 
-  atualizarGPU(id: number, data: any) {
-    return gpuRepository.atualizar(id, data);
+  updateGPU(id: number, data: any) {
+    return gpuRepository.update(id, data);
   }
 
-  deletarGPU(id: number) {
-    return gpuRepository.deletar(id);
+  deleteGPU(id: number) {
+    return gpuRepository.delete(id);
   }
 }

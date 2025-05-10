@@ -3,23 +3,23 @@ import { SSDRepository } from '../repositories/ssd.repository';
 const ssdRepository = new SSDRepository();
 
 export class SSDService {
-  criarSSD(data: any) {
-    return ssdRepository.criar(data);
+  createSSD(data: any) {
+    return ssdRepository.create(data);
   }
 
-  listarSSDs() {
-    return ssdRepository.listar();
+  listSSDs() {
+    return ssdRepository.list();
   }
 
-  buscarSSD(id: number) {
-    return ssdRepository.buscarPorId(id);
+  searchSSD(id: number) {
+    return ssdRepository.searchById(id);
   }
 
-  atualizarSSD(id: number, data: any) {
-    return ssdRepository.atualizar(id, data);
+  updateSSD(id: number, data: any) {
+    return ssdRepository.update(id, data);
   }
 
-  deletarSSD(id: number) {
-    return ssdRepository.deletar(id);
+  deleteSSD(id: number) {
+    return ssdRepository.delete(id);
   }
 }

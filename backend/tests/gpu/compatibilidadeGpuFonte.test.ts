@@ -1,43 +1,43 @@
-import { verificarCompatibilidadeGpuFonte } from "../../src/services/compatibilidade.service";
-import { Fonte } from "../../src/models/fonte.model";
+import { checkGpuPsuCompatibility } from "../../src/services/compatibility.service";
+import { PSU } from "../../src/models/psu.model";
 import { GPU } from "../../src/models/gpu.model";
 
-describe("Compatibilidade GPU e Fonte", () => {
-  it("deve retornar true se a fonte tiver potência suficiente", () => {
+describe("Compatibilidade GPU e PSU", () => {
+  it("deve retornar true se a PSU tiver potência suficiente", () => {
     const gpu: GPU = {
       id: 1,
-      memoriaGB: 8,
-      tipoMemoria: "GDDR6",
+      memoryGB: 8,
+      memoryType: "GDDR6",
       tdp: 200,
-      comprimentoMM: 300,
+      lengthMM: 300,
     };
 
-    const fonte: Fonte = {
+    const PSU: PSU = {
       id: 1,
-      potenciaW: 750,
-      certificacao: "80 Plus Bronze",
+      powerW: 750,
+      certification: "80 Plus Bronze",
       modular: true,
     };
 
-    expect(verificarCompatibilidadeGpuFonte(gpu, fonte)).toBe(true);
+    expect(checkGpuPsuCompatibility(gpu, PSU)).toBe(true);
   });
 
-  it("deve retornar false se a fonte for insuficiente", () => {
+  it("deve retornar false se a PSU for insuficiente", () => {
     const gpu: GPU = {
       id: 2,
-      memoriaGB: 12,
-      tipoMemoria: "GDDR6X",
+      memoryGB: 12,
+      memoryType: "GDDR6X",
       tdp: 300,
-      comprimentoMM: 300,
+      lengthMM: 300,
     };
 
-    const fonte: Fonte = {
+    const PSU: PSU = {
       id: 2,
-      potenciaW: 350,
-      certificacao: "80 Plus White",
+      powerW: 350,
+      certification: "80 Plus White",
       modular: false,
     };
 
-    expect(verificarCompatibilidadeGpuFonte(gpu, fonte)).toBe(false);
+    expect(checkGpuPsuCompatibility(gpu, PSU)).toBe(false);
   });
 });

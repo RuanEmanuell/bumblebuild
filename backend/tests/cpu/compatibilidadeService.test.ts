@@ -1,4 +1,4 @@
-import { verificarCompatibilidadeCpuPlacaMae } from "../../src/services/compatibilidade.service";
+import { checkCpuMotherboardCompatibility } from "../../src/services/compatibility.service";
 
 describe("Compatibilidade CPU e Placa-mãe", () => {
   it("deve retornar true para CPU e placa-mãe compatíveis", () => {
@@ -14,7 +14,7 @@ describe("Compatibilidade CPU e Placa-mãe", () => {
       slots: 4,
     };
 
-    expect(verificarCompatibilidadeCpuPlacaMae(cpu, placaMae)).toBe(true);
+    expect(checkCpuMotherboardCompatibility(cpu, placaMae)).toBe(true);
   });
 
   it("deve retornar false para socket incompatível", () => {
@@ -30,6 +30,6 @@ describe("Compatibilidade CPU e Placa-mãe", () => {
       slots: 4,
     };
 
-    expect(verificarCompatibilidadeCpuPlacaMae(cpu, placaMae)).toBe(false);
+    expect(checkCpuMotherboardCompatibility(cpu, placaMae)).toBe(false);
   });
 });

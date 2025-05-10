@@ -5,25 +5,26 @@ import { BarChart, Users, Settings, Cpu } from "lucide-react";
 import HeaderCustom from "../components/Header";
 
 export default function AdminDashboard() {
-    const [dados] = useState({
-        totalUsuarios: 82,
-        totalPecas: 145,
-        totalMontagens: 37
+    const [data] = useState({
+        totalUsers: 82,
+        totalParts: 145,
+        totalBuilds: 37
     });
 
+
     useEffect(() => {
-      //Para buscas na nossa API
+        //para buscas na API
     }, []);
 
     return (
         <div className="flex flex-col min-h-screen bg-white text-black">
-            <HeaderCustom/>
-           
+            <HeaderCustom />
+
             <main className="flex-1">
-             
+
                 <div className="px-6 py-6">
                     <h1 className="text-3xl font-bold mb-2">Painel do Administrador</h1>
-                    <p className="text-gray-600">Bem-vindo de volta! Aqui estão os dados do sistema.</p>
+                    <p className="text-gray-600">Bem-vindo de volta! Aqui estão os data do sistema.</p>
                 </div>
 
                 {/* Cards com métricas */}
@@ -33,7 +34,7 @@ export default function AdminDashboard() {
                             <Users className="text-blue-600" />
                             <h3 className="text-lg font-semibold">Usuários</h3>
                         </div>
-                        <p className="text-2xl font-bold">{dados.totalUsuarios}</p>
+                        <p className="text-2xl font-bold">{data.totalUsers}</p>
                     </div>
 
                     <div className="bg-gray-100 rounded-2xl p-6 shadow">
@@ -41,7 +42,7 @@ export default function AdminDashboard() {
                             <Cpu className="text-green-600" />
                             <h3 className="text-lg font-semibold">Peças Cadastradas</h3>
                         </div>
-                        <p className="text-2xl font-bold">{dados.totalPecas}</p>
+                        <p className="text-2xl font-bold">{data.totalParts}</p>
                     </div>
 
                     <div className="bg-gray-100 rounded-2xl p-6 shadow">
@@ -49,7 +50,7 @@ export default function AdminDashboard() {
                             <BarChart className="text-purple-600" />
                             <h3 className="text-lg font-semibold">Montagens Realizadas</h3>
                         </div>
-                        <p className="text-2xl font-bold">{dados.totalMontagens}</p>
+                        <p className="text-2xl font-bold">{data.totalBuilds}</p>
                     </div>
                 </section>
 
