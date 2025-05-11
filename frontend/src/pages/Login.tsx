@@ -7,7 +7,6 @@ import { LogoSecondary } from "../components/Logo";
 import CustomCheckbox from "../components/CustomCheckbox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import process from "process";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);

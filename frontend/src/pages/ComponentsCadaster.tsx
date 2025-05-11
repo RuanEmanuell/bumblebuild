@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import HeaderCustom from "../components/Header";
 import Footer from "../components/Footer";
 import { ButtonHome } from "../components/ButtonHome";
-import process from "process";
 
 type ComponentType =
   | "CPU"

@@ -3,7 +3,6 @@ import { LogoTertiary } from "../components/Logo";
 import { Heart, User, Menu, X } from "react-feather";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import process from "process";
 
 const HeaderCustom: React.FC = () => {
     const [menuOpen, setMenuOpen] = useState(false);

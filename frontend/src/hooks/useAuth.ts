@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { User } from "../models/User";
-import process from "process";
 
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null);

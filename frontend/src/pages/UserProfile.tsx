@@ -6,7 +6,6 @@ import Footer from "../components/Footer";
 import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 import ImageCropper from "../components/ImageCropper";
-import process from "process";
 
 //formatar data para exibir
 const formatDate = (isoDate?: string | Date) => {
