@@ -10,7 +10,7 @@ export const useAuth = () => {
 
         if (token) {
             setToken(token);
-            fetch(`http://${import.meta.env.VITE_API_URL}/user/logado`, {
+            fetch(`${import.meta.env.VITE_API_URL}/user/logado`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

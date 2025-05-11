@@ -37,7 +37,7 @@ export default function Auth() {
   const handleLogin = async () => {
     console.log("Realizando login com:", { email, password });
     try {
-      const response : any = await axios.post(`http://${import.meta.env.VITE_API_URL}/user/login`, {
+      const response : any = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, {
         email: email,
         password: password,
       });
@@ -68,7 +68,7 @@ export default function Auth() {
     })
     console.log("User created:", { name, email, password });
     try {
-      const response = await axios.post(`http://${import.meta.env.VITE_API_URL}/user/create`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/create`, {
         name: name,
         email: email,
         password: password,

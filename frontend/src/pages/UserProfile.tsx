@@ -90,7 +90,7 @@ export default function UserProfile() {
       }
 
       const response = await axios.put(
-        `http://${import.meta.env.VITE_API_URL}/user/edit/${id}`,
+        `${import.meta.env.VITE_API_URL}/user/edit/${id}`,
         formData,
         {
           headers: {
@@ -145,7 +145,7 @@ export default function UserProfile() {
                 >
                   {previewPic || user?.profilePictureUrl ? (
                     <img
-                      src={previewPic || `http://${import.meta.env.VITE_API_URL}/uploads/${user?.profilePictureUrl}`}
+                      src={previewPic || `${import.meta.env.VITE_API_URL}/uploads/${user?.profilePictureUrl}`}
                       alt="Pic do usuário"
                       className="absolute top-0 left-0 w-full h-full object-cover rounded-full"
                     />
@@ -166,7 +166,7 @@ export default function UserProfile() {
               </>
             ) : previewPic || user?.profilePictureUrl ? (
               <img
-                src={previewPic || `http://${import.meta.env.VITE_API_URL}/uploads/${user?.profilePictureUrl}`}
+                src={previewPic || `${import.meta.env.VITE_API_URL}/uploads/${user?.profilePictureUrl}`}
                 alt="Pic do usuário"
                 className="rounded-full object-cover w-full h-full border"
               />

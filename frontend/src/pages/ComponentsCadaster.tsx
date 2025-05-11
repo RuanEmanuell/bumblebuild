@@ -49,7 +49,7 @@ export default function ComponentsCadaster() {
 
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://${import.meta.env.VITE_API_URL}0/cpu/create`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}0/cpu/create`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
