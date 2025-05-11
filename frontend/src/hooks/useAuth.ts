@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { User } from "../models/User";
+import process from "process";
 
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -10,7 +11,7 @@ export const useAuth = () => {
 
         if (token) {
             setToken(token);
-            fetch("http://localhost:3000/user/logado", {
+            fetch(`http://${import.meta.env.VITE_API_URL}/user/logado`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

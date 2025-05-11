@@ -7,6 +7,7 @@ import { LogoSecondary } from "../components/Logo";
 import CustomCheckbox from "../components/CustomCheckbox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import process from "process";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -37,7 +38,7 @@ export default function Auth() {
   const handleLogin = async () => {
     console.log("Realizando login com:", { email, password });
     try {
-      const response : any = await axios.post("http://localhost:3000/user/login", {
+      const response : any = await axios.post(`http://${import.meta.env.VITE_API_URL}/user/login`, {
         email: email,
         password: password,
       });
@@ -68,7 +69,7 @@ export default function Auth() {
     })
     console.log("User created:", { name, email, password });
     try {
-      const response = await axios.post("http://localhost:3000/user/create", {
+      const response = await axios.post(`http://${import.meta.env.VITE_API_URL}/user/create`, {
         name: name,
         email: email,
         password: password,

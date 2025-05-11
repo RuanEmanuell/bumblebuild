@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import HeaderCustom from "../components/Header";
 import Footer from "../components/Footer";
 import { ButtonHome } from "../components/ButtonHome";
+import process from "process";
 
 type ComponentType =
   | "CPU"
@@ -49,7 +50,7 @@ export default function ComponentsCadaster() {
 
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3000/cpu/create", {
+        const response = await fetch(`http://${import.meta.env.VITE_API_URL}0/cpu/create`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
