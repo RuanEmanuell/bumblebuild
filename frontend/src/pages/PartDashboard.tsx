@@ -39,7 +39,7 @@ export default function PartDashboard() {
 
   async function fetchParts() {
     try {
-      const response = await fetch("http://localhost:3000/parts");
+      const response = await fetch(`http://${import.meta.env.VITE_API_URL}/parts`);
       const data = await response.json();
       setParts(data);
       setData(prev => ({ ...prev, totalParts: data.length }));
@@ -67,8 +67,8 @@ export default function PartDashboard() {
     };
 
     const url = partBeingEdited
-      ? `http://localhost:3000/parts/${partBeingEdited.id}`
-      : "http://localhost:3000/parts/create";
+      ? `http://${import.meta.env.VITE_API_URL}/parts/${partBeingEdited.id}`
+      : `http://${import.meta.env.VITE_API_URL}/parts/create`;
 
     const method = partBeingEdited ? "PUT" : "POST";
 
@@ -108,7 +108,7 @@ export default function PartDashboard() {
     if (!confirm("Tem certeza que deseja excluir esta peça?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/parts/${id}`, {
+      const response = await fetch(`http://${import.meta.env.VITE_API_URL}/parts/${id}`, {
         method: "DELETE",
       });
 

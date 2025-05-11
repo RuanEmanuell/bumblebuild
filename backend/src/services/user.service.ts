@@ -82,13 +82,12 @@ export class UserService {
     if (!user) throw new Error("User not found.");
 
     const token = randomUUID();
-    const expiration = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+    const expiration = new Date(Date.now() + 30 * 60 * 1000); 
 
     await userRepository.saveRecoveryToken(user.id, token, expiration);
 
-    const link = `http://localhost:5173/reset-password?token=${token}`; // or real domain
+    const link = `http://localhost:5173/reset-password?token=${token}`; 
 
-    // Basic email sending example
     var transporter = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,

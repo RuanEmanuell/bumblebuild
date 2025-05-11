@@ -33,7 +33,7 @@ const HeaderCustom: React.FC = () => {
                     <div className="flex items-center gap-2">
                         {user?.profilePictureUrl ? (
                             <img
-                                src={`http://localhost:3000/uploads/${user?.profilePictureUrl}`}
+                                src={`http://${import.meta.env.VITE_API_URL}/uploads/${user?.profilePictureUrl}`}
                                 alt="Foto usuário"
                                 className="w-8 h-8 rounded-full object-cover border"
                             />
