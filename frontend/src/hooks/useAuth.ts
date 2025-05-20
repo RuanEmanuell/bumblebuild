@@ -9,8 +9,7 @@ export const useAuth = () => {
     const token = localStorage.getItem("token");
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    console.log("🔍 VITE_API_URL:", apiUrl);
-    console.log("📦 Token encontrado:", token);
+
 
     if (token && apiUrl) {
       setToken(token);
@@ -24,7 +23,6 @@ export const useAuth = () => {
           const contentType = res.headers.get("content-type");
           const responseText = await res.text();
 
-          console.log("📨 Resposta da API:", responseText);
 
           if (!res.ok) {
             console.warn("❌ Requisição falhou. Status:", res.status);
@@ -37,7 +35,6 @@ export const useAuth = () => {
 
           if (contentType && contentType.includes("application/json")) {
             const data = JSON.parse(responseText);
-            console.log("✅ Usuário logado:", data);
             if (data.name) {
               setUser(data);
             }

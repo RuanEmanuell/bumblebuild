@@ -35,16 +35,13 @@ export default function Auth() {
   }, []);
 
   const handleLogin = async () => {
-    console.log("Realizando login com:", { email, password });
     try {
       const response : any = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, {
         email: email,
         password: password,
       });
-      console.log("User logged in:", response.data);
       alert("Usuário fez login!");
       const { token } = response.data;
-      console.log("Token recebido:", token);
 
       //salavndo token no localStorage
       localStorage.setItem("token", token);
@@ -66,8 +63,6 @@ export default function Auth() {
       email: email,
       password: password,
     })
-    console.log("User created:", { name, email, password });
-    console.log("url: " + `${import.meta.env.VITE_API_URL}/user/create`);
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/create`, {
         name: name,
