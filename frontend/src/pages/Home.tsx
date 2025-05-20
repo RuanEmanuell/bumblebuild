@@ -1,10 +1,6 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from "framer-motion";
 import { ButtonHome } from "../components/ButtonHome";
-import { ProductCard } from "../components/ProductCard";
 import Footer from '../components/Footer';
-import { Categories } from "../components/Categories";
 
 //imagens dos produtos
 import setupExemplo from "../assets/setupexemplo.jpg";
@@ -14,7 +10,6 @@ import HeaderCustom from '../components/Header';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Home() {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const { user } = useAuth();
 
     const sampleProducts = [
@@ -26,9 +21,13 @@ export default function Home() {
         { name: "PC do Bolsonaro", price: "R$ 2230", stars: 3.3, image: setupExemplo, category: "MOTHERBOARD" }
     ];
 
+    /*
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
     const filteredProducts = selectedCategory
         ? sampleProducts.filter(p => p.category === selectedCategory)
         : sampleProducts;
+    */
 
 
     return (
