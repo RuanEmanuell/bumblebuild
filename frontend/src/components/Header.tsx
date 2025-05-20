@@ -28,6 +28,7 @@ const HeaderCustom: React.FC = () => {
             {/*nav desktop*/}
             <nav className="hidden md:flex items-center gap-8 text-textPrimary">
                 <Link to="/" className="font-bold hover:underline">Home</Link>
+                <Link to="/parts" className="font-bold hover:underline">Peças</Link>
 
                 {user ? (
                     <div className="flex items-center gap-2">
@@ -72,9 +73,6 @@ const HeaderCustom: React.FC = () => {
                         <h1 className="ml-2 font-bold">BUMBLEBUILD</h1>
                     </div>
 
-                    <Link to="/" className="font-bold hover:underline">Home</Link>
-
-
                     {user ? (
                         <div className="flex items-center gap-2">
                             <User size={20} className="text-textPrimary" />
@@ -88,6 +86,10 @@ const HeaderCustom: React.FC = () => {
                             <Link to="/login" className="font-bold hover:underline">Cadastre-se</Link>
                         </div>
                     )}
+
+                    <Link to="/" className="font-bold hover:underline">Home</Link>
+                    <Link to="/parts" className="font-bold hover:underline">Peças</Link>
+
                 </div>
             )}
         </header>
