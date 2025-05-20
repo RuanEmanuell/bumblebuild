@@ -1,10 +1,6 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from "framer-motion";
 import { ButtonHome } from "../components/ButtonHome";
-import { ProductCard } from "../components/ProductCard";
 import Footer from '../components/Footer';
-import { Categories } from "../components/Categories";
 
 //imagens dos produtos
 import setupExemplo from "../assets/setupexemplo.jpg";
@@ -14,7 +10,6 @@ import HeaderCustom from '../components/Header';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Home() {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const { user } = useAuth();
 
     const sampleProducts = [
@@ -26,20 +21,24 @@ export default function Home() {
         { name: "PC do Bolsonaro", price: "R$ 2230", stars: 3.3, image: setupExemplo, category: "MOTHERBOARD" }
     ];
 
+    /*
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
     const filteredProducts = selectedCategory
         ? sampleProducts.filter(p => p.category === selectedCategory)
         : sampleProducts;
+    */
 
 
     return (
-        <div className="bg-white text-black min-h-screen">
+        <div className="bg-white text-black min-h-screen flex flex-col">
             <HeaderCustom />
 
             <div className="px-6 py-4 text-lg md:text-xl font-medium">
                 {user ? `Olá, ${user.name}! Bem-vindo de volta.` : "Olá! Faça login para aproveitar melhor a experiência."}
             </div>
 
-            <section className="flex flex-col md:flex-row items-center justify-center gap-8 px-6 py-12">
+            <section className="flex flex-col md:flex-row items-center justify-center gap-8 px-6 py-12 flex-grow">
                 <div className="flex flex-col items-start text-left">
                     <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-snug mb-4">
                         Encontre as <br /> melhores peças <br /> para seu PC!
@@ -52,7 +51,6 @@ export default function Home() {
                             Montar meu PC →
                         </ButtonHome>
                     </Link>
-
                 </div>
                 <img
                     src={pcIcon}
@@ -61,6 +59,7 @@ export default function Home() {
                 />
             </section>
 
+            {/*
             <Categories
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
@@ -83,7 +82,9 @@ export default function Home() {
                     ))}
                 </div>
             </section>
+            */}
 
+            {/*
             <section className="px-6 md:px-12 py-8 bg-gray-100">
                 <h3 className="text-xl font-semibold mb-4">Histórico de Montagens</h3>
                 <ul className="space-y-4">
@@ -99,6 +100,7 @@ export default function Home() {
                     </li>
                 </ul>
             </section>
+           */}
 
             <Footer />
         </div>

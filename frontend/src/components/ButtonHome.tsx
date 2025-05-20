@@ -17,7 +17,7 @@ const ButtonHome: React.FC<ButtonHomeProps> = ({
     <button
       type={type}
       onClick={onClick}
-      className={`bg-primary text-white text-lg font-semibold py-3 px-8 rounded-2xl transition hover:bg-secondary ${className}`}
+      className={`bg-primary text-white text-lg font-semibold py-3 px-8 rounded-2xl transition hover:bg-secondary hover:bg-yellow-500 cursor-pointer ${className}`}
     >
       {children}
     </button>
