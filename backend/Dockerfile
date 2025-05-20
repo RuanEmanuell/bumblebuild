@@ -13,8 +13,10 @@ RUN npm install
 # Agora copia o restante do projeto
 COPY . .
 
+RUN chmod +x ./entrypoint.sh
+
 # Expõe a porta que a aplicação vai usar dentro do container
 EXPOSE 3000
 
 # Comando para rodar a aplicação
-CMD ["npm", "run", "dev"]
+CMD ["./entrypoint.sh"]
