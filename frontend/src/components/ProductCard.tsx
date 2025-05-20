@@ -6,7 +6,7 @@ interface ProductProps {
   price: string;
   stars: number;
   image: string;
-  link?: string;  //novo campo link
+  link?: string;  
 }
 
 export function ProductCard({ name, price, stars, image, link }: ProductProps) {

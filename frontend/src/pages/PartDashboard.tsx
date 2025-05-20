@@ -51,7 +51,7 @@ export default function PartDashboard() {
   }
 
   const partsFiltradas = selectedCategory
-    ? parts.filter(p => p.tipo === selectedCategory)
+    ? parts.filter(p => p.type === selectedCategory)
     : parts;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,11 +59,12 @@ export default function PartDashboard() {
 
     const form = e.currentTarget;
     const novaPeca = {
-      nome: form.nome.value,
-      marca: form.marca.value,
-      tipo: form.tipo.value,
-      preco: null,
-      linkPreco: form.link1.value
+      // @ts-ignore
+      name: form.name.value,
+      brand: form.brand.value,
+      type: form.type.value,
+      price: null,
+      priceLink: form.link1.value
     };
 
     const url = partBeingEdited
@@ -164,8 +165,8 @@ export default function PartDashboard() {
               {partsFiltradas.map((peca, index) => (
                 <motion.div key={index} whileHover={{ scale: 1.03 }}>
                   <ProductCard
-                    name={peca.nome}
-                    price={`R$ ${peca.preco}`}
+                    name={peca.name}
+                    price={`R$ ${peca.price}`}
                     stars={peca.estrelas || 0}
                     image={setupExemplo}
                     link={peca.link}
@@ -186,25 +187,25 @@ export default function PartDashboard() {
       <Modal isOpen={isModalOpen} onClose={closeModal} title={partBeingEdited ? "Editar Peça" : "Adicionar nova peça"}>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
-            name="nome"
+            name="name"
             type="text"
-            placeholder="Nome da peça"
-            defaultValue={partBeingEdited?.nome || ""}
+            placeholder="name da peça"
+            defaultValue={partBeingEdited?.name || ""}
             className="border border-gray-300 rounded p-2"
           />
           <input
-            name="marca"
+            name="brand"
             type="text"
-            placeholder="Marca"
-            defaultValue={partBeingEdited?.marca || ""}
+            placeholder="brand"
+            defaultValue={partBeingEdited?.brand || ""}
             className="border border-gray-300 rounded p-2"
           />
           <select
-            name="tipo"
+            name="type"
             className="border border-gray-300 rounded p-2"
-            defaultValue={partBeingEdited?.tipo || ""}
+            defaultValue={partBeingEdited?.type || ""}
           >
-            <option value="">Selecione o tipo</option>
+            <option value="">Selecione o type</option>
             <option value="CPU">CPU</option>
             <option value="GPU">GPU</option>
             <option value="RAM">RAM</option>
