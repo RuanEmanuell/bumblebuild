@@ -7,7 +7,7 @@
           "type": "missing"
         }
       ],
-      "destination": "/404",
+      "destination": "/",
       "statusCode": 302
     }
   ]
