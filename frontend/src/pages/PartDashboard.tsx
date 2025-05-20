@@ -189,14 +189,14 @@ export default function PartDashboard() {
           <input
             name="name"
             type="text"
-            placeholder="name da peça"
+            placeholder="Nome da peça"
             defaultValue={partBeingEdited?.name || ""}
             className="border border-gray-300 rounded p-2"
           />
           <input
             name="brand"
             type="text"
-            placeholder="brand"
+            placeholder="Marca"
             defaultValue={partBeingEdited?.brand || ""}
             className="border border-gray-300 rounded p-2"
           />
