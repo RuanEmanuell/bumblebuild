@@ -9,8 +9,6 @@ export const useAuth = () => {
     const token = localStorage.getItem("token");
     const apiUrl = import.meta.env.VITE_API_URL;
 
-
-
     if (token && apiUrl) {
       setToken(token);
 
@@ -22,7 +20,6 @@ export const useAuth = () => {
         .then(async (res) => {
           const contentType = res.headers.get("content-type");
           const responseText = await res.text();
-
 
           if (!res.ok) {
             console.warn("❌ Requisição falhou. Status:", res.status);
@@ -46,5 +43,12 @@ export const useAuth = () => {
     }
   }, []);
 
-  return { user, setUser, token };
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    setToken(null);
+    window.location.href = "/login";
+  };
+
+  return { user, setUser, token, logout };
 };

@@ -23,7 +23,7 @@ const formatDate = (isoDate?: string | Date) => {
 
 export default function UserProfile() {
   //variaveis de controle de estado
-  const { user, token } = useAuth();
+  const { user, token, logout } = useAuth();
   const [previewPic, setPreviewPic] = useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -33,7 +33,7 @@ export default function UserProfile() {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
-  const [PicFile, setPicFile] = useState<File | null>(null);
+  const [picFile, setPicFile] = useState<File | null>(null);
   const [cropperModal, setCropperModal] = useState(false);
 
   //atualiza os dados quando o user for carregado
@@ -80,13 +80,13 @@ export default function UserProfile() {
       }
 
       const formData = new FormData();
-      formData.append("nome", editedName);
+      formData.append("name", editedName);
       formData.append("email", editedEmail);
       if (newPassword) {
-        formData.append("senha", newPassword);
+        formData.append("password", newPassword);
       }
-      if (PicFile) {
-        formData.append("Pic", PicFile);
+      if (picFile) {
+        formData.append("profilePictureUrl", picFile);
       }
 
       const response = await axios.put(
@@ -133,7 +133,8 @@ export default function UserProfile() {
   return (
     <div className="min-h-screen flex flex-col">
       <HeaderCustom />
-      <main className="flex-grow max-w-4xl mx-auto mt-10 px-4 sm:px-6 md:px-8">
+      <main className="flex-grow w-full max-w-3xl mx-auto mt-16 px-6 sm:px-10">
+
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:items-start">
           {/*div para a Pic*/}
           <div className="relative w-50 h-50 sm:w-36 sm:h-36 md:w-44 md:h-44">
@@ -146,7 +147,7 @@ export default function UserProfile() {
                   {previewPic || user?.profilePictureUrl ? (
                     <img
                       src={previewPic || `${import.meta.env.VITE_API_URL}/uploads/${user?.profilePictureUrl}`}
-                      alt="Pic do usuário"
+                      alt="Foto do usuário"
                       className="absolute top-0 left-0 w-full h-full object-cover rounded-full"
                     />
                   ) : (
@@ -278,6 +279,13 @@ export default function UserProfile() {
             </div>
           )}
         </div>
+
+        <div className="flex justify-start mt-6">
+          <ButtonPrimary onClick={logout}>
+            Sair
+          </ButtonPrimary>
+        </div>
+
 
         <div className="my-12">
           <h1 className="font-bold text-2xl">Histórico de Montagens</h1>
