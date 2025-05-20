@@ -67,6 +67,7 @@ export default function Auth() {
       password: password,
     })
     console.log("User created:", { name, email, password });
+    console.log("url: " + `${import.meta.env.VITE_API_URL}/user/create`);
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/create`, {
         name: name,
