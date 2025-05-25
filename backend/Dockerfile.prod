@@ -1,0 +1,23 @@
+# Usa uma imagem mais leve
+FROM node:22-slim
+
+# Define o diretório de trabalho
+WORKDIR /app
+
+# Copia apenas os arquivos essenciais
+COPY package*.json ./
+
+# Instala as dependências de produção
+RUN npm ci --only=production
+
+# Copia o restante do projeto, incluindo o entrypoint
+COPY . .
+
+# Garante permissão de execução no script de entrada
+RUN chmod +x ./entrypoint.sh
+
+# Expõe a porta usada pela aplicação
+EXPOSE 3000
+
+# Comando de inicialização
+CMD ["./entrypoint.sh"]
