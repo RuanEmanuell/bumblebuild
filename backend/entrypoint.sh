@@ -1,9 +1,14 @@
+#!/bin/sh
+
 echo "Aguardando o banco de dados..."
-npx prisma generate
-until npx prisma migrate dev --name init; do 
-    echo "Falha ao aplicar as migrações. Tentando novamente em 5 segundos..."
-    sleep 5
+
+until nc -z $DB_HOST $DB_PORT; do
+  echo "Aguardando o banco de dados..."
+  sleep 2
 done
 
-echo "Inciando a aplicação..."
-npm run dev
+echo "Executando migrações..."
+npx prisma migrate deploy
+
+echo "Iniciando a aplicação..."
+npm run start
