@@ -7,4 +7,5 @@ export interface Motherboard {
   ramType: string; 
   size: string; 
   slots: number;
+  maxRAM : number;
 }
