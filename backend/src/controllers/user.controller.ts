@@ -58,7 +58,7 @@ export class UserController {
 
       //se tiver foto adiciona a dados
       if (req.file) {
-        dados.fotoPerfilUrl = `${req.file.filename}`;
+        dados.profilePictureUrl = `${req.file.filename}`;
       }
 
       await userService.updateUser(Number(id), dados, req.file);

@@ -57,7 +57,7 @@ router.get("/logado", authenticateToken, async (req: Request, res: Response) => 
 router.put(
   "/edit/:id",
   authenticateToken,
-  upload.single("foto"),
+  upload.single("profilePictureUrl"),
   async (req: Request, res: Response) => {
     try {
       await userController.update(req, res);

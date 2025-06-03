@@ -56,12 +56,7 @@ export class UserService {
     }
 
     if (file) {
-      const currentUser = await userRepository.searchById(id);
-      if (currentUser?.profilePictureUrl) {
-        data.profilePictureUrl = currentUser.profilePictureUrl;
-      } else {
-        data.profilePictureUrl = file.filename;
-      }
+      data.profilePictureUrl = file.filename;
     }
 
     data.updatedAt = new Date();
@@ -69,6 +64,7 @@ export class UserService {
     const updatedUser = await userRepository.update(id, data);
     return updatedUser;
   }
+
 
 
   async updatePassword(id: number, newPassword: string) {
@@ -82,11 +78,11 @@ export class UserService {
     if (!user) throw new Error("User not found.");
 
     const token = randomUUID();
-    const expiration = new Date(Date.now() + 30 * 60 * 1000); 
+    const expiration = new Date(Date.now() + 30 * 60 * 1000);
 
     await userRepository.saveRecoveryToken(user.id, token, expiration);
 
-    const link = `http://localhost:5173/reset-password?token=${token}`; 
+    const link = `http://localhost:5173/reset-password?token=${token}`;
 
     var transporter = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
