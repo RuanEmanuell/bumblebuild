@@ -17,6 +17,7 @@ export default function Auth() {
   const [isChecked, setIsChecked] = useState(false);
   const [logoSize, setLogoSize] = useState(window.innerWidth < 768 ? 120 : 190);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -36,26 +37,29 @@ export default function Auth() {
 
   const handleLogin = async () => {
     try {
-      const response : any = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, {
+      setErrorMessage(null);
+      const response: any = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, {
         email: email,
         password: password,
       });
-      alert("Usuário fez login!");
+
       const { token } = response.data;
 
       //salavndo token no localStorage
       localStorage.setItem("token", token);
       navigate("/");
       return response.data;
-    } catch (error) {
-      console.error("Error logging in:", error);
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.error || "Erro ao fazer login. Tente novamente.";
+      setErrorMessage(message);
       throw error;
     }
   };
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
-      alert("As senhas não coincidem");
+      setErrorMessage("As senhas não coincidem");
       return;
     }
     console.log({
@@ -64,6 +68,7 @@ export default function Auth() {
       password: password,
     })
     try {
+      setErrorMessage(null);
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/create`, {
         name: name,
         email: email,
@@ -72,11 +77,13 @@ export default function Auth() {
       });
 
       console.log("User created:", response.data);
-      alert("Usuário criado!");
+
       setIsLogin(true);
       return response.data;
-    } catch (error) {
-      console.error("Error creating user:", error);
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.error || "Erro ao criar conta. Tente novamente.";
+      setErrorMessage(message);
       throw error;
     }
   };
@@ -163,6 +170,12 @@ export default function Auth() {
               checked={isChecked}
               onChange={(e) => setIsChecked(e.target.checked)}
             />
+          )}
+
+          {errorMessage && (
+            <div className="text-red-600 text-center font-medium text-sm">
+              {errorMessage}
+            </div>
           )}
 
           <div className="flex flex-col items-center space-y-4">
