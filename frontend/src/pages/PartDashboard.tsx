@@ -69,7 +69,8 @@ export default function PartDashboard() {
       name: formData.name,
       brand: formData.brand,
       type: selectedPartType,
-      priceLink: formData.priceLink
+      priceLink: formData.priceLink,
+      imageUrl: formData.imageUrl,
     };
     // nested specs
     const specKey = selectedPartType.toLowerCase();               // e.g. "cpu"
@@ -141,8 +142,7 @@ export default function PartDashboard() {
                     <ProductCard
                       name={peca.name}
                       price={`R$ ${peca.price}`}
-                      stars={peca.stars || 0}
-                      image={setupExemplo}
+                      image={peca.imageUrl? peca.imageUrl : setupExemplo}
                       link={peca.priceLink}
                     />
                     <div className="flex justify-between mt-2">
@@ -191,7 +191,13 @@ export default function PartDashboard() {
             onChange={handleChange}
             className="border-gray-300 rounded p-2 border"
           />
-
+          <input
+            name="imageUrl"
+            placeholder="Link da Imagem"
+            value={formData.imageUrl||""}
+            onChange={handleChange}
+            className="border-gray-300 rounded p-2 border"
+          />
           <select
             name="type"
             value={selectedPartType}
