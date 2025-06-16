@@ -19,7 +19,6 @@ model PasswordRecoveryToken {
 model CPU {
   id                 Int     @id
   socket             String
-  line               String
   cores              Int
   threads            Int
   frequency          Float
@@ -84,7 +83,6 @@ model Motherboard {
   slots                Int 
   maxRAM               Int 
   size                 String 
-  cpuCompatibilityLine String 
   part                 Part   @relation("MotherboardToPart", fields: [id], references: [id])
 }
 

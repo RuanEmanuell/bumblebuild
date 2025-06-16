@@ -68,7 +68,6 @@ const parts = [
     cpu: {
       create: {
         socket: "AM4",
-        line: "Ryzen 7",
         cores: 8,
         threads: 16,
         frequency: 3.4,
@@ -87,7 +86,6 @@ const parts = [
     cpu: {
       create: {
         socket: "LGA1700",
-        line: "Core i5",
         cores: 6,
         threads: 12,
         frequency: 2.5,
@@ -106,7 +104,6 @@ const parts = [
     cpu: {
       create: {
         socket: "LGA1700",
-        line: "Core i5",
         cores: 6,
         threads: 12,
         frequency: 2.5,
@@ -191,7 +188,6 @@ const parts = [
         slots: 4,
         maxRAM: 128,
         size: "Micro-ATX",
-        cpuCompatibilityLine: "Ryzen 7000",
       },
     },
   },
@@ -210,7 +206,6 @@ const parts = [
         slots: 2,
         maxRAM: 64,
         size: "Micro-ATX",
-        cpuCompatibilityLine: "Intel 10th/11th Gen",
       },
     },
   },

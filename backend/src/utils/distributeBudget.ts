@@ -10,7 +10,7 @@ export enum PartType {
   
   export function distributeBudget(total: number): Record<PartType, number> {
     return {
-      [PartType.GPU]: total * 0.40,
+      [PartType.GPU]: total * 0.50,
       [PartType.CPU]: total * 0.20,
       [PartType.MOTHERBOARD]: total * 0.1,
       [PartType.RAM]: total * 0.1,
