@@ -6,8 +6,10 @@ import { LogoSecondary } from "../components/Logo";
 import CustomCheckbox from "../components/CustomCheckbox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 export default function Auth() {
+  const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [name, setname] = useState("");
   const [email, setEmail] = useState("");
@@ -35,6 +37,7 @@ export default function Auth() {
   }, []);
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       setErrorMessage(null);
       const response: any = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, {
@@ -52,11 +55,13 @@ export default function Auth() {
       const message =
         error?.response?.data?.error || "Erro ao fazer login. Tente novamente.";
       setErrorMessage(message);
+      setIsLoading(false);
       throw error;
     }
   };
 
   const handleRegister = async () => {
+    setIsLoading(true);
     if (password !== confirmPassword) {
       setErrorMessage("As senhas não coincidem");
       return;
@@ -78,11 +83,13 @@ export default function Auth() {
       console.log("User created:", response.data);
 
       setIsLogin(true);
+      setIsLoading(false);
       return response.data;
     } catch (error: any) {
       const message =
         error?.response?.data?.error || "Erro ao criar conta. Tente novamente.";
       setErrorMessage(message);
+      setIsLoading(false);
       throw error;
     }
   };
@@ -98,6 +105,7 @@ export default function Auth() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-primary p-4 sm:p-0">
+      {isLoading && <Loading/>}
       <div className="w-full max-w-md md:max-w-lg p-6 md:p-8 bg-white rounded-2xl shadow-lg">
         <div className="flex justify-center mb-6">
           <LogoSecondary size={logoSize} />

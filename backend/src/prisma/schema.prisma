@@ -16,42 +16,9 @@ model PasswordRecoveryToken {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model User {
-  id                     Int                     @id @default(autoincrement())
-  userType               String
-  name                   String
-  email                  String                  @unique
-  password               String
-  status                 Boolean                 @default(true)
-  profilePictureUrl      String?
-  createdAt              DateTime                @default(now())
-  updatedAt              DateTime                @updatedAt
-  passwordRecoveryTokens PasswordRecoveryToken[]
-}
-
-model Part {
-  id          Int          @id @default(autoincrement())
-  name        String?
-  brand       String
-  price       Float
-  type        PartType
-  imageUrl    String?
-  priceLink   String?
-  createdAt   DateTime     @default(now())
-  cpu         CPU?         @relation("CPUToPart")
-  case        Case?        @relation("CaseToPart")
-  cooler      Cooler?      @relation("CoolerToPart")
-  gpu         GPU?         @relation("GPUToPart")
-  motherboard Motherboard? @relation("MotherboardToPart")
-  psu         PSU?         @relation("PSUToPart")
-  ram         RAM?         @relation("RAMToPart")
-  ssd         SSD?         @relation("SSDToPart")
-}
-
 model CPU {
   id                 Int     @id
   socket             String
-  line               String
   cores              Int
   threads            Int
   frequency          Float
@@ -116,7 +83,6 @@ model Motherboard {
   slots                Int 
   maxRAM               Int 
   size                 String 
-  cpuCompatibilityLine String 
   part                 Part   @relation("MotherboardToPart", fields: [id], references: [id])
 }
 
@@ -129,4 +95,58 @@ enum PartType {
   CASE
   MOTHERBOARD
   COOLER
+}
+
+model User {
+  id                     Int       @id @default(autoincrement())
+  userType               String
+  name                   String
+  email                  String    @unique
+  password               String
+  status                 Boolean   @default(true)
+  profilePictureUrl      String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  passwordRecoveryTokens PasswordRecoveryToken[]
+
+  builds Build[] @relation("UserBuilds")
+}
+
+model Build {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  user       User      @relation("UserBuilds", fields: [userId], references: [id])
+  name       String
+  createdAt  DateTime  @default(now())
+
+  buildParts BuildPart[]
+}
+
+model Part {
+  id          Int          @id @default(autoincrement())
+  name        String?
+  brand       String
+  price       Float
+  type        PartType
+  imageUrl    String?
+  priceLink   String?
+  createdAt   DateTime     @default(now())
+  cpu         CPU?         @relation("CPUToPart")
+  case        Case?        @relation("CaseToPart")
+  cooler      Cooler?      @relation("CoolerToPart")
+  gpu         GPU?         @relation("GPUToPart")
+  motherboard Motherboard? @relation("MotherboardToPart")
+  psu         PSU?         @relation("PSUToPart")
+  ram         RAM?         @relation("RAMToPart")
+  ssd         SSD?         @relation("SSDToPart")
+
+  buildParts BuildPart[] @relation("PartBuildParts")
+}
+
+model BuildPart {
+  id        Int    @id @default(autoincrement())
+  buildId   Int
+  partId    Int
+  build     Build  @relation(fields: [buildId], references: [id])
+  part      Part   @relation("PartBuildParts", fields: [partId], references: [id])
 }

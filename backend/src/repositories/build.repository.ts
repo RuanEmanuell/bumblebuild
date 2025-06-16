@@ -1,28 +1,35 @@
-// import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-// export class MontagemRepository {
-//     async criarMontagem(dados: Prisma.MontagemCreateInput) {
-//         try {
-//             return await prisma.montagem.create({
-//                 data: dados,
-//                 include: {
-//                     cpu: true,
-//                     gpu: true,
-//                     ram: true,
-//                     ssd: true,
-//                     fonte: true,
-//                     gabinete: true,
-//                     placaMae: true,
-//                     usuario: true,
-//                 },
-//             });
-//         } catch (error) {
-//             console.error("Erro ao criar montagem:", error);
-//             throw error;
-//         }
-//     }
+export class BuildRepository {
+  async createBuild(userId: number, name: string, partIds: number[]) {
+    return await prisma.build.create({
+      data: {
+        userId,
+        name,
+        buildParts: {
+          create: partIds.map(partId => ({
+            part: { connect: { id: partId } }
+          }))
+        }
+      },
+      include: {
+        buildParts: {
+          include: { part: true }
+        }
+      }
+    });
+  }
 
-
-// }
+  async findBuildsByUser(userId: number) {
+    return await prisma.build.findMany({
+      where: { userId },
+      include: {
+        buildParts: {
+          include: { part: true }
+        }
+      }
+    });
+  }
+}

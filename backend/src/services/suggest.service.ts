@@ -25,63 +25,116 @@ export function suggestConfigurationWithBudget(
   budget: number
 ): { configuration: Part[]; message?: string } {
   const distribution = distributeBudget(budget);
-  const selected: Partial<Record<PartType, Part>> = {};
 
-  for (const type in distribution) {
-    const limit = distribution[type as PartType]!;
-    const bestParts = parts
-      .filter(p => p.type === type && p.price <= limit)
-      .sort((a, b) => b.price - a.price);
+  // CPU + Motherboard 
+  const possibleCpus = parts.filter(p => p.type === PartType.CPU && p.price <= distribution.CPU);
 
-    if (bestParts.length === 0) {
-      return {
-        configuration: [],
-        message: `No ${type} found within the budget of $${limit.toFixed(2)}`
-      };
+  let cpu: Part | null = null;
+  let motherboard: Part | null = null;
+
+  for (const cpuOption of possibleCpus.sort((a, b) => b.price - a.price)) {
+    const cpuData = extractSpecificData(cpuOption) as CPU;
+
+    const possibleMotherboards = parts.filter(p =>
+      p.type === PartType.MOTHERBOARD &&
+      p.price <= distribution.MOTHERBOARD &&
+      checkCpuMotherboardCompatibility(cpuData, extractSpecificData(p) as Motherboard)
+    ).sort((a, b) => b.price - a.price);
+
+    if (possibleMotherboards.length > 0) {
+      cpu = cpuOption;
+      motherboard = possibleMotherboards[0];
+      console.log('CPU escolhida:', cpu.name, ' - R$', cpu.price);
+      console.log('Placa-mãe escolhida:', motherboard.name, ' - R$', motherboard.price);
+      break;
     }
-
-    selected[type as PartType] = bestParts[0];
   }
 
-  const cpu = selected['CPU'];
-  const motherboard = selected['MOTHERBOARD'];
-  const ram = selected['RAM'];
-  const gpu = selected['GPU'];
-  const psu = selected['PSU'];
-  const casePC = selected['CASE'];
-
-  const cpuData = cpu ? extractSpecificData(cpu) as CPU : null;
-  const motherboardData = motherboard ? extractSpecificData(motherboard) as Motherboard : null;
-  const ramData = ram ? extractSpecificData(ram) as RAM : null;
-  const gpuData = gpu ? extractSpecificData(gpu) as GPU : null;
-  const psuData = psu ? extractSpecificData(psu) as PSU : null;
-  const caseData = casePC ? extractSpecificData(casePC) as Case : null;
-
-  if (cpuData && motherboardData && !checkCpuMotherboardCompatibility(cpuData, motherboardData)) {
-    return { configuration: [], message: "CPU and Motherboard are incompatible" };
+  if (!cpu || !motherboard) {
+    console.log('❌ Não foi possível encontrar CPU e Motherboard compatíveis dentro do orçamento');
+    return { configuration: [], message: 'No compatible CPU and Motherboard fit the budget' };
   }
 
-  if (ramData && motherboardData && !checkRamMotherboardCompatibility(ramData, motherboardData)) {
-    return { configuration: [], message: "RAM and Motherboard are incompatible" };
-  }
+  const motherboardData = extractSpecificData(motherboard) as Motherboard;
 
-  if (gpuData && psuData && !checkGpuPsuCompatibility(gpuData, psuData)) {
-    return { configuration: [], message: "GPU and PSU are incompatible" };
-  }
+  //RAM
+  const ram = parts.filter(p =>
+    p.type === PartType.RAM &&
+    p.price <= distribution.RAM &&
+    checkRamMotherboardCompatibility(extractSpecificData(p) as RAM, motherboardData)
+  ).sort((a, b) => b.price - a.price)[0] || null;
 
-  if (caseData && motherboardData && gpuData && !checkCaseCompatibility(caseData, motherboardData, gpuData)) {
-    return { configuration: [], message: "Case is incompatible with GPU or Motherboard" };
+  if (!ram) {
+    console.log('❌ Nenhuma RAM compatível');
+    return { configuration: [], message: 'No compatible RAM fits the budget' };
   }
+  console.log('RAM escolhida:', ram.name, ' - R$', ram.price);
 
-  const finalConfiguration = Object.values(selected) as Part[];
+  //GPU
+  const gpu = parts.filter(p =>
+    p.type === PartType.GPU && p.price <= distribution.GPU
+  ).sort((a, b) => b.price - a.price)[0] || null;
+
+  if (!gpu) {
+    console.log('❌ Nenhuma GPU dentro do orçamento');
+    return { configuration: [], message: 'No GPU fits the budget' };
+  }
+  console.log('GPU escolhida:', gpu.name, ' - R$', gpu.price);
+  const gpuData = extractSpecificData(gpu) as GPU;
+
+  // PSU
+  const psu = parts.filter(p =>
+    p.type === PartType.PSU &&
+    p.price <= distribution.PSU &&
+    checkGpuPsuCompatibility(gpuData, extractSpecificData(p) as PSU)
+  ).sort((a, b) => b.price - a.price)[0] || null;
+
+  if (!psu) {
+    console.log('❌ Nenhuma PSU compatível');
+    return { configuration: [], message: 'No compatible PSU fits the budget' };
+  }
+  console.log('PSU escolhida:', psu.name, ' - R$', psu.price);
+
+  const psuData = extractSpecificData(psu) as PSU;
+
+  // CASE
+  const casePC = parts.filter(p =>
+    p.type === PartType.CASE &&
+    p.price <= distribution.CASE &&
+    checkCaseCompatibility(extractSpecificData(p) as Case, motherboardData, gpuData)
+  ).sort((a, b) => b.price - a.price)[0] || null;
+
+  if (!casePC) {
+    console.log('❌ Nenhum Case compatível');
+    return { configuration: [], message: 'No compatible Case fits the budget' };
+  }
+  console.log('Case escolhido:', casePC.name, ' - R$', casePC.price);
+
+  // SSD
+  const ssd = parts.filter(p =>
+    p.type === PartType.SSD && p.price <= distribution.SSD
+  ).sort((a, b) => b.price - a.price)[0] || null;
+
+  if (!ssd) {
+    console.log('❌ Nenhum SSD dentro do orçamento');
+    return { configuration: [], message: 'No SSD fits the budget' };
+  }
+  console.log('SSD escolhido:', ssd.name, ' - R$', ssd.price);
+
+  const finalConfiguration = [cpu, motherboard, ram, gpu, psu, casePC, ssd];
   const totalCost = finalConfiguration.reduce((sum, p) => sum + p.price, 0);
 
+  console.log('Custo total:', totalCost);
+
   if (totalCost > budget) {
+    console.log('❌ Configuração excede o orçamento');
     return {
       configuration: [],
-      message: `Configuration exceeds the budget: $${totalCost.toFixed(2)}`
+      message: `Configuration exceeds the budget: R$${totalCost.toFixed(2)}`,
     };
   }
+
+  console.log('✅ Configuração final gerada com sucesso!');
 
   return { configuration: finalConfiguration };
 }

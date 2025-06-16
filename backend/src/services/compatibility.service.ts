@@ -11,9 +11,8 @@ export function checkCpuMotherboardCompatibility(
   motherboard: Motherboard
 ): boolean {
   const isSocketCompatible = cpu.socket === motherboard.socket;
-  const isChipsetCompatible = motherboard.cpuCompatibilityLine.includes(cpu.line);
 
-  return isSocketCompatible && isChipsetCompatible;
+  return isSocketCompatible;
 }
 
 export function checkRamMotherboardCompatibility(
