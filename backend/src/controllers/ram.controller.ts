@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { RAMService } from '../services/ram.service';
+import { PartService } from '../services/part.service';
 
 const ramService = new RAMService();
+const partService = new PartService();
 
 export class RAMController {
   async create(req: Request, res: Response) {
@@ -30,6 +32,7 @@ export class RAMController {
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
     await ramService.deleteRAM(id);
+    await partService.deletePart(id);
     res.status(204).send();
   }
 }

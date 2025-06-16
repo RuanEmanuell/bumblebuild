@@ -13,14 +13,14 @@ export default function MotherboardForm({ formData, onChange }: MotherboardFormP
         placeholder="Socket"
         onChange={onChange}
         value={formData.socket || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="chipset"
         placeholder="Chipset"
         onChange={onChange}
         value={formData.chipset || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
        <input
         name="maxRAM"
@@ -28,28 +28,28 @@ export default function MotherboardForm({ formData, onChange }: MotherboardFormP
         placeholder="Maximo de RAM"
         onChange={onChange}
         value={formData.maxRAM || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="cpuCompatibilityLine"
         placeholder="Compatibilidade (ex: Ryzen, Core)"
         onChange={onChange}
         value={formData.cpuCompatibilityLine || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="ramType"
         placeholder="Tipo de RAM"
         onChange={onChange}
         value={formData.ramType|| ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="size"
         placeholder="Tamanho (ATX, mATX...)"
         onChange={onChange}
         value={formData.size || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
     
       <input
@@ -58,7 +58,7 @@ export default function MotherboardForm({ formData, onChange }: MotherboardFormP
         placeholder="Nº de slots"
         onChange={onChange}
         value={formData.slots || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
     </>
   );

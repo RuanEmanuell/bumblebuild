@@ -26,7 +26,7 @@ export const Categories: React.FC<CategoriesProps> = ({
   setSelectedCategory,
 }) => {
   return (
-    <section className="px-6 md:px-12 py-8">
+    <section className="py-8">
       <h3 className="text-xl font-semibold mb-4">Categorias</h3>
       <div className="flex flex-wrap gap-3 justify-start">
         <button

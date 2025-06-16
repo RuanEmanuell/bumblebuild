@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { SSDService } from '../services/ssd.service';
+import { PartService } from '../services/part.service';
 
 const ssdService = new SSDService();
+const partService = new PartService();
 
 export class SSDController {
   async create(req: Request, res: Response) {
@@ -30,6 +32,7 @@ export class SSDController {
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
     await ssdService.deleteSSD(id);
+    await partService.deletePart(id);
     res.status(204).send();
   }
 }
