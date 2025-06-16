@@ -96,6 +96,25 @@ const parts = [
       },
     },
   },
+    {
+    name: "Core i5 12400F",
+    brand: "Intel",
+    price: 1050.00,
+    type: "CPU",
+    imageUrl: "https://m.media-amazon.com/images/I/51DY7a--LrL._AC_SX679_.jpg",
+    priceLink: "https://www.amazon.com.br/Processador-Intel-i5-12400-N%C3%BAcleos-BX8071512400/dp/B09MDH6B1P",
+    cpu: {
+      create: {
+        socket: "LGA1700",
+        line: "Core i5",
+        cores: 6,
+        threads: 12,
+        frequency: 2.5,
+        tdp: 65,
+        integratedGraphics: false,
+      },
+    },
+  },
   {
     name: "SSD Plus 480GB",
     brand: "Sandisk",
@@ -185,7 +204,7 @@ const parts = [
     priceLink: "https://www.amazon.com.br/PLACA-MSI-H510M-B-DDR4-GERACAO/dp/B09Y1BCPNC",
     motherboard: {
       create: {
-        socket: "LGA1200",
+        socket: "LGA1700",
         chipset: "H510",
         ramType: "DDR4",
         slots: 2,

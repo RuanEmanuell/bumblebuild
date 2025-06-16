@@ -10,6 +10,7 @@ import motherboard from "./routes/motherboard.routes";
 import psu from "./routes/psu.routes";
 import ssd from "./routes/ssd.routes";
 import cooler from "./routes/cooler.routes";
+import build from "./routes/build.routes";
 import "./utils/cron";
 import path from "path";
 // import builds from "./routes/build.routes"; 
@@ -33,9 +34,9 @@ app.use("/motherboard", motherboard);
 app.use("/psu", psu);
 app.use("/ssd", ssd);
 app.use("/cooler", cooler);
+app.use("/build", build);
 
 app.use("/uploads", express.static(path.resolve(__dirname, "..", "uploads")));
-// app.use("/builds", builds);
 
 // Inicia o servidor
 app.listen(PORT, () => {
