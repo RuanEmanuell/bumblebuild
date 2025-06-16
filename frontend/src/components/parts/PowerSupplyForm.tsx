@@ -13,14 +13,14 @@ export default function PowerSupplyForm({ formData, onChange }: PowerSupplyFormP
         placeholder="Potência (W)"
         onChange={onChange}
         value={formData.powerW || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="certification"
         placeholder="Certificação"
         onChange={onChange}
         value={formData.certification || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <label htmlFor="modular" className="flex items-center gap-2 cursor-pointer">
         Modular:

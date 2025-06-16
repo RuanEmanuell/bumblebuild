@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ButtonPrimary } from "../components/Button";
-import GoogleLoginButton from "../components/GoogleLoginButton";
 import InputField from "../components/InputField";
 import { Mail, Lock, User } from "react-feather";
 import { LogoSecondary } from "../components/Logo";
@@ -180,7 +179,6 @@ export default function Auth() {
 
           <div className="flex flex-col items-center space-y-4">
             <ButtonPrimary type="submit">{isLogin ? "Login" : "Cadastrar"}</ButtonPrimary>
-            <GoogleLoginButton />
           </div>
 
           {isLogin && (

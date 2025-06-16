@@ -10,6 +10,7 @@ import { ProductCard } from "../components/ProductCard";
 import { Modal } from "../components/Modal";
 import HeaderCustom from "../components/Header";
 import PartFormFields from "../components/PartFormFields";
+import Loading from "../components/Loading";
 
 export default function PartDashboard() {
   const [data, setData] = useState({ totalUsers: 82, totalParts: 0, totalBuilds: 37 });
@@ -58,6 +59,8 @@ export default function PartDashboard() {
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    setIsLoading(true);
+
     e.preventDefault();
     if (!selectedPartType) {
       alert("Selecione um tipo de peça.");
@@ -107,12 +110,14 @@ export default function PartDashboard() {
       console.error("Erro no cadastro:", err);
       alert("Erro ao salvar peça.");
     }
+
+    setIsLoading(false);
   }
 
   return (
     <div className="flex flex-col min-h-screen bg-white text-black">
       <HeaderCustom />
-      <main className="flex-1 px-6 md:px-12 py-4">
+      <main className="flex-1 px-6 md:px-12 py-4 max-w-6xl mx-auto">
         {/* Estatísticas */}
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
           <div className="bg-gray-100 rounded-2xl p-6 shadow">
@@ -134,23 +139,24 @@ export default function PartDashboard() {
         {/* Grid de Peças */}
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {isLoading
-            ? <p>Carregando peças...</p>
+            ? <Loading/>
             : parts
                 .filter(p => !selectedCategory || p.type === selectedCategory)
-                .map((peca, idx) => (
+                .map((part, idx) => (
                   <motion.div key={idx} whileHover={{ scale: 1.03 }}>
                     <ProductCard
-                      name={peca.name}
-                      price={`R$ ${peca.price}`}
-                      image={peca.imageUrl? peca.imageUrl : setupExemplo}
-                      link={peca.priceLink}
+                      brand={part.brand}
+                      name={part.name}
+                      price={`R$ ${part.price}`}
+                      image={part.imageUrl? part.imageUrl : setupExemplo}
+                      link={part.priceLink}
                     />
                     <div className="flex justify-between mt-2">
-                      <ButtonSecondary onClick={() => openModal(peca)}>
+                      <ButtonSecondary onClick={() => openModal(part)}>
                         Editar
                       </ButtonSecondary>
                       <ButtonPrimary onClick={() => {
-                        if (confirm("Excluir?")) fetch(`${import.meta.env.VITE_API_URL}/parts/${peca.id}`, { method: 'DELETE' }).then(fetchParts);
+                        if (confirm("Excluir?")) fetch(`${import.meta.env.VITE_API_URL}/${part.type.toLowerCase()}/${part.id}`, { method: 'DELETE' }).then(fetchParts);
                       }}>
                         Remover
                       </ButtonPrimary>
@@ -167,6 +173,7 @@ export default function PartDashboard() {
         onClose={closeModal}
         title={partBeingEdited ? "Editar Peça" : "Adicionar nova peça"}
       >
+        {isLoading && <Loading/>}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             name="name"
@@ -218,7 +225,7 @@ export default function PartDashboard() {
             onChange={handleChange}
           />
 
-          <div className="flex justify-end gap-4">
+          <div className="flex justify-between gap-4">
             <ButtonPrimary type="submit">Salvar</ButtonPrimary>
             <ButtonSecondary type="button" onClick={closeModal}>
               Cancelar

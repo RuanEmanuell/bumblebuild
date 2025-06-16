@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LogoTertiary } from "../components/Logo";
-import { Heart, User, Menu, X } from "react-feather";
+import { User, Menu, X } from "react-feather";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
@@ -17,7 +17,6 @@ const HeaderCustom: React.FC = () => {
 
             {/*ícones no mobile*/}
             <div className="flex items-center gap-4 md:hidden">
-                <Heart size={22} className="hover:cursor-pointer hover:opacity-80" />
                 <div className="relative">
                 </div>
                 <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
@@ -55,9 +54,6 @@ const HeaderCustom: React.FC = () => {
                         <Link to="/login" className="font-bold hover:underline">Cadastre-se</Link>
                     </div>
                 )}
-
-
-                <Heart size={22} className="hover:cursor-pointer hover:opacity-80" />
 
             </nav>
 

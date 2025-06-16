@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { CoolerService } from '../services/cooler.service';
+import { PartService } from '../services/part.service';
 
 const coolerService = new CoolerService();
+const partService = new PartService();
 
 export class CoolerController {
   async create(req: Request, res: Response) {
@@ -30,6 +32,7 @@ export class CoolerController {
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
     await coolerService.deleteCooler(id);
+    await partService.deletePart(id);
     res.status(204).send();
   }
 }

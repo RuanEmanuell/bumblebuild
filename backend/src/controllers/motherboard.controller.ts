@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { MotherboardService } from '../services/motherboard.service';
+import { PartService } from '../services/part.service';
 
 const motherboardService = new MotherboardService();
+const partService = new PartService();
 
 export class MotherboardController {
   async create(req: Request, res: Response) {
@@ -30,6 +32,7 @@ export class MotherboardController {
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
     await motherboardService.deleteMotherboard(id);
+    await partService.deletePart(id);
     res.status(204).send();
   }
 }

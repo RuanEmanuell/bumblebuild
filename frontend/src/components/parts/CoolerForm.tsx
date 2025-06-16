@@ -13,7 +13,7 @@ export default function CoolerForm({ formData, onChange }: CoolerFormProps) {
         placeholder="Tipo do cooler"
         onChange={onChange}
         value={formData.coolerType || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="socketSupport"
@@ -21,7 +21,7 @@ export default function CoolerForm({ formData, onChange }: CoolerFormProps) {
         placeholder="Socket do cooler"
         onChange={onChange}
         value={formData.socketSupport || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
     </>
   );
