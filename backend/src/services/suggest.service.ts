@@ -26,9 +26,6 @@ export function suggestConfigurationWithBudget(
 ): { configuration: Part[]; message?: string } {
   const distribution = distributeBudget(budget);
 
-  console.log('💰 Orçamento total:', budget);
-  console.log('📊 Distribuição:', distribution);
-
   // CPU + Motherboard 
   const possibleCpus = parts.filter(p => p.type === PartType.CPU && p.price <= distribution.CPU);
 
