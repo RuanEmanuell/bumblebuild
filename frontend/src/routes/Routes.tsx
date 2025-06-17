@@ -8,6 +8,7 @@ import ResetPassword from "../pages/ResetPassword";
 import UserProfile from "../pages/UserProfile";
 import PcConfigForm from "../pages/PcConfigForm";
 import ComponentsCadaster from "../pages/ComponentsCadaster";
+import History from "../pages/History";
 
 export default function AppRoutes() {
   return (
@@ -21,6 +22,7 @@ export default function AppRoutes() {
         <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/pc-registration" element={<PcConfigForm />} />
         <Route path="/components-cadaster" element={<ComponentsCadaster />} />
+        <Route path="/history" element={<History />} />
         <Route path="*" element={<Navigate to="/" replace />} />
        </Routes>
   );

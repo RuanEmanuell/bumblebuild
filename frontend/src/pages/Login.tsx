@@ -40,7 +40,7 @@ export default function Auth() {
     setIsLoading(true);
     try {
       setErrorMessage(null);
-      const response: any = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, {
+      const response: any = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, {
         email: email,
         password: password,
       });
@@ -73,7 +73,7 @@ export default function Auth() {
     })
     try {
       setErrorMessage(null);
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/create`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/create`, {
         name: name,
         email: email,
         password: password,
