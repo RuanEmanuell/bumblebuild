@@ -4,13 +4,13 @@ import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';
 import { ProductCard } from '../components/ProductCard';
 import { ButtonPrimary } from '../components/Button';
+import setupExemplo from "../assets/setupexemplo.jpg";
 
 interface Product {
   id?: number;
   name: string;
   price: string;
-  stars?: number;
-  image: string;
+  imageUrl: string;
   category: string;
   brand?: string;
   link?: string;
@@ -60,6 +60,8 @@ const PcConfigForm: React.FC = () => {
         budget: parseFloat(budget),
       });
 
+      console.log(res.data.configuration);
+
       setBuild(res.data.configuration || []);
       setResponseMessage(res.data.message || 'PC montado com sucesso!');
       setSuccess(true);
@@ -94,7 +96,7 @@ const PcConfigForm: React.FC = () => {
 
           <ButtonPrimary
             type="submit">
-            {loading ? 'Enviando...' : 'Enviar'}
+            {loading ? 'Enviando...' : 'Montar'}
           </ButtonPrimary>
 
           {loading && <p className="text-gray-600 mt-2">Carregando configuração...</p>}
@@ -116,8 +118,8 @@ const PcConfigForm: React.FC = () => {
                     key={idx}
                     brand={part.brand || 'Marca Desconhecida'}
                     name={part.name}
-                    price={part.price}
-                    image={part.image}
+                    price={`R$ ${part.price}`}
+                    image={part.imageUrl? part.imageUrl : setupExemplo}
                     link={part.link}
                   />
                 ))}
