@@ -37,7 +37,7 @@ app.use("/motherboard", motherboard);
 app.use("/psu", psu);
 app.use("/ssd", ssd);
 app.use("/cooler", cooler);
-app.use("/build", build);
+app.use("/builds", build);
 
 app.use("/uploads", express.static(path.resolve(__dirname, "..", "uploads")));
 

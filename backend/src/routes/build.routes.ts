@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { suggestConfigurationWithBudget } from '../services/suggest.service';
 import { Part, PrismaClient} from '@prisma/client';
 import { BuildController } from '../controllers/build.controller';
+import { authenticateToken } from '../middlewares/authMiddleware';
 
 const prisma = new PrismaClient();
 const router = Router();
@@ -9,7 +10,7 @@ const buildController = new BuildController();
 
 /**
  * @swagger
- * /suggest:
+ * /builds/suggest:
  *   post:
  *     summary: Sugere uma configuração com base no orçamento informado
  *     requestBody:
@@ -66,7 +67,7 @@ router.post('/suggest', async (req : any, res : any) => {
 
 /**
  * @swagger
- * /builds:
+ * /builds/create:
  *   post:
  *     summary: Cria uma nova build para o usuário autenticado
  *     security:
@@ -91,7 +92,7 @@ router.post('/suggest', async (req : any, res : any) => {
  *       201:
  *         description: Build criada com sucesso
  */
-router.post('/builds', async (req: any, res: any) => {
+router.post('/create', authenticateToken,async (req: any, res: any) => {
   try {
     const userId = req.user!.id;
     const { name, partIds } = req.body;
@@ -127,7 +128,7 @@ router.post('/builds', async (req: any, res: any) => {
 
 /**
  * @swagger
- * /builds:
+ * /builds/all:
  *   get:
  *     summary: Lista as builds do usuário autenticado
  *     security:
@@ -136,7 +137,7 @@ router.post('/builds', async (req: any, res: any) => {
  *       200:
  *         description: Lista de builds retornada com sucesso
  */
-router.get('/builds', async (req: any, res: any) => {
+router.get('/all', async (req: any, res: any) => {
   try {
     const userId = req.user?.id;
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
@@ -189,7 +190,7 @@ router.get('/builds', async (req: any, res: any) => {
  *       200:
  *         description: Build atualizada com sucesso
  */
-router.put('/builds/:id', async (req: any, res: any) => {
+router.put('/:id', async (req: any, res: any) => {
   try {
     const userId = req.user?.id;
     const buildId = Number(req.params.id);
@@ -253,7 +254,7 @@ router.put('/builds/:id', async (req: any, res: any) => {
  *       200:
  *         description: Build removida com sucesso
  */
-router.delete('/builds/:id', async (req: any, res: any) => {
+router.delete('/:id', async (req: any, res: any) => {
   try {
     const userId = req.user?.id;
     const buildId = Number(req.params.id);
@@ -288,7 +289,7 @@ router.delete('/builds/:id', async (req: any, res: any) => {
  *       200:
  *         description: Histórico retornado com sucesso
  */
-router.get('/builds/history', async (req, res) => {
+router.get('/history', authenticateToken,async (req, res) => {
   try {
     await buildController.getUserBuilds(req, res);
   } catch (error) {
