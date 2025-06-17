@@ -15,8 +15,6 @@ import "./utils/cron";
 import path from "path";
 import { setupSwagger } from '../src/config/swagger';
 
-// import builds from "./routes/build.routes"; 
-
 const env = require("dotenv").config();
 const cors = require("cors");
 
