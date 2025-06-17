@@ -209,11 +209,6 @@ export default function ComponentsCadaster() {
             <input name="nome" placeholder="Nome" onChange={handleChange} />
             <input name="socket" placeholder="Socket" onChange={handleChange} />
             <input
-              name="chipset"
-              placeholder="Chipset"
-              onChange={handleChange}
-            />
-            <input
               name="compatibilidadeLinhaCpu"
               placeholder="Compatibilidade (ex: Ryzen, Core)"
               onChange={handleChange}

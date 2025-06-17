@@ -201,7 +201,6 @@ const parts = [
     motherboard: {
       create: {
         socket: "LGA1700",
-        chipset: "H510",
         ramType: "DDR4",
         slots: 2,
         maxRAM: 64,

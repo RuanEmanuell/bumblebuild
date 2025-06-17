@@ -18,14 +18,6 @@ export default function CPUForm({ formData, onChange }: CPUFormProps) {
         required
       />
       <input
-        name="line"
-        placeholder="Linha (e.g. Zen 3)"
-        onChange={onChange}
-        value={formData.line || ""}
-        className="border-gray-300 rounded p-2 border"
-        required
-      />
-      <input
         name="cores"
         type="number"
         placeholder="Cores"

@@ -78,7 +78,6 @@ model Cooler {
 model Motherboard {
   id                   Int    @id
   socket               String 
-  chipset              String 
   ramType              String 
   slots                Int 
   maxRAM               Int 

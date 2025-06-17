@@ -50,7 +50,6 @@ PartFormFields.buildPayload = (type, data) => {
     case "CPU":
       return {
         socket: data.socket,
-        line: data.line,
         cores: Number(data.cores),
         threads: Number(data.threads),
         frequency: Number(data.frequency),
@@ -80,9 +79,7 @@ PartFormFields.buildPayload = (type, data) => {
     case "MOTHERBOARD":
       return {
         socket: data.socket,
-        chipset: data.chipset,
         maxRAM: Number(data.maxRAM),
-        cpuCompatibilityLine: data.cpuCompatibilityLine,
         ramType: data.ramType,
         size: data.size,
         slots: Number(data.slots),
