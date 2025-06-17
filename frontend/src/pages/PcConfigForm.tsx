@@ -1,5 +1,4 @@
 import React, { useState, FormEvent } from 'react';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';
@@ -23,8 +22,6 @@ interface FormErrors {
 
 const PcConfigForm: React.FC = () => {
 
-  const location = useLocation();
-  const registeredProducts: Product[] = location.state?.availableParts || [];
   const [budget, setBudget] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
   const [success, setSuccess] = useState(false);
