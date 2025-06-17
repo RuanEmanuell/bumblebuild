@@ -13,6 +13,8 @@ import cooler from "./routes/cooler.routes";
 import build from "./routes/build.routes";
 import "./utils/cron";
 import path from "path";
+import { setupSwagger } from '../src/config/swagger';
+
 // import builds from "./routes/build.routes"; 
 
 const env = require("dotenv").config();
@@ -20,12 +22,13 @@ const cors = require("cors");
 
 const app = express();
 const PORT = 3000;
+setupSwagger(app);
 
 app.use(cors());
 app.use(express.json());
 
 // Rotas
-app.use("/user", users);
+app.use("/users", users);
 app.use("/parts", parts); 
 app.use("/cpu", cpu);
 app.use("/gpu", gpu);
