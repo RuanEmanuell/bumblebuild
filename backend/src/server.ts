@@ -13,19 +13,20 @@ import cooler from "./routes/cooler.routes";
 import build from "./routes/build.routes";
 import "./utils/cron";
 import path from "path";
-// import builds from "./routes/build.routes"; 
+import { setupSwagger } from '../src/config/swagger';
 
 const env = require("dotenv").config();
 const cors = require("cors");
 
 const app = express();
 const PORT = 3000;
+setupSwagger(app);
 
 app.use(cors());
 app.use(express.json());
 
 // Rotas
-app.use("/user", users);
+app.use("/users", users);
 app.use("/parts", parts); 
 app.use("/cpu", cpu);
 app.use("/gpu", gpu);
@@ -34,7 +35,7 @@ app.use("/motherboard", motherboard);
 app.use("/psu", psu);
 app.use("/ssd", ssd);
 app.use("/cooler", cooler);
-app.use("/build", build);
+app.use("/builds", build);
 
 app.use("/uploads", express.static(path.resolve(__dirname, "..", "uploads")));
 
