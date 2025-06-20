@@ -1,7 +1,7 @@
 import puppeteer, { Page, Browser } from "puppeteer";
 
 export class ScraperService {
-  async getPartPrice(partLinks: string[]): Promise<string | null> {
+  async getPartInfo(partLinks: string[]): Promise<{ price: string | null; image: string | null }> {
     let browser: Browser | undefined;
     let page: Page | undefined;
 
@@ -14,9 +14,11 @@ export class ScraperService {
       });
 
       let currentPrice: string | null = null;
+      let currentImage: string | null = null;
 
-      async function choosePrice(links: string[]) {
+      async function chooseInfo(links: string[]) {
         let price = currentPrice;
+        let image = currentImage;
 
         if (browser) {
           page = await browser.newPage();
@@ -28,41 +30,76 @@ export class ScraperService {
 
             let priceLink = '0.0';
 
+            const prices = await page.$$eval('div, span, p, strong', elements => {
+              return elements
+                .map(el => {
+                  const text = el.textContent?.trim() || '';
+                  const style = window.getComputedStyle(el);
+                  const fontSize = parseFloat(style.fontSize) || 0;
+                  return { text, fontSize };
+                })
+                .filter(item => item.text.startsWith('R$') && item.fontSize > 10)
+                .sort((a, b) => b.fontSize - a.fontSize);
+            });
 
-            const elements = await page.$$('div, span, p, strong');
-
-            for (const el of elements) {
-              const text = await el.evaluate(el => el.textContent?.trim() || '');
-              if (text.startsWith('R$')) {
-                const numericText = text.replace('R$', '').replace('.', '').replace(',', '.').trim();
-                const priceNumber = parseFloat(numericText);
-                if (!isNaN(priceNumber) && priceNumber > 10) {
-                  priceLink = priceNumber.toString();
-                  break;
-                }
-              }
+            if (prices.length > 0) {
+              const rawPrice = prices[0].text;
+              const numericText = rawPrice
+                .replace('R$', '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+                .trim();
+              priceLink = numericText;
             }
+
+            const imageLink = await page.$$eval('img', imgs => {
+              function isValidImage(url: string) {
+                return /\.(jpg|jpeg|png|webp)$/i.test(url);
+              }
+
+              const filtered = imgs
+                .map(img => {
+                  const { width, height } = img.getBoundingClientRect();
+                  const src = img.src || '';
+                  const aspectRatio = width / height;
+                  return { src, width, height, area: width * height, aspectRatio };
+                })
+                .filter(img =>
+                  img.area > 100 * 100 &&
+                  img.src.startsWith('http') &&
+                  isValidImage(img.src) &&
+                  img.aspectRatio > 0.6 &&
+                  img.aspectRatio < 1.8
+                )
+                .sort((a, b) => b.area - a.area);
+
+              return filtered.length > 0 ? filtered[0].src : null;
+            });
 
 
             if (parseFloat(priceLink) !== parseFloat(price || '0') && parseFloat(priceLink) > 0) {
               price = priceLink;
             }
+
+            if (imageLink && imageLink.length > 0) {
+              image = imageLink;
+            }
           }
         }
 
-        return price;
+        return { price, image };
       }
 
-      currentPrice = await choosePrice(partLinks);
+      const { price, image } = await chooseInfo(partLinks);
 
       if (page) await page.close();
       if (browser) await browser.close();
 
-      return currentPrice;
+      return { price, image };
     } catch (error) {
-      console.error("Erro ao pegar o preço:", error);
+      console.error("Erro ao pegar as informações:", error);
       if (browser) await browser.close();
-      return null;
+      return { price: null, image: null };
     }
   }
 }

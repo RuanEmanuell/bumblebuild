@@ -15,7 +15,6 @@ const parts = [
     brand: "Corsair",
     price: 449.90,
     type: "PSU",
-    imageUrl: "https://images7.kabum.com.br/produtos/fotos/516057/fonte-corsair-cx-series-cx750-750w-80-plus-bronze-sem-cabo-preto-cp-9020279-br_1714484853_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/516057/fonte-corsair-cx-series-cx750-750w-80-plus-bronze-com-cabo-preto-cp-9020279-br",
     psu: {
       create: {
@@ -30,7 +29,6 @@ const parts = [
     brand: "XPG",
     price: 759.90,
     type: "PSU",
-    imageUrl: "https://images6.kabum.com.br/produtos/fotos/514896/fonte-xpg-core-reactor-ii-ve-850w-75261436_1721238617_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/514896/fonte-xpg-core-reactor-ii-ve-850w-75261436",
     psu: {
       create: {
@@ -45,7 +43,6 @@ const parts = [
     brand: "TGT",
     price: 150.00,
     type: "CASE",
-    imageUrl: "https://m.media-amazon.com/images/I/611sSJnEOkL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Gabinete-TGT-Mid-Tower-Lateral-TGT-LGN-BK/dp/B0D6Z5MXBK/ref=asc_df_B0D6Z5MXBK?mcid=4d8ccc5ac6473572b550bcb339e5580a&hvadid=709884378154&hvpos=&hvnetw=g&hvrand=6472006341587123059&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9198625&hvtargid=pla-2320909064141&language=pt_BR",
     case: {
       create: {
@@ -59,7 +56,6 @@ const parts = [
     brand: "Cooler Master",
     price: 399.90,
     type: "CASE",
-    imageUrl: "https://m.media-amazon.com/images/I/81I9Ef0fOIL.__AC_SX300_SY300_QL70_ML2_.jpg",
     priceLink: "https://www.amazon.com.br/Gabinete-Cooler-Master-MasterBox-Transparente/dp/B0785GRMPG",
     case: {
       create: {
@@ -73,7 +69,6 @@ const parts = [
     brand: "Rise Mode",
     price: 429.90,
     type: "CASE",
-    imageUrl: "https://images0.kabum.com.br/produtos/fotos/527240/gabinete-gamer-rise-mode-galaxy-full-glass-mid-tower-atx-lateral-e-frente-em-vidro-temperado-branco-rm-ca-fg-w_1724784586_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/527240/gabinete-gamer-rise-mode-galaxy-full-glass-mid-tower-atx-lateral-e-frente-em-vidro-temperado-branco-rm-ca-fg-w",
     case: {
       create: {
@@ -87,7 +82,7 @@ const parts = [
     brand: "Corsair",
     price: 899.90,
     type: "RAM",
-    imageUrl: "https://m.media-amazon.com/images/I/71W0l9URZOL._AC_SX679_.jpg",
+
     priceLink: "https://www.amazon.com.br/Corsair-Vengeance-2x16GB-PC5-41600-CMK32GX5M2B5200C40/dp/B09NCPTVX5",
     ram: {
       create: {
@@ -102,7 +97,6 @@ const parts = [
     brand: "Kingston",
     price: 479.90,
     type: "RAM",
-    imageUrl: "https://images7.kabum.com.br/produtos/fotos/285967/memoria-kingston-fury-beast-16gb-5600mhz-ddr5-cl40-preto-kf556c40bb-16_1639574788_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/285967/memoria-ram-kingston-fury-beast-16gb-5600mhz-ddr5-cl40-para-intel-xmp-preto-kf556c40bb-16",
     ram: {
       create: {
@@ -117,7 +111,6 @@ const parts = [
     brand: "Kingston",
     price: 159.90,
     type: "RAM",
-    imageUrl: "https://images5.kabum.com.br/produtos/fotos/172365/memoria-ram-kingston-fury-beast-8gb-3200mhz-ddr4-cl16-preto-kf432c16bb-8_1742845663_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/172365/memoria-ram-kingston-fury-beast-8gb-3200mhz-ddr4-cl16-preto-kf432c16bb-8",
     ram: {
       create: {
@@ -132,7 +125,6 @@ const parts = [
     brand: "Rise Mode",
     price: 259.90,
     type: "RAM",
-    imageUrl: "https://images5.kabum.com.br/produtos/fotos/383895/memoria-ram-rise-mode-z-16gb-3200mhz-ddr4-cl15-branco-rm-d4-16g-3200zw_1667509468_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/383895/memoria-ram-rise-mode-z-16gb-3200mhz-ddr4-cl19-branco-rm-d4-16g-3200zw",
     ram: {
       create: {
@@ -147,7 +139,6 @@ const parts = [
     brand: "NVIDIA",
     price: 1400.00,
     type: "GPU",
-    imageUrl: "https://m.media-amazon.com/images/I/71MF4X2-XWL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/MSI-GeForce-Express-1492MHz-14000MHz/dp/B0CSPRNRZC",
     gpu: {
       create: {
@@ -163,7 +154,6 @@ const parts = [
     brand: "NVIDIA",
     price: 1900.00,
     type: "GPU",
-    imageUrl: "https://images1.kabum.com.br/produtos/fotos/770131/placa-de-video-galax-geforce-rtx-4060-1-click-oc-2x-gen2_1749640502_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/770131",
     gpu: {
       create: {
@@ -179,7 +169,6 @@ const parts = [
     brand: "AMD",
     price: 3300.00,
     type: "GPU",
-    imageUrl: "https://images3.kabum.com.br/produtos/fotos/725943/placa-de-video-xfx-quicksilver-rx-9070-xt-gaming-edition-with-16gb-amd-radeon-gddr6-hdmi-3xdp-rdna-4-rx-97tqickb9_1741279478_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/725943",
     gpu: {
       create: {
@@ -195,7 +184,6 @@ const parts = [
     brand: "AMD",
     price: 1100.00,
     type: "CPU",
-    imageUrl: "https://m.media-amazon.com/images/I/51gRv8z+K6L._AC_SY879_.jpg",
     priceLink: "https://www.amazon.com.br/PROCESSADOR-AMD-5700X-100-100000926WOF-Cer%C3%A2mica/dp/B09VCHQHZ6",
     cpu: {
       create: {
@@ -213,7 +201,6 @@ const parts = [
     brand: "Intel",
     price: 1050.00,
     type: "CPU",
-    imageUrl: "https://m.media-amazon.com/images/I/51DY7a--LrL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Processador-Intel-i5-12400-N%C3%BAcleos-BX8071512400/dp/B09MDH6B1P",
     cpu: {
       create: {
@@ -231,7 +218,6 @@ const parts = [
     brand: "Intel",
     price: 1050.00,
     type: "CPU",
-    imageUrl: "https://m.media-amazon.com/images/I/51DY7a--LrL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Processador-Intel-i5-12400-N%C3%BAcleos-BX8071512400/dp/B09MDH6B1P",
     cpu: {
       create: {
@@ -249,7 +235,6 @@ const parts = [
     brand: "Sandisk",
     price: 180.00,
     type: "SSD",
-    imageUrl: "https://m.media-amazon.com/images/I/51OHIGS4wtL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Sandisk-480GB-Leitura-Grava%C3%A7%C3%A3o-SDSSDA-480G-G26/dp/B01F9G46Q8",
     ssd: {
       create: {
@@ -265,7 +250,6 @@ const parts = [
     brand: "Kingston",
     price: 380.00,
     type: "SSD",
-    imageUrl: "https://m.media-amazon.com/images/I/71ZnK38jZzL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Kingston-2280-NVMe-SNV3S-1000G/dp/B0DBR3DZWG",
     ssd: {
       create: {
@@ -281,7 +265,6 @@ const parts = [
     brand: "MSI",
     price: 310.00,
     type: "PSU",
-    imageUrl: "https://m.media-amazon.com/images/I/81eLlIQ5PsL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Fonte-650w-Msi-Mag-A650bn/dp/B0991TZ399",
     psu: {
       create: {
@@ -296,7 +279,6 @@ const parts = [
     brand: "Mancer",
     price: 270.00,
     type: "CASE",
-    imageUrl: "https://m.media-amazon.com/images/I/61xaQ1+MVFL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Gabinete-Mancer-Mid-Tower-Lateral-MCR-NRK-RGB01/dp/B0CVN692HC",
     case: {
       create: {
@@ -310,7 +292,6 @@ const parts = [
     brand: "Gigabyte",
     price: 850.00,
     type: "MOTHERBOARD",
-    imageUrl: "https://m.media-amazon.com/images/I/61bqSMeAWGL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Placa-Gigabyte-B650M-Gaming-Chipset/dp/B0D5NM5184",
     motherboard: {
       create: {
@@ -328,7 +309,6 @@ const parts = [
     brand: "MSI",
     price: 490.00,
     type: "MOTHERBOARD",
-    imageUrl: "https://m.media-amazon.com/images/I/819z15YzcIL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/PLACA-MSI-H510M-B-DDR4-GERACAO/dp/B09Y1BCPNC",
     motherboard: {
       create: {
@@ -345,7 +325,6 @@ const parts = [
     brand: "CoolerMaster",
     price: 210.00,
     type: "COOLER",
-    imageUrl: "https://m.media-amazon.com/images/I/71yaJKTZ7IL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Cooler-Hyper-Black-CoolerMaster-RR-212S-20PK-R1/dp/B07H25DYM3",
     cooler: {
       create: {
@@ -359,7 +338,6 @@ const parts = [
     brand: "AMD",
     price: 1149.99,
     type: "CPU",
-    imageUrl: "https://images9.kabum.com.br/produtos/fotos/405799/processador-amd-ryzen-5-7600-5-2ghz-max-turbo-cache-38mb-am5-6-nucleos-video-integrado-100-100001015box_1673290816_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/405799/processador-amd-ryzen-5-7600-5-1ghz-max-turbo-cache-38mb-am5-6-nucleos-video-integrado-100-100001015box",
     cpu: {
       create: {
@@ -377,7 +355,6 @@ const parts = [
     brand: "AMD",
     price: 1579.90,
     type: "CPU",
-    imageUrl: "https://m.media-amazon.com/images/I/615TPN-DayL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Processador-AMD-Ryzen-8600G-100100001237BOX/dp/B0CQ4GYTTX",
     cpu: {
       create: {
@@ -395,7 +372,6 @@ const parts = [
     brand: "AMD",
     price: 1899.90,
     type: "CPU",
-    imageUrl: "https://m.media-amazon.com/images/I/61RfWUr4kvL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/PROCESSADOR-AM5-RYZEN-5-9600X/dp/B0D6NN6TM7",
     cpu: {
       create: {
@@ -413,7 +389,6 @@ const parts = [
     brand: "AMD",
     price: 699.90,
     type: "CPU",
-    imageUrl: "https://m.media-amazon.com/images/I/517vY9awQdL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/PROCESSADOR-AMD-5600-100-100000927BOX-Cerâmica/dp/B09VCHR1VH",
     cpu: {
       create: {
@@ -431,7 +406,6 @@ const parts = [
     brand: "AMD",
     price: 2699.00,
     type: "CPU",
-    imageUrl: "https://m.media-amazon.com/images/I/61F3ZChalyL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/PROCESSADOR-AM5-RYZEN-7-9700X/dp/B0D6NMDNNX",
     cpu: {
       create: {
@@ -449,7 +423,6 @@ const parts = [
     brand: "Intel",
     price: 2799.99,
     type: "CPU",
-    imageUrl: "https://images7.kabum.com.br/produtos/fotos/497577/processador-intel-core-i7-14700kf-bx8071514700kf_1697722906_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/497577/processador-intel-core-i7-14700kf-14-geracao-5-6-ghz-max-turbo-cache-33mb-20-nucleos-28-threads-lga1700-bx8071514700kf",
     cpu: {
       create: {
@@ -467,7 +440,6 @@ const parts = [
     brand: "Intel",
     price: 1899.99,
     type: "CPU",
-    imageUrl: "https://images9.kabum.com.br/produtos/fotos/497579/processador-intel-core-i5-14600kf-bx8071514600kf_1697723502_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/497579/processador-intel-core-i5-14600kf-14-geracao-5-3-ghz-max-turbo-cache-24mb-14-nucleos-20-threads-lga1700-bx8071514600kf",
     cpu: {
       create: {
@@ -485,7 +457,6 @@ const parts = [
     brand: "AMD",
     price: 1849.99,
     type: "GPU",
-    imageUrl: "https://images4.kabum.com.br/produtos/fotos/459144/placa-de-video-rx-7600-challenger-asrock-amd-radeon-8gb-gddr6-90-ga41zz-00uanf_1685551526_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/459144",
     gpu: {
       create: {
@@ -501,7 +472,6 @@ const parts = [
     brand: "NVIDIA",
     price: 2749.90,
     type: "GPU",
-    imageUrl: "https://images6.kabum.com.br/produtos/fotos/781226/placa-de-video-prime-rtx5060-o8g_1747315312_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/781226",
     gpu: {
       create: {
@@ -517,7 +487,6 @@ const parts = [
     brand: "NVIDIA",
     price: 3849.90,
     type: "GPU",
-    imageUrl: "https://images4.kabum.com.br/produtos/fotos/714574/placa-de-video-rtx-5070-windforce-oc-sff-12g-gigabyte-nvidia-geforce-12gb-gddr7-192bits-dlss-ray-tracing-9vn5070wo-00-g10_1740569969_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/714574",
     gpu: {
       create: {
@@ -533,7 +502,6 @@ const parts = [
     brand: "AMD",
     price: 3349.99,
     type: "GPU",
-    imageUrl: "https://images5.kabum.com.br/produtos/fotos/779095/placa-de-video-asrock-rx9060xt-cl-16go_1748868930_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/779095",
     gpu: {
       create: {
@@ -549,7 +517,6 @@ const parts = [
     brand: "Intel",
     price: 2299.90,
     type: "GPU",
-    imageUrl: "https://images4.kabum.com.br/produtos/fotos/sync_mirakl/775944/large/Placa-De-V-deo-Asrock-Intel-Arc-B570-Challenger-Oc-10gb-Gddr6-160-Bits-90-ga5kzz-00uanf_1749588877.jpg",
     priceLink: "https://www.kabum.com.br/produto/775944",
     gpu: {
       create: {
@@ -565,7 +532,6 @@ const parts = [
     brand: "Gigabyte",
     price: 849.90,
     type: "MOTHERBOARD",
-    imageUrl: "https://m.media-amazon.com/images/I/91hqongH+aL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/PLACA-GIGABYTE-B550M-AORUS-ELITE/dp/B08BN8VD23",
     motherboard: {
       create: {
@@ -582,7 +548,6 @@ const parts = [
     brand: "ASUS",
     price: 479.90,
     type: "MOTHERBOARD",
-    imageUrl: "https://m.media-amazon.com/images/I/61rhze+FTiL._AC_SY879_.jpg",
     priceLink: "https://www.amazon.com.br/ASUS-90MB1500-M0EAY0-Prime-A520M-K/dp/B08DQB2GDN",
     motherboard: {
       create: {
@@ -599,7 +564,6 @@ const parts = [
     brand: "ASUS",
     price: 599.90,
     type: "MOTHERBOARD",
-    imageUrl: "https://m.media-amazon.com/images/I/810oasCFqBL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/Placa-PRIME-H610M-K-D4-micro/dp/B09P3RV6ZC",
     motherboard: {
       create: {
@@ -616,7 +580,6 @@ const parts = [
     brand: "ASUS",
     price: 729.90,
     type: "MOTHERBOARD",
-    imageUrl: "https://images6.kabum.com.br/produtos/fotos/521066/placa-mae-asus-prime-a620m-e-amd-am5-a620-matx-ddr5-90mb1f50-m0eay0_1720800197_g.jpg",
     priceLink: "https://www.kabum.com.br/produto/521066",
     motherboard: {
       create: {
@@ -633,7 +596,6 @@ const parts = [
     brand: "ASUS",
     price: 1249.90,
     type: "MOTHERBOARD",
-    imageUrl: "https://m.media-amazon.com/images/I/61rNbkvR5eL.__AC_SX300_SY300_QL70_ML2_.jpg",
     priceLink: "https://www.amazon.com.br/Placa-Asus-GAMING-B760M-PLUS-4xDDR5/dp/B086ZSQNPP",
     motherboard: {
       create: {
@@ -650,7 +612,6 @@ const parts = [
     brand: "Gigabyte",
     price: 2299.90,
     type: "MOTHERBOARD",
-    imageUrl: "https://m.media-amazon.com/images/I/81zT2fwPK9L._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/GIGABYTE-X870-WIFI7-EZ-Latch-Q-Flash/dp/B0DGVMYTW6",
     motherboard: {
       create: {
@@ -667,7 +628,6 @@ const parts = [
     brand: "MSI",
     price: 490.00,
     type: "MOTHERBOARD",
-    imageUrl: "https://m.media-amazon.com/images/I/819z15YzcIL._AC_SX679_.jpg",
     priceLink: "https://www.amazon.com.br/PLACA-MSI-H510M-B-DDR4-GERACAO/dp/B09Y1BCPNC",
     motherboard: {
       create: {
