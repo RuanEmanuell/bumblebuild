@@ -147,7 +147,7 @@ export default function PartDashboard() {
                     <ProductCard
                       brand={part.brand}
                       name={part.name}
-                      price={`R$ ${part.price}`}
+                      price={`${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(part.price.toFixed(2))}`}
                       image={part.imageUrl? part.imageUrl : setupExemplo}
                       link={part.priceLink}
                     />

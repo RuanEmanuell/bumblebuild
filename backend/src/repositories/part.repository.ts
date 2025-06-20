@@ -7,31 +7,32 @@ export class PartRepository {
   private scraperService: ScraperService;
 
   constructor() {
-    this.scraperService = new ScraperService(); 
+    this.scraperService = new ScraperService();
   }
 
   async create(data: Prisma.PartCreateInput) {
     try {
-      let link = '';
+      const link = data.priceLink || '';
 
-      link = data.priceLink || ''; 
-  
-      console.log(link);
-  
       let price = null;
+      let image = null;
+
       if (link) {
-        price = await this.scraperService.getPartPrice([link]);
+        const result = await this.scraperService.getPartInfo([link]); // agora retorna { price, image }
+        price = result.price;
+        image = result.image;
       }
-  
+
       const priceNum = price
         ? parseFloat(price.replace(/[^\d,.-]/g, "").replace(",", "."))
         : 0;
-  
+
       return prisma.part.create({
         data: {
           ...data,
           price: priceNum,
-          priceLink: link, 
+          imageUrl: image,
+          priceLink: link,
         },
         include: {
           cpu: true,
@@ -130,22 +131,31 @@ export class PartRepository {
     try {
       const parts = await prisma.part.findMany();
 
-      console.log(`Número de peças: ${parts.length}`)
-  
+      console.log(`Número de peças: ${parts.length}`);
+
       for (const part of parts) {
-        const link = part.priceLink; 
-  
+        const link = part.priceLink;
+
         if (!link) continue;
-  
-        const precoString = await this.scraperService.getPartPrice([link]);
-  
+
+        const result = await this.scraperService.getPartInfo([link]); // pega preço + imagem
+
+        const precoString = result.price;
+        const image = result.image;
+
         if (!precoString) continue;
-  
-        const priceNum = parseFloat(precoString.replace(/[^\d,.-]/g, "").replace(",", "."));
+
+        const priceNum = parseFloat(
+          precoString.replace(/[^\d,.-]/g, "").replace(",", ".")
+        );
+
         if (!isNaN(priceNum)) {
           await prisma.part.update({
             where: { id: part.id },
-            data: { price: priceNum },
+            data: { 
+              price: priceNum,
+              imageUrl: image || part.imageUrl, // atualiza imagem se tiver nova
+            },
           });
           console.log(`Preço da peça ${part.name} atualizado para R$ ${priceNum}`);
         }
@@ -154,5 +164,4 @@ export class PartRepository {
       console.error("Erro ao atualizar preços automaticamente:", error);
     }
   }
-
 }
