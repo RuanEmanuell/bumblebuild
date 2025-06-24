@@ -1,4 +1,3 @@
-
 import { Part, CPU, GPU, RAM, PSU, Motherboard, Case } from "../models/part.model";
 import { PartType, distributeBudget } from "../utils/distributeBudget";
 import {
@@ -20,14 +19,48 @@ function extractSpecificData(part: Part): CPU | GPU | RAM | PSU | Motherboard | 
   }
 }
 
+function redistributeBudgetWithoutGPU(distribution: Record<PartType, number>): Record<PartType, number> {
+  const gpuBudget = distribution.GPU;
+
+  const cpuWeight  = 0.20;
+  const moboWeight = 0.15;
+  const ramWeight  = 0.15;
+  const ssdWeight  = 0.10;
+  const psuWeight  = 0.10;
+  const caseWeight = 0.10;
+
+  const totalWeight = cpuWeight + ramWeight + ssdWeight + psuWeight;
+
+  distribution.CPU += gpuBudget * (cpuWeight / totalWeight);
+  distribution.MOTHERBOARD += gpuBudget * (moboWeight / totalWeight);
+  distribution.RAM += gpuBudget * (ramWeight / totalWeight);
+  distribution.SSD += gpuBudget * (ssdWeight / totalWeight);
+  distribution.PSU += gpuBudget * (psuWeight / totalWeight);
+  distribution.CASE += gpuBudget * (caseWeight / totalWeight);
+
+  distribution.GPU = 0;
+
+  return distribution;
+}
+
 export function suggestConfigurationWithBudget(
   parts: Part[],
-  budget: number
+  budget: number,
+  includeGPU: boolean = false
 ): { configuration: Part[]; message?: string } {
-  const distribution = distributeBudget(budget);
+  let distribution = distributeBudget(budget);
 
-  // CPU + Motherboard 
-  const possibleCpus = parts.filter(p => p.type === PartType.CPU && p.price <= distribution.CPU);
+  if (!includeGPU) {
+    distribution = redistributeBudgetWithoutGPU(distribution);
+  }
+
+  const possibleCpus = parts
+    .filter(p =>
+      p.type === PartType.CPU &&
+      p.price <= distribution.CPU &&
+      (includeGPU ? true : (extractSpecificData(p) as CPU).integratedGraphics)
+    )
+    .sort((a, b) => b.price - a.price);
 
   let cpu: Part | null = null;
   let motherboard: Part | null = null;
@@ -57,7 +90,6 @@ export function suggestConfigurationWithBudget(
 
   const motherboardData = extractSpecificData(motherboard) as Motherboard;
 
-  //RAM
   const ram = parts.filter(p =>
     p.type === PartType.RAM &&
     p.price <= distribution.RAM &&
@@ -70,23 +102,27 @@ export function suggestConfigurationWithBudget(
   }
   console.log('RAM escolhida:', ram.name, ' - R$', ram.price);
 
-  //GPU
-  const gpu = parts.filter(p =>
-    p.type === PartType.GPU && p.price <= distribution.GPU
-  ).sort((a, b) => b.price - a.price)[0] || null;
+  const gpu = includeGPU ? (
+    parts.filter(p =>
+      p.type === PartType.GPU && p.price <= distribution.GPU
+    ).sort((a, b) => b.price - a.price)[0] || null
+  ) : null;
 
-  if (!gpu) {
+  if (includeGPU && !gpu) {
     console.log('❌ Nenhuma GPU dentro do orçamento');
     return { configuration: [], message: 'No GPU fits the budget' };
   }
-  console.log('GPU escolhida:', gpu.name, ' - R$', gpu.price);
-  const gpuData = extractSpecificData(gpu) as GPU;
 
-  // PSU
+  if (gpu) {
+    console.log('GPU escolhida:', gpu.name, ' - R$', gpu.price);
+  }
+
+  const gpuData = gpu ? extractSpecificData(gpu) as GPU : null;
+
   const psu = parts.filter(p =>
     p.type === PartType.PSU &&
     p.price <= distribution.PSU &&
-    checkGpuPsuCompatibility(gpuData, extractSpecificData(p) as PSU)
+    (gpu ? checkGpuPsuCompatibility(gpuData!, extractSpecificData(p) as PSU) : true)
   ).sort((a, b) => b.price - a.price)[0] || null;
 
   if (!psu) {
@@ -95,13 +131,10 @@ export function suggestConfigurationWithBudget(
   }
   console.log('PSU escolhida:', psu.name, ' - R$', psu.price);
 
-  const psuData = extractSpecificData(psu) as PSU;
-
-  // CASE
   const casePC = parts.filter(p =>
     p.type === PartType.CASE &&
     p.price <= distribution.CASE &&
-    checkCaseCompatibility(extractSpecificData(p) as Case, motherboardData, gpuData)
+    (gpu ? checkCaseCompatibility(extractSpecificData(p) as Case, motherboardData, gpuData!) : checkCaseCompatibility(extractSpecificData(p) as Case, motherboardData))
   ).sort((a, b) => b.price - a.price)[0] || null;
 
   if (!casePC) {
@@ -110,9 +143,9 @@ export function suggestConfigurationWithBudget(
   }
   console.log('Case escolhido:', casePC.name, ' - R$', casePC.price);
 
-  // SSD
   const ssd = parts.filter(p =>
-    p.type === PartType.SSD && p.price <= distribution.SSD
+    p.type === PartType.SSD &&
+    p.price <= distribution.SSD
   ).sort((a, b) => b.price - a.price)[0] || null;
 
   if (!ssd) {
@@ -121,7 +154,16 @@ export function suggestConfigurationWithBudget(
   }
   console.log('SSD escolhido:', ssd.name, ' - R$', ssd.price);
 
-  const finalConfiguration = [cpu, motherboard, ram, gpu, psu, casePC, ssd];
+  const finalConfiguration = [
+    cpu,
+    motherboard,
+    ram,
+    ...(gpu ? [gpu] : []),
+    psu,
+    casePC,
+    ssd
+  ];
+
   const totalCost = finalConfiguration.reduce((sum, p) => sum + p.price, 0);
 
   console.log('Custo total:', totalCost);

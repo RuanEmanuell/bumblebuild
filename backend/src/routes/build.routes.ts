@@ -32,7 +32,7 @@ const buildController = new BuildController();
  */
 router.post('/suggest', async (req: any, res: any) => {
   try {
-    const { budget } = req.body;
+    const { budget, includeGPU } = req.body;
 
     if (typeof budget !== 'number') {
       return res.status(400).json({ message: 'Invalid input data' });
@@ -55,7 +55,7 @@ router.post('/suggest', async (req: any, res: any) => {
       },
     });
 
-    const result = suggestConfigurationWithBudget(parts, budget);
+    const result = suggestConfigurationWithBudget(parts, budget, includeGPU);
 
     if (result.configuration.length === 0) {
       return res.status(400).json({
