@@ -9,6 +9,7 @@ import UserProfile from "../pages/UserProfile";
 import PcConfigForm from "../pages/PcConfigForm";
 import ComponentsCadaster from "../pages/ComponentsCadaster";
 import History from "../pages/History";
+import BuildDetails from "../pages/BuildDetails";
 
 export default function AppRoutes() {
   return (
@@ -23,6 +24,7 @@ export default function AppRoutes() {
         <Route path="/pc-registration" element={<PcConfigForm />} />
         <Route path="/components-cadaster" element={<ComponentsCadaster />} />
         <Route path="/history" element={<History />} />
+        <Route path="/build-details/:id" element={<BuildDetails />} />
         <Route path="*" element={<Navigate to="/" replace />} />
        </Routes>
   );
