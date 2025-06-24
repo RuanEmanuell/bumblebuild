@@ -60,7 +60,7 @@ export default function About() {
                         photo="/jose.jpeg"
                         name="José Marcolino"
                         role="Desenvolvedor Web Fullstack"
-                        description="Estudante do 6º período de Análise e Desenvolvimento de Sistemas no IFTM, atualmente Desenvolvedor Web Júnior na Codiub. Nesse projeto, foi atuou especialmente no back-end com foco em banco de dados e containers Docker, contribuindo para a infraestrutura do BumbleBuild."
+                        description="Estudante do 6º período de Análise e Desenvolvimento de Sistemas no IFTM, atualmente Desenvolvedor Web Júnior na Codiub. Nesse projeto, atuou especialmente no back-end com foco em banco de dados e containers Docker, contribuindo para a infraestrutura do BumbleBuild."
                         githubUrl="https://github.com/jose-marcolino"
                         linkedinUrl="https://www.linkedin.com/in/josé-marcolino-114980236/"
                     />
