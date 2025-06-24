@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 import ImageCropper from "../components/ImageCropper";
+import { useNavigate } from "react-router-dom"; // Import do hook para navegação
 
 //formatar data para exibir
 const formatDate = (isoDate?: string | Date) => {
@@ -20,9 +21,7 @@ const formatDate = (isoDate?: string | Date) => {
   return `${day}/${month}/${year}`;
 };
 
-
 export default function UserProfile() {
-  //variaveis de controle de estado
   const { user, token, logout } = useAuth();
   const [previewPic, setPreviewPic] = useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -36,7 +35,8 @@ export default function UserProfile() {
   const [picFile, setPicFile] = useState<File | null>(null);
   const [cropperModal, setCropperModal] = useState(false);
 
-  //atualiza os dados quando o user for carregado
+  const navigate = useNavigate(); // Inicializa o hook para redirecionamento
+
   useEffect(() => {
     if (user) {
       setEditedName(user.name ?? "");
@@ -44,7 +44,6 @@ export default function UserProfile() {
     }
   }, [user]);
 
-  //metodo para mudança de Pic
   const handlePicChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -58,14 +57,13 @@ export default function UserProfile() {
   const handleSaveCroppedImage = (croppedImage: File) => {
     const imgUrl = URL.createObjectURL(croppedImage);
     setPreviewPic(imgUrl);
-    setPicFile(croppedImage); //salva a imagem recortada
+    setPicFile(croppedImage);
   };
 
   const handleCloseModal = () => {
-    setCropperModal(false); //fecha o modal
+    setCropperModal(false);
   };
 
-  //salvar alterações
   const handleSave = async () => {
     try {
       if (newPassword && newPassword !== confirmPassword) {
@@ -90,7 +88,7 @@ export default function UserProfile() {
       }
 
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/user/edit/${id}`,
+        `${import.meta.env.VITE_API_URL}/users/edit/${id}`,
         formData,
         {
           headers: {
@@ -115,7 +113,6 @@ export default function UserProfile() {
     }
   };
 
-
   const handleCancelar = () => {
     setEditedName(user?.name || "");
     setEditedEmail(user?.email || "");
@@ -128,15 +125,12 @@ export default function UserProfile() {
     setIsEditingPassword(false);
   };
 
-
-
   return (
     <div className="min-h-screen flex flex-col">
       <HeaderCustom />
       <main className="flex-grow w-full max-w-3xl mx-auto mt-16 px-6 sm:px-10">
 
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:items-start">
-          {/*div para a Pic*/}
           <div className="relative w-50 h-50 sm:w-36 sm:h-36 md:w-44 md:h-44">
             {isEditing ? (
               <>
@@ -176,8 +170,6 @@ export default function UserProfile() {
                 <User size={150} />
               </div>
             )}
-
-
           </div>
 
           {cropperModal && (
@@ -199,8 +191,6 @@ export default function UserProfile() {
               Desde {formatDate(user?.createdAt)}
             </p>
           </div>
-
-
         </div>
 
         <div>
@@ -286,9 +276,11 @@ export default function UserProfile() {
           </ButtonPrimary>
         </div>
 
-
         <div className="my-12">
-          <h1 className="font-bold text-2xl">Histórico de Montagens</h1>
+          <h1 className="font-bold text-2xl mb-4">Histórico de Montagens</h1>
+          <ButtonSecondary onClick={() => navigate("/history")}>
+            Ver histórico completo
+          </ButtonSecondary>
         </div>
 
       </main>

@@ -56,5 +56,6 @@ You can access it <a href="https://www.bumblebuild.com.br/">here</a>
         </div>
     </td></tr></table>
 		
-### How to run in development mode 🏃
-    - Instrunctions will be provided as the project goes on
+### Here are some images of the project running ⚡️: 
+![image](https://github.com/user-attachments/assets/2c06bdf9-eefc-43e3-8054-f6db19399fa6)
+![image](https://github.com/user-attachments/assets/4a97eff4-3e54-45fb-b3e8-299be10a4c01)

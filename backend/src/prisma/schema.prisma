@@ -7,6 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                     Int       @id @default(autoincrement())
+  userType               UserType  @default(COMUM)
+  name                   String
+  email                  String    @unique
+  password               String
+  status                 Boolean   @default(true)
+  profilePictureUrl      String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  passwordRecoveryTokens PasswordRecoveryToken[]
+  builds                 Build[]   @relation("UserBuilds")
+}
+
+enum UserType {
+  COMUM
+  ADMIN
+}
+
+
+
 model PasswordRecoveryToken {
   id        String   @id @default(uuid())
   token     String   @unique
@@ -14,19 +35,6 @@ model PasswordRecoveryToken {
   createdAt DateTime @default(now())
   expiredAt DateTime
   user      User     @relation(fields: [userId], references: [id])
-}
-
-model User {
-  id                     Int                     @id @default(autoincrement())
-  userType               String
-  name                   String
-  email                  String                  @unique
-  password               String
-  status                 Boolean                 @default(true)
-  profilePictureUrl      String?
-  createdAt              DateTime                @default(now())
-  updatedAt              DateTime                @updatedAt
-  passwordRecoveryTokens PasswordRecoveryToken[]
 }
 
 model Part {
@@ -46,12 +54,13 @@ model Part {
   psu         PSU?         @relation("PSUToPart")
   ram         RAM?         @relation("RAMToPart")
   ssd         SSD?         @relation("SSDToPart")
+
+  buildParts BuildPart[] @relation("PartBuildParts")
 }
 
 model CPU {
   id                 Int     @id
   socket             String
-  line               String
   cores              Int
   threads            Int
   frequency          Float
@@ -111,12 +120,10 @@ model Cooler {
 model Motherboard {
   id                   Int    @id
   socket               String 
-  chipset              String 
   ramType              String 
   slots                Int 
   maxRAM               Int 
   size                 String 
-  cpuCompatibilityLine String 
   part                 Part   @relation("MotherboardToPart", fields: [id], references: [id])
 }
 
@@ -129,4 +136,22 @@ enum PartType {
   CASE
   MOTHERBOARD
   COOLER
+}
+
+model Build {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  user       User      @relation("UserBuilds", fields: [userId], references: [id])
+  name       String
+  createdAt  DateTime  @default(now())
+
+  buildParts BuildPart[]
+}
+
+model BuildPart {
+  id        Int    @id @default(autoincrement())
+  buildId   Int
+  partId    Int
+  build     Build  @relation(fields: [buildId], references: [id])
+  part      Part   @relation("PartBuildParts", fields: [partId], references: [id])
 }

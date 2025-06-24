@@ -6,6 +6,7 @@ import ramIcon from "../assets/icons/ram.png";
 import ssdIcon from "../assets/icons/ssd.png";
 import motherboardIcon from "../assets/icons/motherboard.png";
 import coolerIcon from "../assets/icons/cooler.png";
+import psuIcon from "../assets/icons/psu.png";
 
 const categories = [
   { name: "Processador", value: "CPU", icon: cpuIcon },
@@ -14,6 +15,7 @@ const categories = [
   { name: "SSD", value: "SSD", icon: ssdIcon },
   { name: "Placa mãe", value: "MOTHERBOARD", icon: motherboardIcon },
   { name: "Cooler", value: "COOLER", icon: coolerIcon },
+  { name: "Fonte", value : "PSU", icon : psuIcon }
 ];
 
 interface CategoriesProps {
@@ -26,7 +28,7 @@ export const Categories: React.FC<CategoriesProps> = ({
   setSelectedCategory,
 }) => {
   return (
-    <section className="px-6 md:px-12 py-8">
+    <section className="py-8">
       <h3 className="text-xl font-semibold mb-4">Categorias</h3>
       <div className="flex flex-wrap gap-3 justify-start">
         <button

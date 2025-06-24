@@ -1,24 +1,27 @@
 import { Card, CardContent } from "./Card";
 
 interface ProductProps {
+  brand: string;
   name: string;
-  price: string;
+  price: any;
   image: string;
   link?: string;  
+  details?: string;
 }
 
-export function ProductCard({ name, price, image, link }: ProductProps) {
+export function ProductCard({ brand, name, price, image, link, details }: ProductProps) {
   return (
     <Card className="p-0 flex flex-col">
       <img
         src={image}
         alt={name}
-        className="w-full h-40 object-contain rounded-t-2xl bg-white"
+        className="w-2/3 h-40 object-contain rounded-t-2xl bg-white m-auto"
       />
       <CardContent className="p-4 flex flex-col justify-between h-full">
         <div className="flex flex-col items-start gap-2">
-          <h4 className="font-medium text-sm">{name}</h4>
-          <span className="text-black font-bold text-lg">{price}</span>
+          <h4 className="font-medium text-sm">{brand} {name}</h4>
+          <p className="text-sm">{details}</p>
+          <span className={`text-black font-bold text-lg ${price > 0 ? 'text-black' : 'text-red-500'}`}>{price > 0 ? `${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price.toFixed(2))}` : 'Produto esgotado!'}</span>
           {/*verificando se o link existe para mostrar o botão */}
           {link && (
             <a

@@ -11,9 +11,8 @@ const ButtonPrimary: React.FC<ButtonProps> = ({ children, onClick, className = "
   return (
     <button
       onClick={onClick}
-      className={`bg-primary text-white font-bold rounded-[20px] cursor-pointer transition hover:bg-secondary
-        text-sm sm:text-base md:text-lg lg:text-xl
-        py-2 px-4 sm:py-3 sm:px-5 md:py-4 md:px-6
+      className={`flex items-center gap-2 bg-primary text-white font-semibold rounded-md cursor-pointer transition hover:bg-secondary
+        text-sm py-1 px-3 sm:py-1.5 sm:px-4
         ${className}`}
     >
       {children}
@@ -25,9 +24,8 @@ const ButtonSecondary: React.FC<ButtonProps> = ({ children, onClick, className =
   return (
     <button
       onClick={onClick}
-      className={`bg-black text-textYellow font-bold rounded-[20px] cursor-pointer transition hover:bg-secondary
-        text-sm sm:text-base md:text-lg lg:text-xl
-        py-2 px-4 sm:py-3 sm:px-5 md:py-4 md:px-6
+      className={`flex items-center gap-2 bg-black text-textYellow font-semibold rounded-md cursor-pointer transition hover:bg-secondary
+        text-sm py-1 px-3 sm:py-1.5 sm:px-4
         ${className}`}
     >
       {children}

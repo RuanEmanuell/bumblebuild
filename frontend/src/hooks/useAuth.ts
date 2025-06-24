@@ -12,7 +12,7 @@ export const useAuth = () => {
     if (token && apiUrl) {
       setToken(token);
 
-      fetch(`${apiUrl}/user/logado`, {
+      fetch(`${apiUrl}/users/logado`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

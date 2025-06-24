@@ -7,7 +7,6 @@ const partController = new PartController();
 
 router.post("/create", async (req: Request, res: Response) => {
   try {
-
     await partController.create(req, res);
   } catch (error) {
     console.error(error);

@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { ButtonPrimary } from "../components/Button";
-import GoogleLoginButton from "../components/GoogleLoginButton";
 import InputField from "../components/InputField";
 import { Mail, Lock, User } from "react-feather";
 import { LogoSecondary } from "../components/Logo";
 import CustomCheckbox from "../components/CustomCheckbox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 export default function Auth() {
+  const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [name, setname] = useState("");
   const [email, setEmail] = useState("");
@@ -36,9 +37,10 @@ export default function Auth() {
   }, []);
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       setErrorMessage(null);
-      const response: any = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, {
+      const response: any = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, {
         email: email,
         password: password,
       });
@@ -53,11 +55,13 @@ export default function Auth() {
       const message =
         error?.response?.data?.error || "Erro ao fazer login. Tente novamente.";
       setErrorMessage(message);
+      setIsLoading(false);
       throw error;
     }
   };
 
   const handleRegister = async () => {
+    setIsLoading(true);
     if (password !== confirmPassword) {
       setErrorMessage("As senhas não coincidem");
       return;
@@ -69,21 +73,22 @@ export default function Auth() {
     })
     try {
       setErrorMessage(null);
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/create`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/create`, {
         name: name,
         email: email,
         password: password,
-        userType: "padrao"
       });
 
       console.log("User created:", response.data);
 
       setIsLogin(true);
+      setIsLoading(false);
       return response.data;
     } catch (error: any) {
       const message =
         error?.response?.data?.error || "Erro ao criar conta. Tente novamente.";
       setErrorMessage(message);
+      setIsLoading(false);
       throw error;
     }
   };
@@ -99,6 +104,7 @@ export default function Auth() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-primary p-4 sm:p-0">
+      {isLoading && <Loading/>}
       <div className="w-full max-w-md md:max-w-lg p-6 md:p-8 bg-white rounded-2xl shadow-lg">
         <div className="flex justify-center mb-6">
           <LogoSecondary size={logoSize} />
@@ -180,7 +186,6 @@ export default function Auth() {
 
           <div className="flex flex-col items-center space-y-4">
             <ButtonPrimary type="submit">{isLogin ? "Login" : "Cadastrar"}</ButtonPrimary>
-            <GoogleLoginButton />
           </div>
 
           {isLogin && (

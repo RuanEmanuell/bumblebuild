@@ -1,4 +1,5 @@
 import { LogoPrimary } from "./Logo";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
     return (
@@ -6,11 +7,14 @@ export default function Footer() {
             <div className="text-left max-w-5xl mx-auto flex flex-col justify-center items-center">
                 <LogoPrimary size={90} />
                 <ul className="flex flex-row gap-6 my-2">
-                    <li className="transition-all duration-250 ease-in-out hover:font-bold"><a href="#">Quem somos</a></li>
-                    <li className="transition-all duration-250 ease-in-out hover:font-bold"><a href="#">Contato</a></li>
-                    <li className="transition-all duration-250 ease-in-out hover:font-bold"><a href="#">Termos de uso</a></li>
+                    <li className="transition-all duration-250 ease-in-out hover:font-bold">
+                        <Link to="/about">Quem somos</Link>
+                    </li>
+                    <li className="transition-all duration-250 ease-in-out hover:font-bold">
+                        <Link to="/terms">Termos de uso</Link>
+                    </li>
                 </ul>
-                <p className="text opacity-60 ">©BumbleBuild 2025</p>
+                <p className="opacity-60">© BumbleBuild 2025</p>
             </div>
         </footer>
     );

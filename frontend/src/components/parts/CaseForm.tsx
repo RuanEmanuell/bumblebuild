@@ -13,7 +13,7 @@ export default function CaseForm({ formData, onChange }: CaseFormProps) {
         placeholder="Tamanhos suportados (ex: ATX, mATX)"
         onChange={onChange}
         value={formData.supportedSizes || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="maxGpuLengthMM"
@@ -21,7 +21,7 @@ export default function CaseForm({ formData, onChange }: CaseFormProps) {
         placeholder="Comprimento máximo da GPU (mm)"
         onChange={onChange}
         value={formData.maxGpuLengthMM || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
     </>
   );

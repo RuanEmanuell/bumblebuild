@@ -14,14 +14,14 @@ export default function RAMForm({ formData, onChange }: RAMFormProps) {
         placeholder="Capacidade (GB)"
         onChange={onChange}
         value={formData.capacityGB || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="type"
         placeholder="Tipo (DDR4, DDR5...)"
         onChange={onChange}
         value={formData.type || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
       <input
         name="frequency"
@@ -29,7 +29,7 @@ export default function RAMForm({ formData, onChange }: RAMFormProps) {
         placeholder="Frequência (MHz)"
         onChange={onChange}
         value={formData.frequency || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
       />
     </>
   );

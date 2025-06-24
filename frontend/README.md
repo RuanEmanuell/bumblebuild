@@ -1,18 +1,20 @@
+# Veja a versão em Português <a href="README-ptbr.md">aqui</a>
+
 # BumbleBuild - FrontEnd
 
-### Estrutura de Pastas 📁
+### Folder Structure 📁
 
     /src  
-    ├── /assets        # Imagens, fontes, ícones, arquivos estáticos  
-    ├── /components    # Componentes reutilizáveis  
-    ├── /hooks         # Custom Hooks  
-    ├── /pages         # Páginas principais  
-    ├── /routes        # Configuração de rotas  
-    ├── /services      # Chamadas à API e lógica de negócios  
-    ├── /utils         # Funções auxiliares e helpers  
-    ├── /styles        # Arquivos globais de CSS ou Tailwind configs  
-    ├── /config        # Configurações de ambiente, temas, constantes  
-    ├── App.tsx        # Componente principal  
-    ├── main.tsx       # Ponto de entrada da aplicação  
-    ├── index.html     # Template HTML  
-    └── vite.config.ts # Configurações do Vite  
+    ├── /assets        # Static files: images, fonts, icons  
+    ├── /components    # Reusable UI components  
+    ├── /hooks         # Custom React hooks  
+    ├── /pages         # Main application pages  
+    ├── /routes        # Application route configuration  
+    ├── /services      # API calls and business logic  
+    ├── /utils         # Utility functions and helpers  
+    ├── /styles        # Global styles and Tailwind configurations  
+    ├── /config        # App-wide configurations, constants, and themes  
+    ├── App.tsx        # Main application component  
+    ├── main.tsx       # Entry point of the React app  
+    ├── index.html     # HTML template file  
+    └── vite.config.ts # Vite build and development configuration  

@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { CPUService } from '../services/cpu.service';
+import { PartService } from '../services/part.service';
 
-const service = new CPUService();
+const service     = new CPUService();
+const partService = new PartService();
 
 export class CPUController {
   async create(req: Request, res: Response) {
@@ -30,6 +32,7 @@ export class CPUController {
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
     await service.deleteCPU(id);
+    await partService.deletePart(id);
     res.status(204).send();
   }
 }

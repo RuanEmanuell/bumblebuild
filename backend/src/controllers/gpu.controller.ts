@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { GPUService } from '../services/gpu.service';
+import { PartService } from '../services/part.service';
 
 const gpuService = new GPUService();
+const partService = new PartService();
 
 export class GPUController {
   async create(req: Request, res: Response) {
@@ -30,6 +32,7 @@ export class GPUController {
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
     await gpuService.deleteGPU(id);
+    await partService.deletePart(id);
     res.status(204).send();
   }
 }

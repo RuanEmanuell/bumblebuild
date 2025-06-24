@@ -14,15 +14,7 @@ export default function CPUForm({ formData, onChange }: CPUFormProps) {
         placeholder="Socket"
         onChange={onChange}
         value={formData.socket || ""}
-        className="input"
-        required
-      />
-      <input
-        name="line"
-        placeholder="Linha (e.g. Zen 3)"
-        onChange={onChange}
-        value={formData.line || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
         required
       />
       <input
@@ -31,7 +23,7 @@ export default function CPUForm({ formData, onChange }: CPUFormProps) {
         placeholder="Cores"
         onChange={onChange}
         value={formData.cores || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
         required
       />
       <input
@@ -40,7 +32,7 @@ export default function CPUForm({ formData, onChange }: CPUFormProps) {
         placeholder="Threads"
         onChange={onChange}
         value={formData.threads || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
         required
       />
       <input
@@ -50,7 +42,7 @@ export default function CPUForm({ formData, onChange }: CPUFormProps) {
         placeholder="Frequência (GHz)"
         onChange={onChange}
         value={formData.frequency || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
         required
       />
       <input
@@ -59,7 +51,7 @@ export default function CPUForm({ formData, onChange }: CPUFormProps) {
         placeholder="TDP (W)"
         onChange={onChange}
         value={formData.tdp || ""}
-        className="input"
+        className="border-gray-300 rounded p-2 border"
         required
       />
       <label htmlFor="integratedGraphics" className="flex items-center gap-2 cursor-pointer">

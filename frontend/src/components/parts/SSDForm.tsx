@@ -14,12 +14,14 @@ export default function SSDForm({ formData, onChange }: SSDFormProps) {
             placeholder="Memória (GB)"
             onChange={onChange}
             value={formData.capacityGB || ""}
+            className="border-gray-300 rounded p-2 border"
             />
             <input
             name="typeSSD"
             placeholder="Tipo do SSD (M2, SATA)"
             onChange={onChange}
             value={formData.typeSSD || ""}
+            className="border-gray-300 rounded p-2 border"
             />
             <input
             name="readMBs"
@@ -27,6 +29,7 @@ export default function SSDForm({ formData, onChange }: SSDFormProps) {
             placeholder="Capacidade de leitura (MBs)"
             onChange={onChange}
             value={formData.readMBs || ""}
+            className="border-gray-300 rounded p-2 border"
             />
             <input
             name="writeMBs"
@@ -34,6 +37,7 @@ export default function SSDForm({ formData, onChange }: SSDFormProps) {
             placeholder="Capacidade de escrita (MBs)"
             onChange={onChange}
             value={formData.writeMBs|| ""}
+            className="border-gray-300 rounded p-2 border"
         />
     </>
   );

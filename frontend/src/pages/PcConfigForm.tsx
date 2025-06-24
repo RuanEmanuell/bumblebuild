@@ -1,89 +1,147 @@
-import React, { useState, KeyboardEvent, FormEvent } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, FormEvent, useEffect } from 'react';
+import axios from 'axios';
 import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';
+import { ProductCard } from '../components/ProductCard';
+import { ButtonPrimary, ButtonSecondary } from '../components/Button';
+import setupExemplo from "../assets/setupexemplo.jpg";
 
 interface Product {
+  id?: number;
   name: string;
-  price: string;
-  stars: number;
-  image: string;
+  price: any;
+  imageUrl: string;
   category: string;
+  brand?: string;
+  priceLink?: string;
 }
 
 interface FormErrors {
   budget?: string;
-  games?: string;
 }
 
-const suggestedGames = [
-  'League of Legends', 'Valorant', 'CS:GO', 'Fortnite', 'GTA V', 'Elden Ring',
-  'Call of Duty: Warzone', 'Minecraft', 'The Witcher 3', 'Cyberpunk 2077'
-];
-
 const PcConfigForm: React.FC = () => {
-  const location = useLocation();
-  const registeredProducts: Product[] = location.state?.availableParts || [];
 
   const [budget, setBudget] = useState('');
-  const [games, setGames] = useState<string[]>([]);
-  const [gameInput, setGameInput] = useState('');
-  const [selectedParts, setSelectedParts] = useState<string[]>([]);
-  const [partInput, setPartInput] = useState('');
-  const [manualParts, setManualParts] = useState<string[]>([]);
+  const [includeGPU, setIncludeGPU] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [success, setSuccess] = useState(false);
-
-
-  const handleAddGame = (game: string) => {
-    if (game && !games.includes(game)) {
-      setGames([...games, game]);
-    }
-    setGameInput('');
-  };
-
-  const handleAddManualPart = () => {
-    if (partInput && !manualParts.includes(partInput)) {
-      setManualParts([...manualParts, partInput]);
-    }
-    setPartInput('');
-  };
-
-  const toggleSelectedPart = (name: string) => {
-    setSelectedParts((prev) =>
-      prev.includes(name) ? prev.filter(p => p !== name) : [...prev, name]
-    );
-  };
+  const [loading, setLoading] = useState(false);
+  const [build, setBuild] = useState<Product[]>([]);
+  const [buildPrice, setBuildPrice] = useState<any>(0);
+  const [responseMessage, setResponseMessage] = useState<string | null>('');
+  const [buildName, setBuildName] = useState('');
+  const [selectedPartIds, setSelectedPartIds] = useState<number[]>([]);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
     const orc = parseFloat(budget);
-    if (!budget || orc <= 0) {
-      newErrors.budget = 'Informe um orçamento válido.';
+    if (!budget || orc < 1500) {
+      newErrors.budget = 'É necessário um orçamento mínimo de R$ 1500';
     }
-    if (games.length === 0 && gameInput.trim() === '') {
-      newErrors.games = 'Adicione pelo menos um game.';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  interface SuggestResponse {
+    configuration: Product[];
+    message?: string;
+  }
+
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const gamesFinal = gameInput && !games.includes(gameInput) ? [...games, gameInput] : games;
 
     if (!validate()) {
       setSuccess(false);
       return;
     }
 
-    const finalParts = [...selectedParts, ...manualParts];
+    try {
+      setLoading(true);
+      setBuildPrice(0);
 
-    console.log({ budget, games: gamesFinal, pecas: finalParts });
-    setGames(gamesFinal);
-    setSuccess(true);
+      const res = await axios.post<SuggestResponse>(`${import.meta.env.VITE_API_URL}/builds/suggest`, {
+        budget: parseFloat(budget),
+        includeGPU: includeGPU
+      });
+
+      console.log(res.data.configuration);
+
+      setBuild(res.data.configuration || []);
+      setResponseMessage(res.data.message || 'PC montado com sucesso!');
+      setSuccess(true);
+    } catch (error: any) {
+      setResponseMessage(
+        "Nenhum PC dentro do orçamento foi encontrado."
+      );
+      setSuccess(false);
+    } finally {
+      setLoading(false);
+      setTimeout(() => {
+        setResponseMessage(null);
+      }, 5000);
+    }
   };
+
+  const handleSaveBuild = async () => {
+
+    if (!validate()) {
+      setSuccess(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        alert('Você precisa estar logado para salvar a build.');
+        setSuccess(false);
+        return;
+      }
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/builds/create`,
+        {
+          name: buildName,
+          partIds: selectedPartIds
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log('Build criada:', res.data);
+
+      setResponseMessage('Build salva com sucesso!');
+      setSuccess(true);
+    } catch (error: any) {
+      console.error('Erro ao salvar build:', error);
+      setSuccess(false);
+      setResponseMessage(error?.response?.data?.message || 'Erro ao salvar a build.');
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (success && build.length > 0) {
+      setSelectedPartIds(build.map(part => part.id || 0));
+      let buildPrices = build.map(part => part.price);
+      let totalBuildPrice = 0;
+
+      for(let i=0; i<buildPrices.length; i++){
+        totalBuildPrice += buildPrices[i];
+      }
+      setBuildPrice(totalBuildPrice);
+    }
+  }, [success, build]);
+
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col">
@@ -92,109 +150,79 @@ const PcConfigForm: React.FC = () => {
         <h2 className="text-3xl font-bold mb-6">Montar PC Personalizado</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/*orçamento */}
+          {/*orçamento*/}
           <div>
-            <label className="block text-sm font-medium">Orçamento (R$)</label>
+            <label className="block text-md font-medium">Orçamento (R$)</label>
             <input
               type="number"
               className={`w-full border px-4 py-2 rounded-lg ${errors.budget ? 'border-red-500' : 'border-gray-300'}`}
               value={budget}
-              onChange={(e) => setBudget(e.target.value)}
+              onChange={(e) => {
+                setBudget(e.target.value);
+                setResponseMessage(""); //limpa a mensagem ao digitar
+              }}
+
             />
+            <div className="flex flex-row pt-2">
+              <label className="block text-md font-medium mr-2">Incluir placa de vídeo?</label>
+              <input
+                type="checkbox"
+                value={includeGPU.toString()}
+                className="border-2 border-red-500"
+                onChange={() => setIncludeGPU(i => !i)}
+              />
+            </div>
             {errors.budget && <p className="text-red-600 text-sm">{errors.budget}</p>}
           </div>
 
-          {/* games */}
-          <div>
-            <label className="block text-sm font-medium">games Desejados</label>
-            <input
-              type="text"
-              list="games-list"
-              value={gameInput}
-              onChange={(e) => setGameInput(e.target.value)}
-              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleAddGame(gameInput);
-                }
-              }}
-              className="w-full border px-4 py-2 rounded-lg"
-              placeholder="Digite e pressione Enter"
-            />
-            <datalist id="games-list">
-              {suggestedGames.map((game, idx) => (
-                <option key={idx} value={game} />
-              ))}
-            </datalist>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {games.map((game, i) => (
-                <span
-                  key={i}
-                  className="bg-gray-200 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-red-200"
-                  onClick={() => setGames(games.filter(j => j !== game))}
-                >
-                  {game} ✕
-                </span>
-              ))}
-            </div>
-            {errors.games && <p className="text-red-600 text-sm">{errors.games}</p>}
-          </div>
-
-          {/* Peças Cadastradas */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Peças Já Adquiridas (Cadastradas)</label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {registeredProducts.map((peca, i) => (
-                <label key={i} className="flex items-center gap-2 border px-3 py-2 rounded-md cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selectedParts.includes(peca.name)}
-                    onChange={() => toggleSelectedPart(peca.name)}
-                  />
-                  <span>{peca.name} ({peca.category})</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Peças Manuais */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Adicionar Peças Manualmente</label>
-            <input
-              type="text"
-              value={partInput}
-              onChange={(e) => setPartInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleAddManualPart();
-                }
-              }}
-              className="w-full border px-4 py-2 rounded-lg"
-              placeholder="Digite e pressione Enter"
-            />
-            <div className="flex flex-wrap gap-2 mt-2">
-              {manualParts.map((p, i) => (
-                <span
-                  key={i}
-                  className="bg-gray-200 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-red-200"
-                  onClick={() => setManualParts(manualParts.filter(x => x !== p))}
-                >
-                  {p} ✕
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/*submit */}
-          <button
-            type="submit"
-            className="w-full bg-yellow-400 text-black font-semibold py-3 rounded-lg hover:bg-yellow-500 transition"
-          >
-            Enviar
-          </button>
-          {success && <p className="text-green-600 text-sm mt-2">Pc enviado para montagem com sucesso!</p>}
+          <ButtonPrimary
+            type="submit">
+            {loading ? 'Enviando...' : 'Montar'}
+          </ButtonPrimary>
         </form>
+        {loading && <p className="text-gray-600 mt-2">Carregando configuração...</p>}
+
+        {/*mensagem do backend*/}
+        {responseMessage && (
+          <p className={`text-sm ${success ? 'text-green-600' : 'text-red-600'} pt-4`}>
+            {responseMessage}
+          </p>
+        )}
+
+        {/*mostrar as peças da montagem*/}
+        {success && build.length > 0 && (
+          <section className="mt-8">
+            <label className="block text-sm font-medium m-2">Nome da Montagem</label>
+            <input
+              type="text"
+              className="w-full border px-4 py-2 rounded-lg"
+              value={buildName}
+              onChange={(e) => setBuildName(e.target.value)}
+            />
+            <ButtonSecondary onClick={handleSaveBuild}
+              className='mt-4 mb-4'>
+              Salvar montagem
+            </ButtonSecondary>
+
+            <h3 className="text-xl font-bold my-4">Configuração Recomendada</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {build.map((part, idx) => (
+                <ProductCard
+                  key={idx}
+                  brand={part.brand || 'Marca Desconhecida'}
+                  name={part.name}
+                  price={part.price}
+                  image={part.imageUrl ? part.imageUrl : setupExemplo}
+                  link={part.priceLink}
+                />
+              ))}
+            </div>
+            <h4 className="text-lg font-bold my-4 mx-auto w-fit">Preço total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(buildPrice.toFixed(2))}</h4>
+
+          </section>
+        )}
+
+
       </main>
       <Footer />
     </div>

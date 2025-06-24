@@ -11,9 +11,8 @@ export function checkCpuMotherboardCompatibility(
   motherboard: Motherboard
 ): boolean {
   const isSocketCompatible = cpu.socket === motherboard.socket;
-  const isChipsetCompatible = motherboard.cpuCompatibilityLine.includes(cpu.line);
 
-  return isSocketCompatible && isChipsetCompatible;
+  return isSocketCompatible;
 }
 
 export function checkRamMotherboardCompatibility(
@@ -34,11 +33,14 @@ export function checkGpuPsuCompatibility(
 export function checkCaseCompatibility(
   casepc: Case,
   motherboard: Motherboard,
-  gpu: GPU
+  gpu?: GPU
 ): boolean {
   const isMotherboardCompatible = casepc.supportedSizes.includes(motherboard.size);
-  const isGpuCompatible = gpu.lengthMM <= casepc.maxGpuLengthMM;
-
-  return isMotherboardCompatible && isGpuCompatible;
+  if (gpu) {
+    const isGpuCompatible = gpu.lengthMM <= casepc.maxGpuLengthMM;
+    return isMotherboardCompatible && isGpuCompatible;
+  } else {
+    return isMotherboardCompatible;
+  }
 }
 

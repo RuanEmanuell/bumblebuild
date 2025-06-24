@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { PSUService } from '../services/psu.service';
+import { PartService } from '../services/part.service';
 
 const psuService = new PSUService();
+const partService = new PartService();
 
 export class PSUController {
   async create(req: Request, res: Response) {
@@ -30,6 +32,7 @@ export class PSUController {
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
     await psuService.deletePSU(id);
+    await partService.deletePart(id);
     res.status(204).send();
   }
 }
