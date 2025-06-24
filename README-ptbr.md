@@ -56,5 +56,6 @@ You can access it <a href="https://www.bumblebuild.com.br/">here</a>
         </div>
     </td></tr></table>
 
-### Como rodar em modo de desenvolvimento 🏃
-    - Instruções serão disponibilizadas quando o projeto for finalizado
+Aqui estão algumas imagens do projeto rodando ⚡️:
+![image](https://github.com/user-attachments/assets/2c06bdf9-eefc-43e3-8054-f6db19399fa6)
+![image](https://github.com/user-attachments/assets/4a97eff4-3e54-45fb-b3e8-299be10a4c01)
