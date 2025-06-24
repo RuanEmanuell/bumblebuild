@@ -136,12 +136,10 @@ export class PartRepository {
 
     const type = part.type;
 
-    // 1. Remove registros em BuildPart
     await prisma.buildPart.deleteMany({
       where: { partId: id }
     });
 
-    // 2. Remove o filho específico
     switch (type) {
       case "CPU":
         await prisma.cPU.deleteMany({ where: { id } });
@@ -169,7 +167,6 @@ export class PartRepository {
         break;
     }
 
-    // 3. Agora sim pode remover a peça
     return prisma.part.delete({ where: { id } });
   }
 
