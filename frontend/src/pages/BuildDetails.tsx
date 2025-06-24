@@ -4,7 +4,7 @@ import axios from 'axios';
 import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';
 import { ProductCard } from '../components/ProductCard';
-import { ButtonSecondary } from '../components/Button';
+import { ButtonPrimary, ButtonSecondary } from '../components/Button';
 import setupExemplo from "../assets/setupexemplo.jpg";
 
 interface Product {
@@ -33,6 +33,8 @@ export default function BuildDetails() {
   const [build, setBuild] = useState<Build | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [newName, setNewName] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchBuildDetails = async () => {
@@ -44,7 +46,9 @@ export default function BuildDetails() {
           },
         });
 
-        setBuild(response.data as Build);
+        const buildData = response.data as Build;
+        setBuild(buildData);
+        setNewName(buildData.name);
       } catch (err) {
         console.error("Erro ao buscar detalhes da montagem:", err);
         setError("Erro ao carregar a montagem.");
@@ -55,6 +59,48 @@ export default function BuildDetails() {
 
     fetchBuildDetails();
   }, [id]);
+
+  const handleUpdateName = async () => {
+    if (!newName.trim()) return alert("O nome da montagem não pode ser vazio.");
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/builds/${id}`,
+        { name: newName },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Nome atualizado com sucesso!");
+      setBuild((prev) => prev ? { ...prev, name: newName } : null);
+      setIsEditing(false); //volta ao modo de visualização
+    } catch (err) {
+      console.error("Erro ao atualizar nome:", err);
+      alert("Erro ao atualizar o nome.");
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(`Tem certeza que deseja excluir a montagem "${build?.name}"?`);
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${import.meta.env.VITE_API_URL}/builds/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert("Montagem excluída com sucesso!");
+      navigate("/history");
+    } catch (err) {
+      console.error("Erro ao excluir montagem:", err);
+      alert("Não foi possível excluir a montagem.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col">
@@ -68,12 +114,41 @@ export default function BuildDetails() {
         ) : build ? (
           <>
             <div className="mb-6">
-              <h2 className="text-3xl font-bold">{build.name}</h2>
-              <p className="text-gray-500">
+              <label className="block text-sm font-medium mb-1">Nome da Montagem</label>
+
+              {isEditing ? (
+                <>
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    className="w-full border border-gray-300 px-4 py-2 rounded-lg"
+                  />
+                  <div className="flex gap-3 mt-3">
+                    <ButtonPrimary onClick={handleUpdateName}>Salvar</ButtonPrimary>
+                    <ButtonSecondary onClick={() => {
+                      setNewName(build.name); //restaura o valor original
+                      setIsEditing(false);
+                    }}>Cancelar</ButtonSecondary>
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold">{build.name}</h2>
+                  <ButtonPrimary onClick={() => setIsEditing(true)}>Editar</ButtonPrimary>
+                </div>
+              )}
+
+              <div className="mt-4">
+                <ButtonSecondary onClick={handleDelete} className='hover:bg-red-700'>Excluir Montagem</ButtonSecondary>
+              </div>
+
+              <p className="text-gray-500 mt-2">
                 Criada em: {new Date(build.createdAt).toLocaleDateString('pt-BR')}
               </p>
             </div>
 
+            <h3 className="text-xl font-bold mb-4">Peças da Montagem</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {build.buildParts.map((bp, idx) => (
                 <ProductCard
@@ -88,9 +163,7 @@ export default function BuildDetails() {
             </div>
 
             <div className="mt-8">
-              <ButtonSecondary onClick={() => navigate(-1)}>
-                Voltar
-              </ButtonSecondary>
+              <ButtonSecondary onClick={() => navigate(-1)}>Voltar</ButtonSecondary>
             </div>
           </>
         ) : (

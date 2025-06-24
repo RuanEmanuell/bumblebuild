@@ -195,7 +195,7 @@ router.get('/all', async (req: any, res: any) => {
  *       200:
  *         description: Build atualizada com sucesso
  */
-router.put('/:id', async (req: any, res: any) => {
+router.put('/:id', authenticateToken, async (req: any, res: any) => {
   try {
     const userId = req.user?.id;
     const buildId = Number(req.params.id);
@@ -204,7 +204,7 @@ router.put('/:id', async (req: any, res: any) => {
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
     if (!name && !partIds) return res.status(400).json({ message: 'Nothing to update' });
 
-    const existingBuild = await prisma.build.findUnique({
+    const existingBuild = await prisma.build.findUnique({ 
       where: { id: buildId },
     });
     if (!existingBuild || existingBuild.userId !== userId) {

@@ -69,10 +69,11 @@ const PcConfigForm: React.FC = () => {
       setBuild(res.data.configuration || []);
       setResponseMessage(res.data.message || 'PC montado com sucesso!');
       setSuccess(true);
-    } catch (error) {
-      console.error('Erro ao enviar dados para o servidor:', error);
+    } catch (error: any) {
+      setResponseMessage(
+        error.response?.data?.message || "Erro ao montar o PC. Tente novamente."
+      );
       setSuccess(false);
-      alert('Erro ao enviar os dados. Verifique o console.');
     } finally {
       setLoading(false);
     }
@@ -113,11 +114,12 @@ const PcConfigForm: React.FC = () => {
 
       setResponseMessage('Build salva com sucesso!');
       setSuccess(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao salvar build:', error);
       setSuccess(false);
-      alert('Erro ao salvar a build. Verifique o console.');
-    } finally {
+      setResponseMessage(error?.response?.data?.message || 'Erro ao salvar a build.');
+    }
+    finally {
       setLoading(false);
     }
   };
@@ -143,7 +145,11 @@ const PcConfigForm: React.FC = () => {
               type="number"
               className={`w-full border px-4 py-2 rounded-lg ${errors.budget ? 'border-red-500' : 'border-gray-300'}`}
               value={budget}
-              onChange={(e) => setBudget(e.target.value)}
+              onChange={(e) => {
+                setBudget(e.target.value);
+                setResponseMessage(""); //limpa a mensagem ao digitar
+              }}
+
             />
             <div className="flex flex-row py-2">
               <label className="block text-md font-medium mr-2">Incluir placa de vídeo?</label>
