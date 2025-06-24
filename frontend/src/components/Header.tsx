@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LogoTertiary } from "../components/Logo";
-import { User, Menu, X } from "react-feather";
+import { User, Menu, X, LogOut } from "react-feather";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { ButtonPrimary } from "../components/Button";
@@ -42,7 +42,7 @@ const HeaderCustom: React.FC = () => {
               </div>
             )}
             <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.name}</Link></span>
-            <ButtonPrimary onClick={logout}>Sair</ButtonPrimary>
+            <ButtonPrimary onClick={logout}>Sair<LogOut size={15}/></ButtonPrimary>
           </div>
         ) : (
           <div className="flex gap-1">
@@ -73,7 +73,7 @@ const HeaderCustom: React.FC = () => {
                 <User size={20} className="text-textPrimary" />
                 <span>Olá, <Link to="/user-profile" className="font-bold hover:underline">{user.name}</Link></span>
               </div>
-              <ButtonPrimary onClick={logout}>Sair</ButtonPrimary>
+              <ButtonPrimary onClick={logout}>Sair<LogOut size={15}/></ButtonPrimary>
             </div>
           ) : (
             <div className="flex gap-1">
