@@ -9,7 +9,7 @@ import setupExemplo from "../assets/setupexemplo.jpg";
 interface Product {
   id?: number;
   name: string;
-  price: string;
+  price: any;
   imageUrl: string;
   category: string;
   brand?: string;
@@ -23,6 +23,7 @@ interface FormErrors {
 const PcConfigForm: React.FC = () => {
 
   const [budget, setBudget] = useState('');
+  const [includeGPU, setIncludeGPU] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -34,8 +35,8 @@ const PcConfigForm: React.FC = () => {
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
     const orc = parseFloat(budget);
-    if (!budget || orc < 5000) {
-      newErrors.budget = 'É necessário um orçamento mínimo de 5000';
+    if (!budget || orc < 2200 ) {
+      newErrors.budget = 'É necessário um orçamento mínimo de 2200';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -60,6 +61,7 @@ const PcConfigForm: React.FC = () => {
 
       const res = await axios.post<SuggestResponse>('http://localhost:3000/builds/suggest', {
         budget: parseFloat(budget),
+        includeGPU: includeGPU
       });
 
       console.log(res.data.configuration);
@@ -136,13 +138,22 @@ const PcConfigForm: React.FC = () => {
 
           {/*orçamento*/}
           <div>
-            <label className="block text-sm font-medium">Orçamento (R$)</label>
+            <label className="block text-md font-medium">Orçamento (R$)</label>
             <input
               type="number"
               className={`w-full border px-4 py-2 rounded-lg ${errors.budget ? 'border-red-500' : 'border-gray-300'}`}
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
             />
+            <div className="flex flex-row py-2">
+              <label className="block text-md font-medium mr-2">Incluir placa de vídeo?</label>
+              <input
+                type="checkbox"
+                value={includeGPU.toString()}
+                className="border-2 border-red-500"
+                onChange={(e) => setIncludeGPU(i => !i)}
+              />
+            </div>
             {errors.budget && <p className="text-red-600 text-sm">{errors.budget}</p>}
           </div>
 
