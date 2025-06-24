@@ -18,7 +18,7 @@ export default function PartDashboard() {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
   const [onDialogConfirm, setOnDialogConfirm] = useState<() => void>(
-    () => () => {}
+    () => () => { }
   );
 
   const { user, token } = useAuth();
@@ -199,6 +199,38 @@ export default function PartDashboard() {
     setIsLoading(false);
   }
 
+  function getPartDetails(part: any): string {
+    switch (part.type) {
+      case 'CPU':
+        return `${part.cpu.cores}-Core, ${part.cpu.threads > part.cpu.cores ? 'HT' : 'No HT'}, ${part.cpu.socket}, ${part.cpu.frequency}GHz, ${part.cpu.tdp}W ${part.cpu.integratedGraphics ? ', iGPU' : ''}`;
+
+      case 'GPU':
+        return `${part.gpu.memoryGB}GB ${part.gpu.memoryType}, ${part.gpu.tdp}W, ${part.gpu.lengthMM}mm`;
+
+      case 'MOTHERBOARD':
+        return `${part.motherboard.socket}, ${part.motherboard.ramType}, ${part.motherboard.slots}x Slots, até ${part.motherboard.maxRAM}GB, ${part.motherboard.size}`;
+
+      case 'RAM':
+        return `${part.ram.capacityGB}GB, ${part.ram.type}, ${part.ram.frequency}MHz`;
+
+      case 'SSD':
+        return `${part.ssd.capacityGB}GB, ${part.ssd.type}, Leitura: ${part.ssd.readMBs}MB/s, Gravação: ${part.ssd.writeMBs}MB/s`;
+
+      case 'PSU':
+        return `${part.psu.powerW}W, ${part.psu.certification}, ${part.psu.modular ? 'Modular' : 'Não modular'}`;
+
+      case 'CASE':
+        return `Tamanhos suportados: ${part.case.supportedSizes}, GPU até ${part.case.maxGpuLengthMM}mm`;
+
+      case 'COOLER':
+        return `${part.cooler.type}, Suporte: ${part.cooler.socketSupport}`;
+
+      default:
+        return '';
+    }
+  }
+
+
   return (
     <div className="flex flex-col min-h-screen bg-white text-black">
       <HeaderCustom />
@@ -235,16 +267,16 @@ export default function PartDashboard() {
             parts
 
               .filter((p) => !selectedCategory || p.type === selectedCategory)
-              
+
               .map((part, idx) => (
                 <motion.div key={idx} whileHover={{ scale: 1.03 }}>
                   <ProductCard
                     brand={part.brand}
                     name={part.name}
-
                     price={part.price}
                     image={part.imageUrl ? part.imageUrl : setupExemplo}
                     link={part.priceLink}
+                    details={getPartDetails(part)}
                   />
                   {user?.userType === "ADMIN" && (
                     <div className="flex justify-between mt-2">
@@ -259,8 +291,7 @@ export default function PartDashboard() {
                           );
                           setOnDialogConfirm(() => async () => {
                             await fetch(
-                              `${
-                                import.meta.env.VITE_API_URL
+                              `${import.meta.env.VITE_API_URL
                               }/${part.type.toLowerCase()}/${part.id}`,
                               {
                                 method: "DELETE",
