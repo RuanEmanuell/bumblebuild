@@ -11,9 +11,15 @@ import { Modal } from "../components/Modal";
 import HeaderCustom from "../components/Header";
 import PartFormFields from "../components/PartFormFields";
 import Loading from "../components/Loading";
+import { useAuth } from "../hooks/useAuth";
 
 export default function PartDashboard() {
-  const [data, setData] = useState({ totalUsers: 82, totalParts: 0, totalBuilds: 37 });
+  const { user } = useAuth();
+  const [data, setData] = useState({
+    totalUsers: 82,
+    totalParts: 0,
+    totalBuilds: 37,
+  });
   const [parts, setParts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -22,14 +28,16 @@ export default function PartDashboard() {
   const [selectedPartType, setSelectedPartType] = useState<string>("");
   const [formData, setFormData] = useState<Record<string, any>>({});
 
-  useEffect(() => { fetchParts(); }, []);
+  useEffect(() => {
+    fetchParts();
+  }, []);
 
   async function fetchParts() {
     try {
       const resp = await fetch(`${import.meta.env.VITE_API_URL}/parts`);
       const list = await resp.json();
       setParts(list);
-      setData(prev => ({ ...prev, totalParts: list.length }));
+      setData((prev) => ({ ...prev, totalParts: list.length }));
     } catch (err) {
       console.error("Erro ao buscar peças:", err);
     } finally {
@@ -52,9 +60,9 @@ export default function PartDashboard() {
 
   function handleChange(e: React.ChangeEvent<any>) {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   }
 
@@ -76,8 +84,12 @@ export default function PartDashboard() {
       imageUrl: formData.imageUrl,
     };
     // nested specs
-    const specKey = selectedPartType.toLowerCase();               // e.g. "cpu"
-    const nested = { [specKey]: { create: PartFormFields.buildPayload(selectedPartType, formData) } };
+    const specKey = selectedPartType.toLowerCase(); // e.g. "cpu"
+    const nested = {
+      [specKey]: {
+        create: PartFormFields.buildPayload(selectedPartType, formData),
+      },
+    };
     const payload = { ...base, ...nested };
 
     const url = partBeingEdited
@@ -88,12 +100,12 @@ export default function PartDashboard() {
 
     try {
       const res = await fetch(url, {
-      method, 
-      headers: { 
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}` 
-      },
-      body: JSON.stringify(payload)
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Erro ao salvar peça");
       const { part } = await res.json();
@@ -101,10 +113,10 @@ export default function PartDashboard() {
       closeModal();
       fetchParts();
       if (!partBeingEdited) {
-        setParts(prev => [...prev, part]);
-        setData(prev => ({ ...prev, totalParts: prev.totalParts + 1 }));
+        setParts((prev) => [...prev, part]);
+        setData((prev) => ({ ...prev, totalParts: prev.totalParts + 1 }));
       } else {
-        setParts(prev => prev.map(p => p.id === part.id ? part : p));
+        setParts((prev) => prev.map((p) => (p.id === part.id ? part : p)));
       }
     } catch (err) {
       console.error("Erro no cadastro:", err);
@@ -134,36 +146,54 @@ export default function PartDashboard() {
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
           />
-          <ButtonPrimary onClick={() => openModal()}>Adicionar Peça</ButtonPrimary>
+          {user?.userType === "ADMIN" && (
+            <ButtonPrimary onClick={() => openModal()}>
+              Adicionar Peça
+            </ButtonPrimary>
+          )}
         </div>
         {/* Grid de Peças */}
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {isLoading
-            ? <Loading/>
-            : parts
-                .filter(p => !selectedCategory || p.type === selectedCategory)
-                .map((part, idx) => (
-                  <motion.div key={idx} whileHover={{ scale: 1.03 }}>
-                    <ProductCard
-                      brand={part.brand}
-                      name={part.name}
-                      price={`${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(part.price.toFixed(2))}`}
-                      image={part.imageUrl? part.imageUrl : setupExemplo}
-                      link={part.priceLink}
-                    />
+          {isLoading ? (
+            <Loading />
+          ) : (
+            parts
+              .filter((p) => !selectedCategory || p.type === selectedCategory)
+              .map((part, idx) => (
+                <motion.div key={idx} whileHover={{ scale: 1.03 }}>
+                  <ProductCard
+                    brand={part.brand}
+                    name={part.name}
+                    price={part.price}
+                    image={part.imageUrl ? part.imageUrl : setupExemplo}
+                    link={part.priceLink}
+                  />
+                  {user?.userType === "ADMIN" && (
                     <div className="flex justify-between mt-2">
                       <ButtonSecondary onClick={() => openModal(part)}>
                         Editar
                       </ButtonSecondary>
-                      <ButtonPrimary onClick={() => {
-                        if (confirm("Excluir?")) fetch(`${import.meta.env.VITE_API_URL}/${part.type.toLowerCase()}/${part.id}`, { method: 'DELETE' }).then(fetchParts);
-                      }}>
+                      <ButtonPrimary
+                        onClick={() => {
+                          if (confirm("Excluir?")) {
+                            fetch(
+                              `${
+                                import.meta.env.VITE_API_URL
+                              }/${part.type.toLowerCase()}/${part.id}`,
+                              {
+                                method: "DELETE",
+                              }
+                            ).then(fetchParts);
+                          }
+                        }}
+                      >
                         Remover
                       </ButtonPrimary>
                     </div>
-                  </motion.div>
-                ))
-          }
+                  )}
+                </motion.div>
+              ))
+          )}
         </section>
       </main>
       <Footer />
@@ -173,12 +203,12 @@ export default function PartDashboard() {
         onClose={closeModal}
         title={partBeingEdited ? "Editar Peça" : "Adicionar nova peça"}
       >
-        {isLoading && <Loading/>}
+        {isLoading && <Loading />}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             name="name"
             placeholder="Nome da peça"
-            value={formData.name||""}
+            value={formData.name || ""}
             onChange={handleChange}
             required
             className="border-gray-300 rounded p-2 border"
@@ -186,7 +216,7 @@ export default function PartDashboard() {
           <input
             name="brand"
             placeholder="Marca"
-            value={formData.brand||""}
+            value={formData.brand || ""}
             onChange={handleChange}
             required
             className="border-gray-300 rounded p-2 border"
@@ -194,29 +224,43 @@ export default function PartDashboard() {
           <input
             name="priceLink"
             placeholder="Link de preço"
-            value={formData.priceLink||""}
+            value={formData.priceLink || ""}
             onChange={handleChange}
             className="border-gray-300 rounded p-2 border"
           />
           <input
             name="imageUrl"
             placeholder="Link da Imagem"
-            value={formData.imageUrl||""}
+            value={formData.imageUrl || ""}
             onChange={handleChange}
             className="border-gray-300 rounded p-2 border"
           />
           <select
             name="type"
             value={selectedPartType}
-            onChange={e=>{ setSelectedPartType(e.target.value); handleChange(e); }}
+            onChange={(e) => {
+              setSelectedPartType(e.target.value);
+              handleChange(e);
+            }}
             required
             className="border-gray-300 rounded p-2 border"
           >
             <option value="">Selecione o tipo</option>
-            {["CPU","GPU","RAM","SSD","PSU","CASE","MOTHERBOARD","COOLER"].map(t=>(
-              <option key={t} value={t}>{t}</option>
+            {[
+              "CPU",
+              "GPU",
+              "RAM",
+              "SSD",
+              "PSU",
+              "CASE",
+              "MOTHERBOARD",
+              "COOLER",
+            ].map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
             ))}
-          </select> 
+          </select>
 
           {/* campos específicos ficam aqui */}
           <PartFormFields

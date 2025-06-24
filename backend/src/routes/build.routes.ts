@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { suggestConfigurationWithBudget } from '../services/suggest.service';
-import { Part, PrismaClient} from '@prisma/client';
+import { Part, PrismaClient } from '@prisma/client';
 import { BuildController } from '../controllers/build.controller';
 import { authenticateToken } from '../middlewares/authMiddleware';
 
@@ -30,15 +30,20 @@ const buildController = new BuildController();
  *       400:
  *         description: Nenhuma configuração possível
  */
-router.post('/suggest', async (req : any, res : any) => {
+router.post('/suggest', async (req: any, res: any) => {
   try {
-    const { budget } = req.body;
+    const { budget, includeGPU } = req.body;
 
     if (typeof budget !== 'number') {
       return res.status(400).json({ message: 'Invalid input data' });
     }
 
-    const parts : any= await prisma.part.findMany({
+    const parts: any = await prisma.part.findMany({
+      where: {
+        price: {
+          gt: 10
+        }
+      },
       include: {
         cpu: true,
         gpu: true,
@@ -50,7 +55,7 @@ router.post('/suggest', async (req : any, res : any) => {
       },
     });
 
-    const result = suggestConfigurationWithBudget(parts, budget);
+    const result = suggestConfigurationWithBudget(parts, budget, includeGPU);
 
     if (result.configuration.length === 0) {
       return res.status(400).json({
@@ -92,7 +97,7 @@ router.post('/suggest', async (req : any, res : any) => {
  *       201:
  *         description: Build criada com sucesso
  */
-router.post('/create', authenticateToken,async (req: any, res: any) => {
+router.post('/create', authenticateToken, async (req: any, res: any) => {
   try {
     const userId = req.user!.id;
     const { name, partIds } = req.body;
@@ -290,7 +295,7 @@ router.delete('/:id', async (req: any, res: any) => {
  *       200:
  *         description: Histórico retornado com sucesso
  */
-router.get('/history', authenticateToken,async (req, res) => {
+router.get('/history', authenticateToken, async (req, res) => {
   try {
     await buildController.getUserBuilds(req, res);
   } catch (error) {
