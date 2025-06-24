@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import HeaderCustom from "../components/Header";
 import Footer from "../components/Footer";
-import { ButtonPrimary } from '../components/Button';
+import { ButtonPrimary, ButtonSecondary } from '../components/Button';
 
 export default function History() {
     interface Build {
@@ -14,12 +14,12 @@ export default function History() {
 
     const [history, setHistory] = useState<Build[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(""); 
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchHistory = async () => {
             try {
-                const token = localStorage.getItem("token"); 
+                const token = localStorage.getItem("token");
                 const response = await axios.get<Build[]>(`${import.meta.env.VITE_API_URL}/builds/history`, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -36,6 +36,26 @@ export default function History() {
 
         fetchHistory();
     }, []);
+
+    const handleDeleteBuild = async (id: number, name: string) => {
+        const confirmDelete = window.confirm(`Tem certeza que deseja excluir a montagem "${name}"?`);
+        if (!confirmDelete) return;
+
+        try {
+            const token = localStorage.getItem("token");
+            await axios.delete(`${import.meta.env.VITE_API_URL}/builds/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            //remove da lista
+            setHistory(prev => prev.filter(b => b.id !== id));
+        } catch (err) {
+            console.error("Erro ao excluir montagem:", err);
+            alert("Não foi possível excluir a montagem. Tente novamente.");
+        }
+    };
 
     return (
         <div className="flex flex-col min-h-screen bg-white text-black">
@@ -63,12 +83,23 @@ export default function History() {
                                         Data: {new Date(item.createdAt).toLocaleDateString('pt-BR')}
                                     </p>
                                 </div>
-                                <Link to={`/build-details/${item.id}`}>
-                                    <ButtonPrimary className="min-w-[140px]">Ver Detalhes</ButtonPrimary>
-                                </Link>
+
+                                <div className="flex gap-2">
+                                    <Link to={`/build-details/${item.id}`}>
+                                        <ButtonPrimary className="min-w-[140px]">Ver Detalhes</ButtonPrimary>
+                                    </Link>
+
+                                    <ButtonSecondary
+                                        className="hover:bg-red-700"
+                                        onClick={() => handleDeleteBuild(item.id, item.name)}
+                                    >
+                                        Excluir
+                                    </ButtonSecondary>
+                                </div>
                             </li>
                         ))}
                     </ul>
+
                 )}
             </main>
 

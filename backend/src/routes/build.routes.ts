@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { suggestConfigurationWithBudget } from '../services/suggest.service';
-import { Part, PrismaClient} from '@prisma/client';
+import { Part, PrismaClient } from '@prisma/client';
 import { BuildController } from '../controllers/build.controller';
 import { authenticateToken } from '../middlewares/authMiddleware';
 
@@ -30,15 +30,20 @@ const buildController = new BuildController();
  *       400:
  *         description: Nenhuma configuração possível
  */
-router.post('/suggest', async (req : any, res : any) => {
+router.post('/suggest', async (req: any, res: any) => {
   try {
-    const { budget } = req.body;
+    const { budget, includeGPU } = req.body;
 
     if (typeof budget !== 'number') {
       return res.status(400).json({ message: 'Invalid input data' });
     }
 
-    const parts : any= await prisma.part.findMany({
+    const parts: any = await prisma.part.findMany({
+      where: {
+        price: {
+          gt: 10
+        }
+      },
       include: {
         cpu: true,
         gpu: true,
@@ -50,7 +55,7 @@ router.post('/suggest', async (req : any, res : any) => {
       },
     });
 
-    const result = suggestConfigurationWithBudget(parts, budget);
+    const result = suggestConfigurationWithBudget(parts, budget, includeGPU);
 
     if (result.configuration.length === 0) {
       return res.status(400).json({
@@ -92,7 +97,7 @@ router.post('/suggest', async (req : any, res : any) => {
  *       201:
  *         description: Build criada com sucesso
  */
-router.post('/create', authenticateToken,async (req: any, res: any) => {
+router.post('/create', authenticateToken, async (req: any, res: any) => {
   try {
     const userId = req.user!.id;
     const { name, partIds } = req.body;
@@ -190,7 +195,7 @@ router.get('/all', async (req: any, res: any) => {
  *       200:
  *         description: Build atualizada com sucesso
  */
-router.put('/:id', async (req: any, res: any) => {
+router.put('/:id', authenticateToken, async (req: any, res: any) => {
   try {
     const userId = req.user?.id;
     const buildId = Number(req.params.id);
@@ -199,7 +204,7 @@ router.put('/:id', async (req: any, res: any) => {
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
     if (!name && !partIds) return res.status(400).json({ message: 'Nothing to update' });
 
-    const existingBuild = await prisma.build.findUnique({
+    const existingBuild = await prisma.build.findUnique({ 
       where: { id: buildId },
     });
     if (!existingBuild || existingBuild.userId !== userId) {
@@ -210,6 +215,7 @@ router.put('/:id', async (req: any, res: any) => {
     if (name) dataToUpdate.name = name;
 
     if (partIds && Array.isArray(partIds)) {
+      
       await prisma.buildPart.deleteMany({ where: { buildId } });
 
       dataToUpdate.buildParts = {
@@ -254,7 +260,7 @@ router.put('/:id', async (req: any, res: any) => {
  *       200:
  *         description: Build removida com sucesso
  */
-router.delete('/:id', async (req: any, res: any) => {
+router.delete('/:id', authenticateToken, async (req: any, res: any) => {
   try {
     const userId = req.user?.id;
     const buildId = Number(req.params.id);
@@ -289,12 +295,57 @@ router.delete('/:id', async (req: any, res: any) => {
  *       200:
  *         description: Histórico retornado com sucesso
  */
-router.get('/history', authenticateToken,async (req, res) => {
+router.get('/history', authenticateToken, async (req, res) => {
   try {
     await buildController.getUserBuilds(req, res);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+/**
+ * @swagger
+ * /builds/{id}:
+ *   get:
+ *     summary: Retorna os detalhes de uma build específica do usuário autenticado
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da build
+ *     responses:
+ *       200:
+ *         description: Build retornada com sucesso
+ */
+router.get('/:id', authenticateToken, async (req: any, res: any) => {
+  try {
+    const userId = req.user?.id;
+    const buildId = Number(req.params.id);
+
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+
+    const build = await prisma.build.findUnique({
+      where: { id: buildId },
+      include: {
+        buildParts: {
+          include: { part: true },
+        },
+      },
+    });
+
+    if (!build || build.userId !== userId) {
+      return res.status(404).json({ message: 'Build not found or unauthorized' });
+    }
+
+    return res.status(200).json(build);
+  } catch (error) {
+    console.error('Erro ao buscar build por ID:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 

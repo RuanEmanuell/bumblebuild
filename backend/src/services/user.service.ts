@@ -5,18 +5,29 @@ import { blackListToken } from "../middlewares/authMiddleware";
 import { randomUUID } from "crypto";
 import nodemailer from "nodemailer";
 import { Prisma } from "@prisma/client";
+import { UserType } from "@prisma/client";
+import sgTransport from "nodemailer-sendgrid";
 
 const userRepository = new UserRepository();
 
 export class UserService {
-
-  async createUser(userType: string, name: string, email: string, password: string) {
+  async createUser(
+    userType: UserType,
+    name: string,
+    email: string,
+    password: string
+  ) {
     const userExistent = await userRepository.searchByEmail(email);
     if (userExistent) throw new Error("Email já cadastrado.");
 
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    const novouser = await userRepository.create({ userType, name, email, password: encryptedPassword });
+    const novouser = await userRepository.create({
+      userType,
+      name,
+      email,
+      password: encryptedPassword,
+    });
     return novouser;
   }
 
@@ -29,7 +40,11 @@ export class UserService {
 
     if (!process.env.SECRET_JWT) throw new Error("SECRET_JWT não definido!");
 
-    const token = jwt.sign({ id: user.id, email: user.email, userType: user.userType }, process.env.SECRET_JWT, { expiresIn: "1h" });
+    const token = jwt.sign(
+      { id: user.id, email: user.email, userType: user.userType },
+      process.env.SECRET_JWT,
+      { expiresIn: "1h" }
+    );
     return token;
   }
 
@@ -38,13 +53,21 @@ export class UserService {
       blackListToken(token);
       return "Logout realizado com sucesso!";
     } catch (error) {
-      throw new Error("Erro ao tentar realizar o logout. Tente novamente mais tarde.");
+      throw new Error(
+        "Erro ao tentar realizar o logout. Tente novamente mais tarde."
+      );
     }
   }
 
-  async updateUser(id: number, data: Prisma.UserUpdateInput, file?: Express.Multer.File) {
+  async updateUser(
+    id: number,
+    data: Prisma.UserUpdateInput,
+    file?: Express.Multer.File
+  ) {
     if (data.email) {
-      const existingUser = await userRepository.searchByEmail(data.email as string);
+      const existingUser = await userRepository.searchByEmail(
+        data.email as string
+      );
       if (existingUser && existingUser.id !== id) {
         throw new Error("Email already registered.");
       }
@@ -65,13 +88,10 @@ export class UserService {
     return updatedUser;
   }
 
-
-
   async updatePassword(id: number, newPassword: string) {
     const encryptedPassword = await bcrypt.hash(newPassword, 10);
     return await userRepository.updatePassword(id, encryptedPassword);
   }
-
 
   async requestPasswordRecovery(email: string) {
     const user = await userRepository.searchByEmail(email);
@@ -84,20 +104,17 @@ export class UserService {
 
     const link = `http://localhost:5173/reset-password?token=${token}`;
 
-    var transporter = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "0f26d58beca21d",
-        pass: "d75fb9092aa5df"
-      }
-    });
+    const transporter = nodemailer.createTransport(
+      sgTransport({
+        apiKey: process.env.SENDGRID_API_KEY!,
+      })
+    );
 
     await transporter.sendMail({
-      from: "noreply@bumblebuild.com",
+      from: "bumblebuild2@gmail.com",
       to: email,
       subject: "Password Recovery",
-      html: `<p>Click the link to reset your password:</p><a href="${link}">${link}</a>`
+      html: `<p>Click the link to reset your password:</p><a href="${link}">${link}</a>`,
     });
 
     return "Password recovery email sent successfully!";
@@ -123,11 +140,12 @@ export class UserService {
   async searchLoggedUser(token: string) {
     if (!process.env.SECRET_JWT) throw new Error("SECRET_JWT não definido!");
 
-    const decoded = jwt.verify(token, process.env.SECRET_JWT as string) as { id: number };
+    const decoded = jwt.verify(token, process.env.SECRET_JWT as string) as {
+      id: number;
+    };
     const user = await userRepository.searchById(decoded.id);
     if (!user) throw new Error("Usuário não encontrado");
 
     return user;
   }
-
 }

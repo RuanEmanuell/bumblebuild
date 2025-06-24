@@ -10,9 +10,23 @@ import { Modal } from "../components/Modal";
 import HeaderCustom from "../components/Header";
 import PartFormFields from "../components/PartFormFields";
 import Loading from "../components/Loading";
+import { useAuth } from "../hooks/useAuth";
+import Dialog from "../components/Dialog";
 
 export default function PartDashboard() {
-  const [data, setData] = useState({ totalUsers: 82, totalParts: 0, totalBuilds: 37 });
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [onDialogConfirm, setOnDialogConfirm] = useState<() => void>(
+    () => () => {}
+  );
+
+  const { user, token } = useAuth();
+  const [data, setData] = useState({
+    totalUsers: 82,
+    totalParts: 0,
+    totalBuilds: 37,
+  });
   const [parts, setParts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -30,7 +44,7 @@ export default function PartDashboard() {
       const resp = await fetch(`${import.meta.env.VITE_API_URL}/parts`);
       const list = await resp.json();
       setParts(list);
-      setData(prev => ({ ...prev, totalParts: list.length }));
+      setData((prev) => ({ ...prev, totalParts: list.length }));
     } catch (err) {
       console.error("Erro ao buscar peças:", err);
     } finally {
@@ -92,9 +106,9 @@ export default function PartDashboard() {
 
   function handleChange(e: React.ChangeEvent<any>) {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   }
 
@@ -103,7 +117,10 @@ export default function PartDashboard() {
     e.preventDefault();
 
     if (!selectedPartType) {
-      alert("Selecione um tipo de peça.");
+      setDialogTitle("Atenção");
+      setDialogMessage("Selecione um tipo de peça.");
+      setOnDialogConfirm(() => () => setDialogOpen(false));
+      setDialogOpen(true);
       return;
     }
 
@@ -116,6 +133,7 @@ export default function PartDashboard() {
       priceLink: formData.priceLink,
       imageUrl: formData.imageUrl,
     };
+
 
     const specKey = selectedPartType.toLowerCase();
     let nested: Record<string, any> = {};
@@ -146,27 +164,36 @@ export default function PartDashboard() {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(payload)
+
       });
 
       if (!res.ok) throw new Error("Erro ao salvar peça");
 
       const { part } = await res.json();
 
-      alert(partBeingEdited ? "Peça atualizada!" : "Peça cadastrada!");
+      setDialogTitle("Sucesso");
+      setDialogMessage(
+        partBeingEdited ? "Peça atualizada!" : "Peça cadastrada!"
+      );
+      setOnDialogConfirm(() => () => setDialogOpen(false));
+      setDialogOpen(true);
 
       closeModal();
       fetchParts();
 
       if (!partBeingEdited) {
-        setParts(prev => [...prev, part]);
-        setData(prev => ({ ...prev, totalParts: prev.totalParts + 1 }));
+        setParts((prev) => [...prev, part]);
+        setData((prev) => ({ ...prev, totalParts: prev.totalParts + 1 }));
       } else {
-        setParts(prev => prev.map(p => p.id === part.id ? part : p));
+        setParts((prev) => prev.map((p) => (p.id === part.id ? part : p)));
       }
 
     } catch (err) {
       console.error("Erro no cadastro:", err);
-      alert("Erro ao salvar peça.");
+      setDialogTitle("Erro");
+      setDialogMessage("Erro ao salvar peça.");
+      setOnDialogConfirm(() => () => setDialogOpen(false));
+      setDialogOpen(true);
     }
 
     setIsLoading(false);
@@ -193,7 +220,11 @@ export default function PartDashboard() {
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
           />
-          <ButtonPrimary onClick={() => openModal()}>Adicionar Peça</ButtonPrimary>
+          {user?.userType === "ADMIN" && (
+            <ButtonPrimary onClick={() => openModal()}>
+              Adicionar Peça
+            </ButtonPrimary>
+          )}
         </div>
 
         {/* Grid de Peças */}
@@ -202,42 +233,52 @@ export default function PartDashboard() {
             <Loading />
           ) : (
             parts
-              .filter(p => !selectedCategory || p.type === selectedCategory)
+
+              .filter((p) => !selectedCategory || p.type === selectedCategory)
+              
               .map((part, idx) => (
                 <motion.div key={idx} whileHover={{ scale: 1.03 }}>
                   <ProductCard
                     brand={part.brand}
                     name={part.name}
-                    price={`${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(part.price.toFixed(2))}`}
-                    image={part.imageUrl || setupExemplo}
+
+                    price={part.price}
+                    image={part.imageUrl ? part.imageUrl : setupExemplo}
                     link={part.priceLink}
                   />
-                  <div className="flex justify-between mt-2">
-                    <ButtonSecondary onClick={() => openModal(part)}>
-                      Editar
-                    </ButtonSecondary>
-                    <ButtonPrimary
-                      onClick={async () => {
-                        if (confirm("Excluir?")) {
-                          try {
-                            const res = await fetch(`${import.meta.env.VITE_API_URL}/parts/${part.id}`, {
-                              method: 'DELETE',
-                              headers: {
-                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                  {user?.userType === "ADMIN" && (
+                    <div className="flex justify-between mt-2">
+                      <ButtonSecondary onClick={() => openModal(part)}>
+                        Editar
+                      </ButtonSecondary>
+                      <ButtonPrimary
+                        onClick={() => {
+                          setDialogTitle("Confirmação");
+                          setDialogMessage(
+                            "Deseja realmente excluir esta peça?"
+                          );
+                          setOnDialogConfirm(() => async () => {
+                            await fetch(
+                              `${
+                                import.meta.env.VITE_API_URL
+                              }/${part.type.toLowerCase()}/${part.id}`,
+                              {
+                                method: "DELETE",
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                },
                               }
-                            });
-                            if (!res.ok) throw new Error("Erro ao excluir");
+                            );
                             fetchParts();
-                          } catch (err) {
-                            console.error("Erro ao excluir peça:", err);
-                            alert("Erro ao excluir peça.");
-                          }
-                        }
-                      }}
-                    >
-                      Remover
-                    </ButtonPrimary>
-                  </div>
+                            setDialogOpen(false);
+                          });
+                          setDialogOpen(true);
+                        }}
+                      >
+                        Remover
+                      </ButtonPrimary>
+                    </div>
+                  )}
                 </motion.div>
               ))
           )}
@@ -286,7 +327,8 @@ export default function PartDashboard() {
           <select
             name="type"
             value={selectedPartType}
-            onChange={e => {
+
+            onChange={(e) => {
               setSelectedPartType(e.target.value);
               handleChange(e);
             }}
@@ -294,8 +336,10 @@ export default function PartDashboard() {
             className="border-gray-300 rounded p-2 border"
           >
             <option value="">Selecione o tipo</option>
+
             {["CPU", "GPU", "RAM", "SSD", "PSU", "CASE", "MOTHERBOARD", "COOLER"].map(t => (
               <option key={t} value={t}>{t}</option>
+
             ))}
           </select>
 
@@ -313,6 +357,13 @@ export default function PartDashboard() {
           </div>
         </form>
       </Modal>
+      <Dialog
+        open={dialogOpen}
+        title={dialogTitle}
+        message={dialogMessage}
+        onClose={() => setDialogOpen(false)}
+        onConfirm={onDialogConfirm}
+      />
     </div>
   );
 }
