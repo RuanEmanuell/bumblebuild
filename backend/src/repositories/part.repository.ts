@@ -123,8 +123,78 @@ export class PartRepository {
     });
   }
 
+  
   async delete(id: number) {
+    const part = await prisma.part.findUnique({
+      where: { id },
+      select: { type: true }
+    });
+
+    if (!part) {
+      throw new Error("Peça não encontrada.");
+    }
+
+    const type = part.type;
+
+    // 1. Remove registros em BuildPart
+    await prisma.buildPart.deleteMany({
+      where: { partId: id }
+    });
+
+    // 2. Remove o filho específico
+    switch (type) {
+      case "CPU":
+        await prisma.cPU.deleteMany({ where: { id } });
+        break;
+      case "GPU":
+        await prisma.gPU.deleteMany({ where: { id } });
+        break;
+      case "RAM":
+        await prisma.rAM.deleteMany({ where: { id } });
+        break;
+      case "SSD":
+        await prisma.sSD.deleteMany({ where: { id } });
+        break;
+      case "PSU":
+        await prisma.pSU.deleteMany({ where: { id } });
+        break;
+      case "CASE":
+        await prisma.case.deleteMany({ where: { id } });
+        break;
+      case "MOTHERBOARD":
+        await prisma.motherboard.deleteMany({ where: { id } });
+        break;
+      case "COOLER":
+        await prisma.cooler.deleteMany({ where: { id } });
+        break;
+    }
+
+    // 3. Agora sim pode remover a peça
     return prisma.part.delete({ where: { id } });
+  }
+
+  async deleteSpecificTypeRelation(partId: number, type: string) {
+    switch (type) {
+      
+        case "cpu":
+          return prisma.cPU.deleteMany({ where: { id: partId } });
+        case "gpu":
+          return prisma.gPU.deleteMany({ where: { id: partId } });
+        case "ram":
+          return prisma.rAM.deleteMany({ where: { id: partId } });
+        case "ssd":
+          return prisma.sSD.deleteMany({ where: { id: partId } });
+        case "psu":
+          return prisma.pSU.deleteMany({ where: { id: partId } });
+        case "case":
+          return prisma.case.deleteMany({ where: { id: partId } });
+        case "motherboard":
+          return prisma.motherboard.deleteMany({ where: { id: partId } });
+        case "cooler":
+          return prisma.cooler.deleteMany({ where: { id: partId } });
+        default:
+          throw new Error("Tipo desconhecido para deletar relacionamento");
+    }
   }
 
   async autoUpdatePrices() {

@@ -31,6 +31,14 @@ export class PartService {
     const existent = await partRepository.searchById(id);
     if (!existent) throw new Error("Peça não encontrada para atualizar");
 
+    const oldType = existent.type;
+    const newType = data.type;
+
+    if (oldType !== newType) {
+      // Remove o relacionamento antigo antes de atualizar
+      await partRepository.deleteSpecificTypeRelation(id, oldType.toLowerCase());
+    }
+
     return await partRepository.update(id, data);
   }
 

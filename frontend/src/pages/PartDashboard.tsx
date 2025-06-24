@@ -1,4 +1,3 @@
-// src/pages/PartDashboard.tsx
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import { ButtonPrimary, ButtonSecondary } from "../components/Button";
@@ -22,7 +21,9 @@ export default function PartDashboard() {
   const [selectedPartType, setSelectedPartType] = useState<string>("");
   const [formData, setFormData] = useState<Record<string, any>>({});
 
-  useEffect(() => { fetchParts(); }, []);
+  useEffect(() => {
+    fetchParts();
+  }, []);
 
   async function fetchParts() {
     try {
@@ -37,12 +38,51 @@ export default function PartDashboard() {
     }
   }
 
-  function openModal(peca?: any) {
-    setPartBeingEdited(peca || null);
-    setSelectedPartType(peca?.type || "");
-    setFormData(peca || {});
+  async function openModal(peca?: any) {
+    if (peca) {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/parts/${peca.id}`);
+        const fullPart = await res.json();
+
+        const tipo = fullPart.type.toLowerCase();
+        const specificData = fullPart[tipo] || {};
+
+        const renamedSpecificData = { ...specificData };
+
+        if (fullPart.type === "COOLER" && specificData.type) {
+          renamedSpecificData.coolerType = specificData.type;
+          delete renamedSpecificData.type;
+        }
+
+        if (fullPart.type === "SSD" && specificData.type) {
+          renamedSpecificData.ssdType = specificData.type;
+          delete renamedSpecificData.type;
+        }
+
+        setFormData({
+          ...fullPart,
+          ...renamedSpecificData
+        });
+
+        setSelectedPartType(fullPart.type);
+        setPartBeingEdited(fullPart);
+
+      } catch (err) {
+        console.error("Erro ao buscar dados da peça:", err);
+        alert("Erro ao carregar dados da peça.");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setPartBeingEdited(null);
+      setSelectedPartType("");
+      setFormData({});
+    }
+
     setIsModalOpen(true);
   }
+
   function closeModal() {
     setIsModalOpen(false);
     setPartBeingEdited(null);
@@ -60,14 +100,15 @@ export default function PartDashboard() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
-
     e.preventDefault();
+
     if (!selectedPartType) {
       alert("Selecione um tipo de peça.");
       return;
     }
+
     const token = localStorage.getItem("token");
-    // payload base
+
     const base = {
       name: formData.name,
       brand: formData.brand,
@@ -75,9 +116,20 @@ export default function PartDashboard() {
       priceLink: formData.priceLink,
       imageUrl: formData.imageUrl,
     };
-    // nested specs
-    const specKey = selectedPartType.toLowerCase();               // e.g. "cpu"
-    const nested = { [specKey]: { create: PartFormFields.buildPayload(selectedPartType, formData) } };
+
+    const specKey = selectedPartType.toLowerCase();
+    let nested: Record<string, any> = {};
+
+    if (partBeingEdited && partBeingEdited.type === selectedPartType) {
+      nested[specKey] = {
+        update: PartFormFields.buildPayload(selectedPartType, formData)
+      };
+    } else {
+      nested[specKey] = {
+        create: PartFormFields.buildPayload(selectedPartType, formData)
+      };
+    }
+
     const payload = { ...base, ...nested };
 
     const url = partBeingEdited
@@ -88,24 +140,30 @@ export default function PartDashboard() {
 
     try {
       const res = await fetch(url, {
-      method, 
-      headers: { 
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}` 
-      },
-      body: JSON.stringify(payload)
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
       });
+
       if (!res.ok) throw new Error("Erro ao salvar peça");
+
       const { part } = await res.json();
+
       alert(partBeingEdited ? "Peça atualizada!" : "Peça cadastrada!");
+
       closeModal();
       fetchParts();
+
       if (!partBeingEdited) {
         setParts(prev => [...prev, part]);
         setData(prev => ({ ...prev, totalParts: prev.totalParts + 1 }));
       } else {
         setParts(prev => prev.map(p => p.id === part.id ? part : p));
       }
+
     } catch (err) {
       console.error("Erro no cadastro:", err);
       alert("Erro ao salvar peça.");
@@ -128,6 +186,7 @@ export default function PartDashboard() {
             <p className="text-2xl font-bold">{data.totalParts}</p>
           </div>
         </section>
+
         {/* Filtros e botão */}
         <div className="flex justify-between items-center mb-4">
           <Categories
@@ -136,36 +195,55 @@ export default function PartDashboard() {
           />
           <ButtonPrimary onClick={() => openModal()}>Adicionar Peça</ButtonPrimary>
         </div>
+
         {/* Grid de Peças */}
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {isLoading
-            ? <Loading/>
-            : parts
-                .filter(p => !selectedCategory || p.type === selectedCategory)
-                .map((part, idx) => (
-                  <motion.div key={idx} whileHover={{ scale: 1.03 }}>
-                    <ProductCard
-                      brand={part.brand}
-                      name={part.name}
-                      price={`${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(part.price.toFixed(2))}`}
-                      image={part.imageUrl? part.imageUrl : setupExemplo}
-                      link={part.priceLink}
-                    />
-                    <div className="flex justify-between mt-2">
-                      <ButtonSecondary onClick={() => openModal(part)}>
-                        Editar
-                      </ButtonSecondary>
-                      <ButtonPrimary onClick={() => {
-                        if (confirm("Excluir?")) fetch(`${import.meta.env.VITE_API_URL}/${part.type.toLowerCase()}/${part.id}`, { method: 'DELETE' }).then(fetchParts);
-                      }}>
-                        Remover
-                      </ButtonPrimary>
-                    </div>
-                  </motion.div>
-                ))
-          }
+          {isLoading ? (
+            <Loading />
+          ) : (
+            parts
+              .filter(p => !selectedCategory || p.type === selectedCategory)
+              .map((part, idx) => (
+                <motion.div key={idx} whileHover={{ scale: 1.03 }}>
+                  <ProductCard
+                    brand={part.brand}
+                    name={part.name}
+                    price={`${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(part.price.toFixed(2))}`}
+                    image={part.imageUrl || setupExemplo}
+                    link={part.priceLink}
+                  />
+                  <div className="flex justify-between mt-2">
+                    <ButtonSecondary onClick={() => openModal(part)}>
+                      Editar
+                    </ButtonSecondary>
+                    <ButtonPrimary
+                      onClick={async () => {
+                        if (confirm("Excluir?")) {
+                          try {
+                            const res = await fetch(`${import.meta.env.VITE_API_URL}/parts/${part.id}`, {
+                              method: 'DELETE',
+                              headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                              }
+                            });
+                            if (!res.ok) throw new Error("Erro ao excluir");
+                            fetchParts();
+                          } catch (err) {
+                            console.error("Erro ao excluir peça:", err);
+                            alert("Erro ao excluir peça.");
+                          }
+                        }
+                      }}
+                    >
+                      Remover
+                    </ButtonPrimary>
+                  </div>
+                </motion.div>
+              ))
+          )}
         </section>
       </main>
+
       <Footer />
 
       <Modal
@@ -173,12 +251,12 @@ export default function PartDashboard() {
         onClose={closeModal}
         title={partBeingEdited ? "Editar Peça" : "Adicionar nova peça"}
       >
-        {isLoading && <Loading/>}
+        {isLoading && <Loading />}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             name="name"
             placeholder="Nome da peça"
-            value={formData.name||""}
+            value={formData.name || ""}
             onChange={handleChange}
             required
             className="border-gray-300 rounded p-2 border"
@@ -186,7 +264,7 @@ export default function PartDashboard() {
           <input
             name="brand"
             placeholder="Marca"
-            value={formData.brand||""}
+            value={formData.brand || ""}
             onChange={handleChange}
             required
             className="border-gray-300 rounded p-2 border"
@@ -194,31 +272,33 @@ export default function PartDashboard() {
           <input
             name="priceLink"
             placeholder="Link de preço"
-            value={formData.priceLink||""}
+            value={formData.priceLink || ""}
             onChange={handleChange}
             className="border-gray-300 rounded p-2 border"
           />
           <input
             name="imageUrl"
             placeholder="Link da Imagem"
-            value={formData.imageUrl||""}
+            value={formData.imageUrl || ""}
             onChange={handleChange}
             className="border-gray-300 rounded p-2 border"
           />
           <select
             name="type"
             value={selectedPartType}
-            onChange={e=>{ setSelectedPartType(e.target.value); handleChange(e); }}
+            onChange={e => {
+              setSelectedPartType(e.target.value);
+              handleChange(e);
+            }}
             required
             className="border-gray-300 rounded p-2 border"
           >
             <option value="">Selecione o tipo</option>
-            {["CPU","GPU","RAM","SSD","PSU","CASE","MOTHERBOARD","COOLER"].map(t=>(
+            {["CPU", "GPU", "RAM", "SSD", "PSU", "CASE", "MOTHERBOARD", "COOLER"].map(t => (
               <option key={t} value={t}>{t}</option>
             ))}
-          </select> 
+          </select>
 
-          {/* campos específicos ficam aqui */}
           <PartFormFields
             selectedPartType={selectedPartType}
             partBeingEdited={formData}

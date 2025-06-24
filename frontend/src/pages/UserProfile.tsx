@@ -88,7 +88,7 @@ export default function UserProfile() {
       }
 
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/user/edit/${id}`,
+        `${import.meta.env.VITE_API_URL}/users/edit/${id}`,
         formData,
         {
           headers: {
