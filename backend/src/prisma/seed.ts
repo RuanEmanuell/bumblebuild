@@ -11,6 +11,173 @@ async function seedPart(data: any) {
 
 const parts = [
   {
+    "name": "Thunder 500W Bronze",
+    "brand": "Mancer",
+    "type": "PSU",
+    "priceLink": "https://www.pichau.com.br/fonte-mancer-thunder-500w-bronze-80-plus-mcr-thr500-bl01",
+    "psu": {
+      "create": {
+        "powerW": 500,
+        "certification": "80 Plus Bronze",
+        "modular": false
+      }
+    }
+  },
+  {
+    "name": "SU650 240GB",
+    "brand": "ADATA",
+    "type": "SSD",
+    "priceLink": "https://www.terabyteshop.com.br/produto/10527/ssd-adata-su650-240gb-asu650ss-240gt-r-sata-6gbs-25-pol-leitura-520mbs-gravacao-450mbs",
+    "ssd": {
+      "create": {
+        "capacityGB": 240,
+        "type": "SATA",
+        "readMBs": 520,
+        "writeMBs": 450
+      }
+    }
+  },
+  {
+    "name": "T-Dagger Cube White",
+    "brand": "T-Dagger",
+    "type": "CASE",
+    "priceLink": "https://www.kabum.com.br/produto/108089/gabinete-gamer-t-dagger-cube-white-mid-tower-lateral-em-vidro-branco-t-tgc305w",
+    "case": {
+      "create": {
+        "supportedSizes": "ATX, Micro-ATX, Mini-ITX",
+        "maxGpuLengthMM": 350
+      }
+    }
+  },
+  {
+    "name": "Acegeek Blade Mid Tower",
+    "brand": "Acegeek",
+    "type": "CASE",
+    "priceLink": "https://www.pichau.com.br/gabinete-gamer-acegeek-blade-mid-tower-lateral-de-vidro-preto-ag-blade-bk",
+    "case": {
+      "create": {
+        "supportedSizes": "ATX, Micro-ATX, Mini-ITX",
+        "maxGpuLengthMM": 340
+      }
+    }
+  },
+  {
+    "name": "Gamdias Boreas E1-410 Red 120mm",
+    "brand": "Gamdias",
+    "type": "COOLER",
+    "priceLink": "https://www.terabyteshop.com.br/produto/25350/cooler-processador-gamdias-boreas-e1-410-red-120mm-intel-amd-boreas-e1-410-red",
+    "cooler": {
+      "create": {
+        "type": "Air Cooler",
+        "socketSupport": "Intel & AMD"
+      }
+    }
+  },
+  {
+    "name": "Thermalright Assassin X 120 R SE ARGB Black",
+    "brand": "Thermalright",
+    "type": "COOLER",
+    "priceLink": "https://www.ciapc.com.br/hardware/cooler/para-processador/air-cooler-120mm-thermalright-assassin-x-120-r-se-argb-black-assassin-x-120-r-se",
+    "cooler": {
+      "create": {
+        "type": "Air Cooler",
+        "socketSupport": "Intel LGA 1200/115x, AMD AM4"
+      }
+    }
+  },
+  {
+    "name": "Intel Core i3 14100F",
+    "brand": "Intel",
+    "type": "CPU",
+    "priceLink": "https://www.terabyteshop.com.br/produto/27407/processador-intel-core-i3-14100f-35-ghz-47ghz-turbo-14-geracao-4-cores-8-threads-lga-1700-bx8071514100f",
+    "cpu": {
+      "create": {
+        "socket": "LGA1700",
+        "cores": 4,
+        "threads": 8,
+        "frequency": 3.5,
+        "tdp": 65,
+        "integratedGraphics": false
+      }
+    }
+  },
+  {
+    "name": "AMD Ryzen 3 5300G",
+    "brand": "AMD",
+    "type": "CPU",
+    "priceLink": "https://www.pichau.com.br/processador-amd-ryzen-3-5300g-4-core-8-threads-4-0ghz-4-2ghz-turbo-cache-8mb-am4-100-100000253box",
+    "cpu": {
+      "create": {
+        "socket": "AM4",
+        "cores": 4,
+        "threads": 8,
+        "frequency": 4.0,
+        "tdp": 65,
+        "integratedGraphics": true
+      }
+    }
+  },
+  {
+    "name": "AMD Ryzen 3 4100",
+    "brand": "AMD",
+    "type": "CPU",
+    "priceLink": "https://www.gigantec.com.br/processador-amd-ryzen-3-4100-am4-4-0ghz-6mb-cache-wraith-stealth-s-video-integrado-100-100000510box.html",
+    "cpu": {
+      "create": {
+        "socket": "AM4",
+        "cores": 4,
+        "threads": 8,
+        "frequency": 4.0,
+        "tdp": 65,
+        "integratedGraphics": true
+      }
+    }
+  },
+  {
+    "name": "AMD Ryzen 5 4500",
+    "brand": "AMD",
+    "type": "CPU",
+    "priceLink": "https://www.kabum.com.br/produto/333154/processador-amd-ryzen-5-4500-3-6ghz-4-1ghz-max-turbo-cache-11mb-am4-sem-video-100-100000644box",
+    "cpu": {
+      "create": {
+        "socket": "AM4",
+        "cores": 6,
+        "threads": 12,
+        "frequency": 3.6,
+        "tdp": 65,
+        "integratedGraphics": false
+      }
+    }
+  },
+  {
+    "name": "ASRock Intel ARC A380 6GB Challenger ITX OC",
+    "brand": "ASRock",
+    "type": "GPU",
+    "priceLink": "https://www.ciapc.com.br/placas-de-video/geforce/gpu-asrock-intel-arc-a380-6gb-challenger-itx-oc-gddr6-96-bits-3x-dp-1x-hdmi-a380-cli-6go",
+    "gpu": {
+      "create": {
+        "memoryGB": 6,
+        "memoryType": "GDDR6",
+        "tdp": 75,
+        "lengthMM": 170
+      }
+    }
+  },
+  {
+    "name": "ASRock Radeon RX 6500 XT Phantom Gaming D OC 4GB",
+    "brand": "ASRock",
+    "type": "GPU",
+    "priceLink": "https://www.terabyteshop.com.br/produto/20241/placa-de-video-asrock-radeon-rx-6500-xt-phantom-gaming-d-oc-4gb-gddr6-fsr-ray-tracing-90-ga3dzz-00uanf",
+    "gpu": {
+      "create": {
+        "memoryGB": 4,
+        "memoryType": "GDDR6",
+        "tdp": 107,
+        "lengthMM": 170
+      }
+    }
+  },
+  {
     name: "CX Series CX750 750W",
     brand: "Corsair",
     price: 449.90,
@@ -135,14 +302,14 @@ const parts = [
     },
   },
   {
-    name: "GeForce RTX 3050 8GB MSI",
+    name: "GeForce RTX 3050 6B MSI",
     brand: "NVIDIA",
     price: 1400.00,
     type: "GPU",
     priceLink: "https://www.amazon.com.br/MSI-GeForce-Express-1492MHz-14000MHz/dp/B0CSPRNRZC",
     gpu: {
       create: {
-        memoryGB: 8,
+        memoryGB: 6,
         memoryType: "GDDR6",
         tdp: 130,
         lengthMM: 242,
@@ -191,23 +358,6 @@ const parts = [
         cores: 8,
         threads: 16,
         frequency: 3.4,
-        tdp: 65,
-        integratedGraphics: false,
-      },
-    },
-  },
-  {
-    name: "Core i5 12400F",
-    brand: "Intel",
-    price: 1050.00,
-    type: "CPU",
-    priceLink: "https://www.amazon.com.br/Processador-Intel-i5-12400-N%C3%BAcleos-BX8071512400/dp/B09MDH6B1P",
-    cpu: {
-      create: {
-        socket: "LGA1700",
-        cores: 6,
-        threads: 12,
-        frequency: 2.5,
         tdp: 65,
         integratedGraphics: false,
       },
@@ -288,6 +438,21 @@ const parts = [
     },
   },
   {
+    name: "H410M-H V2",
+    brand: "Gigabyte",
+    type: "MOTHERBOARD",
+    priceLink: "https://www.kabum.com.br/produto/212032/placa-mae-gigabyte-intel-lga-1200-ddr4-hdmi-d-sub-raid-m-2-usb-3-2-h410m-h",
+    motherboard: {
+      create: {
+        socket: "LGA 1200",
+        ramType: "DDR4",
+        slots: 2,
+        maxRAM: 64,
+        size: "Micro-ATX",
+      },
+    },
+  },
+  {
     name: "B650M Gaming Wifi",
     brand: "Gigabyte",
     price: 850.00,
@@ -296,7 +461,6 @@ const parts = [
     motherboard: {
       create: {
         socket: "AM5",
-        chipset: "B650",
         ramType: "DDR5",
         slots: 4,
         maxRAM: 128,
