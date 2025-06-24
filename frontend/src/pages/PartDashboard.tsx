@@ -12,9 +12,17 @@ import HeaderCustom from "../components/Header";
 import PartFormFields from "../components/PartFormFields";
 import Loading from "../components/Loading";
 import { useAuth } from "../hooks/useAuth";
+import Dialog from "../components/Dialog";
 
 export default function PartDashboard() {
-  const { user } = useAuth();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [onDialogConfirm, setOnDialogConfirm] = useState<() => void>(
+    () => () => {}
+  );
+
+  const { user, token } = useAuth();
   const [data, setData] = useState({
     totalUsers: 82,
     totalParts: 0,
@@ -71,9 +79,13 @@ export default function PartDashboard() {
 
     e.preventDefault();
     if (!selectedPartType) {
-      alert("Selecione um tipo de peça.");
+      setDialogTitle("Atenção");
+      setDialogMessage("Selecione um tipo de peça.");
+      setOnDialogConfirm(() => () => setDialogOpen(false));
+      setDialogOpen(true);
       return;
     }
+
     const token = localStorage.getItem("token");
     // payload base
     const base = {
@@ -109,7 +121,13 @@ export default function PartDashboard() {
       });
       if (!res.ok) throw new Error("Erro ao salvar peça");
       const { part } = await res.json();
-      alert(partBeingEdited ? "Peça atualizada!" : "Peça cadastrada!");
+      setDialogTitle("Sucesso");
+      setDialogMessage(
+        partBeingEdited ? "Peça atualizada!" : "Peça cadastrada!"
+      );
+      setOnDialogConfirm(() => () => setDialogOpen(false));
+      setDialogOpen(true);
+
       closeModal();
       fetchParts();
       if (!partBeingEdited) {
@@ -120,7 +138,10 @@ export default function PartDashboard() {
       }
     } catch (err) {
       console.error("Erro no cadastro:", err);
-      alert("Erro ao salvar peça.");
+      setDialogTitle("Erro");
+      setDialogMessage("Erro ao salvar peça.");
+      setOnDialogConfirm(() => () => setDialogOpen(false));
+      setDialogOpen(true);
     }
 
     setIsLoading(false);
@@ -175,16 +196,26 @@ export default function PartDashboard() {
                       </ButtonSecondary>
                       <ButtonPrimary
                         onClick={() => {
-                          if (confirm("Excluir?")) {
-                            fetch(
+                          setDialogTitle("Confirmação");
+                          setDialogMessage(
+                            "Deseja realmente excluir esta peça?"
+                          );
+                          setOnDialogConfirm(() => async () => {
+                            await fetch(
                               `${
                                 import.meta.env.VITE_API_URL
                               }/${part.type.toLowerCase()}/${part.id}`,
                               {
                                 method: "DELETE",
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                },
                               }
-                            ).then(fetchParts);
-                          }
+                            );
+                            fetchParts();
+                            setDialogOpen(false);
+                          });
+                          setDialogOpen(true);
                         }}
                       >
                         Remover
@@ -277,6 +308,13 @@ export default function PartDashboard() {
           </div>
         </form>
       </Modal>
+      <Dialog
+        open={dialogOpen}
+        title={dialogTitle}
+        message={dialogMessage}
+        onClose={() => setDialogOpen(false)}
+        onConfirm={onDialogConfirm}
+      />
     </div>
   );
 }
