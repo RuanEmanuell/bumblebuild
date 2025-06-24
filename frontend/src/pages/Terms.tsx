@@ -2,7 +2,6 @@ import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function Terms() {
-
     return (
         <div className="bg-white text-black min-h-screen flex flex-col">
             <HeaderCustom />
@@ -51,6 +50,19 @@ export default function Terms() {
                     <p>
                         Caso tenha dúvidas, sugestões ou precise de suporte, entre em contato conosco
                         através da página de <strong>Contato</strong>.
+                    </p>
+
+                    <h2 className="text-xl font-semibold mt-6">6. Uso de Marcas e Links Externos</h2>
+                    <p>
+                        A plataforma BumbleBuild pode conter links para sites de terceiros, como lojas (ex: Kabum) e apresentar marcas comerciais reconhecidas (ex: AMD). Esses links são fornecidos apenas para facilitar a navegação e consulta dos usuários, não configurando vínculo, patrocínio ou parceria oficial entre o BumbleBuild e tais empresas ou marcas.
+                        Todas as marcas registradas exibidas são propriedade de seus respectivos donos. O BumbleBuild não se responsabiliza por quaisquer alterações, erros, preços, disponibilidade ou conteúdos presentes em sites externos vinculados à plataforma.
+                    </p>
+
+                    <h2 className="text-xl font-semibold mt-6">7. Natureza da Plataforma</h2>
+                    <p>
+                        O BumbleBuild é uma plataforma sem fins lucrativos, oferecida gratuitamente aos usuários.
+                        Não há comercialização direta de produtos, nem recebemos qualquer tipo de pagamento, comissão, patrocínio ou parceria comercial de fabricantes, lojas ou marcas exibidas na plataforma.
+                        Nosso objetivo é exclusivamente auxiliar usuários na montagem virtual de computadores.
                     </p>
 
                     <p className="pt-4 text-md">
