@@ -18,6 +18,18 @@ services:
       - postgres
     restart: always
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod  # ou Dockerfile, dependendo do seu projeto
+    ports:
+      - "5180:5180"  # porta padrão do Vite, altere se for outra
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    restart: always
+
   postgres:
     image: postgres:16
     restart: always

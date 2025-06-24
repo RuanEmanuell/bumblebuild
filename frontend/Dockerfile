@@ -14,6 +14,6 @@ RUN npm rebuild
 # Copia o restante do código-fonte
 COPY . .
 
-EXPOSE 5173
+EXPOSE 5180
 
 CMD ["npm", "run", "dev"]

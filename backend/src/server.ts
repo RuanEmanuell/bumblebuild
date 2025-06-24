@@ -20,7 +20,12 @@ const cors = require("cors");
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+
+app.use(cors({
+  origin: 'http://bumblebuild.com.br',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Rotas
