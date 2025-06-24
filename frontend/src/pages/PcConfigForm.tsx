@@ -1,9 +1,9 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import axios from 'axios';
 import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';
 import { ProductCard } from '../components/ProductCard';
-import { ButtonPrimary } from '../components/Button';
+import { ButtonPrimary, ButtonSecondary } from '../components/Button';
 import setupExemplo from "../assets/setupexemplo.jpg";
 
 interface Product {
@@ -29,6 +29,8 @@ const PcConfigForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [build, setBuild] = useState<Product[]>([]);
   const [responseMessage, setResponseMessage] = useState('');
+  const [buildName, setBuildName] = useState('');
+  const [selectedPartIds, setSelectedPartIds] = useState<number[]>([]);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -76,6 +78,56 @@ const PcConfigForm: React.FC = () => {
     }
   };
 
+  const handleSaveBuild = async () => {
+
+    if (!validate()) {
+      setSuccess(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        alert('Você precisa estar logado para salvar a build.');
+        setSuccess(false);
+        return;
+      }
+
+      const res = await axios.post(
+        'http://localhost:3000/builds/create',
+        {
+          name: buildName,
+          partIds: selectedPartIds
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log('Build criada:', res.data);
+
+      setResponseMessage('Build salva com sucesso!');
+      setSuccess(true);
+    } catch (error) {
+      console.error('Erro ao salvar build:', error);
+      setSuccess(false);
+      alert('Erro ao salvar a build. Verifique o console.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (success && build.length > 0) {
+      setSelectedPartIds(build.map(part => part.id || 0));
+    }
+  }, [success, build]);
+
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col">
@@ -114,7 +166,7 @@ const PcConfigForm: React.FC = () => {
 
           {/*mensagem do backend*/}
           {responseMessage && (
-            <p className={`mt-4 text-sm ${success ? 'text-green-600' : 'text-red-600'}`}>
+            <p className={`text-sm ${success ? 'text-green-600' : 'text-red-600'}`}>
               {responseMessage}
             </p>
           )}
@@ -122,6 +174,19 @@ const PcConfigForm: React.FC = () => {
           {/*mostrar as peças da montagem*/}
           {success && build.length > 0 && (
             <section className="mt-8">
+              <label className="block text-sm font-medium m-2">Nome da Montagem</label>
+              <input
+                type="text"
+                className="w-full border px-4 py-2 rounded-lg"
+                value={buildName}
+                onChange={(e) => setBuildName(e.target.value)}
+                required
+              />
+              <ButtonSecondary onClick={handleSaveBuild}
+              className='mt-4 mb-4'>
+                Salvar montagem
+              </ButtonSecondary>
+
               <h3 className="text-xl font-bold mb-4">Configuração Recomendada</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {build.map((part, idx) => (
@@ -129,12 +194,13 @@ const PcConfigForm: React.FC = () => {
                     key={idx}
                     brand={part.brand || 'Marca Desconhecida'}
                     name={part.name}
-                    price={part.price}
-                    image={part.imageUrl? part.imageUrl : setupExemplo}
+                    price={`R$ ${part.price}`}
+                    image={part.imageUrl ? part.imageUrl : setupExemplo}
                     link={part.link}
                   />
                 ))}
               </div>
+
             </section>
           )}
 

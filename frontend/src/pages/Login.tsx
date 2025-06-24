@@ -77,7 +77,6 @@ export default function Auth() {
         name: name,
         email: email,
         password: password,
-        userType: "padrao"
       });
 
       console.log("User created:", response.data);
