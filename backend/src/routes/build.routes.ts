@@ -259,7 +259,7 @@ router.put('/:id', async (req: any, res: any) => {
  *       200:
  *         description: Build removida com sucesso
  */
-router.delete('/:id', async (req: any, res: any) => {
+router.delete('/:id', authenticateToken, async (req: any, res: any) => {
   try {
     const userId = req.user?.id;
     const buildId = Number(req.params.id);
@@ -300,6 +300,51 @@ router.get('/history', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+/**
+ * @swagger
+ * /builds/{id}:
+ *   get:
+ *     summary: Retorna os detalhes de uma build específica do usuário autenticado
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da build
+ *     responses:
+ *       200:
+ *         description: Build retornada com sucesso
+ */
+router.get('/:id', authenticateToken, async (req: any, res: any) => {
+  try {
+    const userId = req.user?.id;
+    const buildId = Number(req.params.id);
+
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
+
+    const build = await prisma.build.findUnique({
+      where: { id: buildId },
+      include: {
+        buildParts: {
+          include: { part: true },
+        },
+      },
+    });
+
+    if (!build || build.userId !== userId) {
+      return res.status(404).json({ message: 'Build not found or unauthorized' });
+    }
+
+    return res.status(200).json(build);
+  } catch (error) {
+    console.error('Erro ao buscar build por ID:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 

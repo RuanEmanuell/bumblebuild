@@ -13,7 +13,7 @@ interface Product {
   imageUrl: string;
   category: string;
   brand?: string;
-  link?: string;
+  priceLink?: string;
 }
 
 interface FormErrors {
@@ -35,7 +35,7 @@ const PcConfigForm: React.FC = () => {
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
     const orc = parseFloat(budget);
-    if (!budget || orc < 2200 ) {
+    if (!budget || orc < 2200) {
       newErrors.budget = 'É necessário um orçamento mínimo de 2200';
     }
     setErrors(newErrors);
@@ -59,7 +59,7 @@ const PcConfigForm: React.FC = () => {
     try {
       setLoading(true);
 
-      const res = await axios.post<SuggestResponse>('http://localhost:3000/builds/suggest', {
+      const res = await axios.post<SuggestResponse>(`${import.meta.env.VITE_API_URL}/builds/suggest`, {
         budget: parseFloat(budget),
         includeGPU: includeGPU
       });
@@ -97,7 +97,7 @@ const PcConfigForm: React.FC = () => {
       }
 
       const res = await axios.post(
-        'http://localhost:3000/builds/create',
+        `${import.meta.env.VITE_API_URL}/builds/create`,
         {
           name: buildName,
           partIds: selectedPartIds
@@ -161,50 +161,49 @@ const PcConfigForm: React.FC = () => {
             type="submit">
             {loading ? 'Enviando...' : 'Montar'}
           </ButtonPrimary>
-
-          {loading && <p className="text-gray-600 mt-2">Carregando configuração...</p>}
-
-          {/*mensagem do backend*/}
-          {responseMessage && (
-            <p className={`text-sm ${success ? 'text-green-600' : 'text-red-600'}`}>
-              {responseMessage}
-            </p>
-          )}
-
-          {/*mostrar as peças da montagem*/}
-          {success && build.length > 0 && (
-            <section className="mt-8">
-              <label className="block text-sm font-medium m-2">Nome da Montagem</label>
-              <input
-                type="text"
-                className="w-full border px-4 py-2 rounded-lg"
-                value={buildName}
-                onChange={(e) => setBuildName(e.target.value)}
-                required
-              />
-              <ButtonSecondary onClick={handleSaveBuild}
-              className='mt-4 mb-4'>
-                Salvar montagem
-              </ButtonSecondary>
-
-              <h3 className="text-xl font-bold mb-4">Configuração Recomendada</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {build.map((part, idx) => (
-                  <ProductCard
-                    key={idx}
-                    brand={part.brand || 'Marca Desconhecida'}
-                    name={part.name}
-                    price={part.price}
-                    image={part.imageUrl ? part.imageUrl : setupExemplo}
-                    link={part.link}
-                  />
-                ))}
-              </div>
-
-            </section>
-          )}
-
         </form>
+        {loading && <p className="text-gray-600 mt-2">Carregando configuração...</p>}
+
+        {/*mensagem do backend*/}
+        {responseMessage && (
+          <p className={`text-sm ${success ? 'text-green-600' : 'text-red-600'}`}>
+            {responseMessage}
+          </p>
+        )}
+
+        {/*mostrar as peças da montagem*/}
+        {success && build.length > 0 && (
+          <section className="mt-8">
+            <label className="block text-sm font-medium m-2">Nome da Montagem</label>
+            <input
+              type="text"
+              className="w-full border px-4 py-2 rounded-lg"
+              value={buildName}
+              onChange={(e) => setBuildName(e.target.value)}
+            />
+            <ButtonSecondary onClick={handleSaveBuild}
+              className='mt-4 mb-4'>
+              Salvar montagem
+            </ButtonSecondary>
+
+            <h3 className="text-xl font-bold mb-4">Configuração Recomendada</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {build.map((part, idx) => (
+                <ProductCard
+                  key={idx}
+                  brand={part.brand || 'Marca Desconhecida'}
+                  name={part.name}
+                  price={part.price}
+                  image={part.imageUrl ? part.imageUrl : setupExemplo}
+                  link={part.priceLink}
+                />
+              ))}
+            </div>
+
+          </section>
+        )}
+
+
       </main>
       <Footer />
     </div>
