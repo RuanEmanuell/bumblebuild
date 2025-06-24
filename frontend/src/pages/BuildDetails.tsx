@@ -35,6 +35,7 @@ export default function BuildDetails() {
   const [error, setError] = useState("");
   const [newName, setNewName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [buildPrice, setBuildPrice] = useState<any>(0);
 
   useEffect(() => {
     const fetchBuildDetails = async () => {
@@ -49,6 +50,16 @@ export default function BuildDetails() {
         const buildData = response.data as Build;
         setBuild(buildData);
         setNewName(buildData.name);
+
+        let buildPrices = buildData.buildParts.map(item => item.part.price);
+        let totalBuildPrice = 0;
+
+        for (let i = 0; i < buildPrices.length; i++) {
+          totalBuildPrice += buildPrices[i];
+        }
+        setBuildPrice(totalBuildPrice);
+
+        console.log(buildData.buildParts);
       } catch (err) {
         console.error("Erro ao buscar detalhes da montagem:", err);
         setError("Erro ao carregar a montagem.");
@@ -161,6 +172,8 @@ export default function BuildDetails() {
                 />
               ))}
             </div>
+
+            <h4 className="text-lg font-bold my-4 mx-auto w-fit">Preço total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(buildPrice.toFixed(2))}</h4>
 
             <div className="mt-8">
               <ButtonSecondary onClick={() => navigate(-1)}>Voltar</ButtonSecondary>

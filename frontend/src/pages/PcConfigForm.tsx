@@ -28,15 +28,16 @@ const PcConfigForm: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [build, setBuild] = useState<Product[]>([]);
-  const [responseMessage, setResponseMessage] = useState('');
+  const [buildPrice, setBuildPrice] = useState<any>(0);
+  const [responseMessage, setResponseMessage] = useState<string | null>('');
   const [buildName, setBuildName] = useState('');
   const [selectedPartIds, setSelectedPartIds] = useState<number[]>([]);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
     const orc = parseFloat(budget);
-    if (!budget || orc < 2200) {
-      newErrors.budget = 'É necessário um orçamento mínimo de 2200';
+    if (!budget || orc < 1500) {
+      newErrors.budget = 'É necessário um orçamento mínimo de R$ 1500';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -58,6 +59,7 @@ const PcConfigForm: React.FC = () => {
 
     try {
       setLoading(true);
+      setBuildPrice(0);
 
       const res = await axios.post<SuggestResponse>(`${import.meta.env.VITE_API_URL}/builds/suggest`, {
         budget: parseFloat(budget),
@@ -71,11 +73,14 @@ const PcConfigForm: React.FC = () => {
       setSuccess(true);
     } catch (error: any) {
       setResponseMessage(
-        error.response?.data?.message || "Erro ao montar o PC. Tente novamente."
+        "Nenhum PC dentro do orçamento foi encontrado."
       );
       setSuccess(false);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setResponseMessage(null);
+      }, 5000);
     }
   };
 
@@ -127,6 +132,13 @@ const PcConfigForm: React.FC = () => {
   useEffect(() => {
     if (success && build.length > 0) {
       setSelectedPartIds(build.map(part => part.id || 0));
+      let buildPrices = build.map(part => part.price);
+      let totalBuildPrice = 0;
+
+      for(let i=0; i<buildPrices.length; i++){
+        totalBuildPrice += buildPrices[i];
+      }
+      setBuildPrice(totalBuildPrice);
     }
   }, [success, build]);
 
@@ -151,13 +163,13 @@ const PcConfigForm: React.FC = () => {
               }}
 
             />
-            <div className="flex flex-row py-2">
+            <div className="flex flex-row pt-2">
               <label className="block text-md font-medium mr-2">Incluir placa de vídeo?</label>
               <input
                 type="checkbox"
                 value={includeGPU.toString()}
                 className="border-2 border-red-500"
-                onChange={(e) => setIncludeGPU(i => !i)}
+                onChange={() => setIncludeGPU(i => !i)}
               />
             </div>
             {errors.budget && <p className="text-red-600 text-sm">{errors.budget}</p>}
@@ -172,7 +184,7 @@ const PcConfigForm: React.FC = () => {
 
         {/*mensagem do backend*/}
         {responseMessage && (
-          <p className={`text-sm ${success ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`text-sm ${success ? 'text-green-600' : 'text-red-600'} pt-4`}>
             {responseMessage}
           </p>
         )}
@@ -192,7 +204,7 @@ const PcConfigForm: React.FC = () => {
               Salvar montagem
             </ButtonSecondary>
 
-            <h3 className="text-xl font-bold mb-4">Configuração Recomendada</h3>
+            <h3 className="text-xl font-bold my-4">Configuração Recomendada</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {build.map((part, idx) => (
                 <ProductCard
@@ -205,6 +217,7 @@ const PcConfigForm: React.FC = () => {
                 />
               ))}
             </div>
+            <h4 className="text-lg font-bold my-4 mx-auto w-fit">Preço total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(buildPrice.toFixed(2))}</h4>
 
           </section>
         )}
