@@ -33,8 +33,8 @@ const PcConfigForm: React.FC = () => {
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
     const orc = parseFloat(budget);
-    if (!budget || orc < 2000 ) {
-      newErrors.budget = 'É necessário um orçamento mínimo de 2000';
+    if (!budget || orc < 2200 ) {
+      newErrors.budget = 'É necessário um orçamento mínimo de 2200';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

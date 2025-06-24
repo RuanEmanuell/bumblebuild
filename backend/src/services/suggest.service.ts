@@ -22,12 +22,12 @@ function extractSpecificData(part: Part): CPU | GPU | RAM | PSU | Motherboard | 
 function redistributeBudgetWithoutGPU(distribution: Record<PartType, number>): Record<PartType, number> {
   const gpuBudget = distribution.GPU;
 
-  const cpuWeight  = 0.20;
-  const moboWeight = 0.15;
-  const ramWeight  = 0.15;
-  const ssdWeight  = 0.10;
-  const psuWeight  = 0.10;
-  const caseWeight = 0.10;
+  const cpuWeight = 0.30;
+  const moboWeight = 0.25;
+  const ramWeight = 0.15;
+  const ssdWeight = 0.15;
+  const psuWeight = 0.10;
+  const caseWeight = 0.05;
 
   const totalWeight = cpuWeight + ramWeight + ssdWeight + psuWeight;
 
@@ -42,6 +42,67 @@ function redistributeBudgetWithoutGPU(distribution: Record<PartType, number>): R
 
   return distribution;
 }
+
+function tryDowngrade(
+  currentConfig: Part[],
+  parts: Part[],
+  budget: number
+): { configuration: Part[]; message?: string } {
+  let config = [...currentConfig];
+  let totalCost = config.reduce((sum, p) => sum + p.price, 0);
+
+  console.log(`🔍 Custo inicial: R$${totalCost.toFixed(2)} — Orçamento: R$${budget}`);
+
+  const downgradePriority: PartType[] = [
+    PartType.CASE,
+    PartType.SSD,
+    PartType.PSU,
+    PartType.RAM,
+    PartType.MOTHERBOARD,
+    PartType.CPU
+  ];
+
+  for (const partType of downgradePriority) {
+    const currentPart = config.find(p => p.type === partType);
+    if (!currentPart) continue;
+
+    const cheaperOptions = parts
+      .filter(p =>
+        p.type === partType &&
+        p.price < currentPart.price &&
+        (partType !== PartType.MOTHERBOARD || checkCpuMotherboardCompatibility(
+          extractSpecificData(config.find(p => p.type === PartType.CPU)!) as CPU,
+          extractSpecificData(p) as Motherboard
+        )) &&
+        (partType !== PartType.RAM || checkRamMotherboardCompatibility(
+          extractSpecificData(p) as RAM,
+          extractSpecificData(config.find(p => p.type === PartType.MOTHERBOARD)!) as Motherboard
+        )) &&
+        (partType !== PartType.PSU || true)
+      )
+      .sort((a, b) => b.price - a.price);
+
+    if (cheaperOptions.length > 0) {
+      const cheaperPart = cheaperOptions[0];
+      config = config.map(p => (p.id === currentPart.id ? cheaperPart : p));
+
+      totalCost = config.reduce((sum, p) => sum + p.price, 0);
+      console.log(`⚙️ Downgrade ${partType}: ${currentPart.name} → ${cheaperPart.name} — Novo custo: R$${totalCost.toFixed(2)}`);
+
+      if (totalCost <= budget) {
+        console.log('✅ Cabemos no orçamento após downgrade!');
+        return { configuration: config };
+      }
+    }
+  }
+
+  console.log('❌ Não foi possível caber no orçamento mesmo após downgrades');
+  return {
+    configuration: [],
+    message: 'Could not fit within budget even after downgrades.'
+  };
+}
+
 
 export function suggestConfigurationWithBudget(
   parts: Part[],
@@ -61,6 +122,8 @@ export function suggestConfigurationWithBudget(
       (includeGPU ? true : (extractSpecificData(p) as CPU).integratedGraphics)
     )
     .sort((a, b) => b.price - a.price);
+
+        console.log(distribution);
 
   let cpu: Part | null = null;
   let motherboard: Part | null = null;
@@ -169,14 +232,24 @@ export function suggestConfigurationWithBudget(
   console.log('Custo total:', totalCost);
 
   if (totalCost > budget) {
-    console.log('❌ Configuração excede o orçamento');
-    return {
-      configuration: [],
-      message: `Configuration exceeds the budget: R$${totalCost.toFixed(2)}`,
-    };
+    console.log('❌ Configuração excede o orçamento, tentando downgrade inteligente...');
+
+    const downgradeResult = tryDowngrade(finalConfiguration, parts, budget);
+
+    if (downgradeResult.configuration.length === 0) {
+      return {
+        configuration: [],
+        message: `Configuration exceeds the budget: R$${totalCost.toFixed(2)}`
+      };
+    } else {
+      console.log('✅ Configuração ajustada após downgrade');
+      return downgradeResult;
+    }
   }
 
   console.log('✅ Configuração final gerada com sucesso!');
 
   return { configuration: finalConfiguration };
 }
+
+

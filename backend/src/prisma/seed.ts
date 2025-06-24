@@ -438,6 +438,21 @@ const parts = [
     },
   },
   {
+    name: "H410M-H V2",
+    brand: "Gigabyte",
+    type: "MOTHERBOARD",
+    priceLink: "https://www.kabum.com.br/produto/212032/placa-mae-gigabyte-intel-lga-1200-ddr4-hdmi-d-sub-raid-m-2-usb-3-2-h410m-h",
+    motherboard: {
+      create: {
+        socket: "LGA 1200",
+        ramType: "DDR4",
+        slots: 2,
+        maxRAM: 64,
+        size: "Micro-ATX",
+      },
+    },
+  },
+  {
     name: "B650M Gaming Wifi",
     brand: "Gigabyte",
     price: 850.00,
