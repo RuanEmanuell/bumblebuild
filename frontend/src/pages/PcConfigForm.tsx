@@ -194,7 +194,7 @@ const PcConfigForm: React.FC = () => {
                     key={idx}
                     brand={part.brand || 'Marca Desconhecida'}
                     name={part.name}
-                    price={`R$ ${part.price}`}
+                    price={part.price}
                     image={part.imageUrl ? part.imageUrl : setupExemplo}
                     link={part.link}
                   />
