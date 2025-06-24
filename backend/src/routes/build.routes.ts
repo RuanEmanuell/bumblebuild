@@ -215,6 +215,7 @@ router.put('/:id', async (req: any, res: any) => {
     if (name) dataToUpdate.name = name;
 
     if (partIds && Array.isArray(partIds)) {
+      
       await prisma.buildPart.deleteMany({ where: { buildId } });
 
       dataToUpdate.buildParts = {
