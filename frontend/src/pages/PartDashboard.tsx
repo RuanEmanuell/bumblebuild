@@ -1,4 +1,3 @@
-// src/pages/PartDashboard.tsx
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import { ButtonPrimary, ButtonSecondary } from "../components/Button";
@@ -53,12 +52,51 @@ export default function PartDashboard() {
     }
   }
 
-  function openModal(peca?: any) {
-    setPartBeingEdited(peca || null);
-    setSelectedPartType(peca?.type || "");
-    setFormData(peca || {});
+  async function openModal(peca?: any) {
+    if (peca) {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/parts/${peca.id}`);
+        const fullPart = await res.json();
+
+        const tipo = fullPart.type.toLowerCase();
+        const specificData = fullPart[tipo] || {};
+
+        const renamedSpecificData = { ...specificData };
+
+        if (fullPart.type === "COOLER" && specificData.type) {
+          renamedSpecificData.coolerType = specificData.type;
+          delete renamedSpecificData.type;
+        }
+
+        if (fullPart.type === "SSD" && specificData.type) {
+          renamedSpecificData.ssdType = specificData.type;
+          delete renamedSpecificData.type;
+        }
+
+        setFormData({
+          ...fullPart,
+          ...renamedSpecificData
+        });
+
+        setSelectedPartType(fullPart.type);
+        setPartBeingEdited(fullPart);
+
+      } catch (err) {
+        console.error("Erro ao buscar dados da peça:", err);
+        alert("Erro ao carregar dados da peça.");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setPartBeingEdited(null);
+      setSelectedPartType("");
+      setFormData({});
+    }
+
     setIsModalOpen(true);
   }
+
   function closeModal() {
     setIsModalOpen(false);
     setPartBeingEdited(null);
@@ -76,8 +114,8 @@ export default function PartDashboard() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
-
     e.preventDefault();
+
     if (!selectedPartType) {
       setDialogTitle("Atenção");
       setDialogMessage("Selecione um tipo de peça.");
@@ -87,7 +125,7 @@ export default function PartDashboard() {
     }
 
     const token = localStorage.getItem("token");
-    // payload base
+
     const base = {
       name: formData.name,
       brand: formData.brand,
@@ -95,13 +133,21 @@ export default function PartDashboard() {
       priceLink: formData.priceLink,
       imageUrl: formData.imageUrl,
     };
-    // nested specs
-    const specKey = selectedPartType.toLowerCase(); // e.g. "cpu"
-    const nested = {
-      [specKey]: {
-        create: PartFormFields.buildPayload(selectedPartType, formData),
-      },
-    };
+
+
+    const specKey = selectedPartType.toLowerCase();
+    let nested: Record<string, any> = {};
+
+    if (partBeingEdited && partBeingEdited.type === selectedPartType) {
+      nested[specKey] = {
+        update: PartFormFields.buildPayload(selectedPartType, formData)
+      };
+    } else {
+      nested[specKey] = {
+        create: PartFormFields.buildPayload(selectedPartType, formData)
+      };
+    }
+
     const payload = { ...base, ...nested };
 
     const url = partBeingEdited
@@ -115,12 +161,16 @@ export default function PartDashboard() {
         method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
+
       });
+
       if (!res.ok) throw new Error("Erro ao salvar peça");
+
       const { part } = await res.json();
+
       setDialogTitle("Sucesso");
       setDialogMessage(
         partBeingEdited ? "Peça atualizada!" : "Peça cadastrada!"
@@ -130,12 +180,14 @@ export default function PartDashboard() {
 
       closeModal();
       fetchParts();
+
       if (!partBeingEdited) {
         setParts((prev) => [...prev, part]);
         setData((prev) => ({ ...prev, totalParts: prev.totalParts + 1 }));
       } else {
         setParts((prev) => prev.map((p) => (p.id === part.id ? part : p)));
       }
+
     } catch (err) {
       console.error("Erro no cadastro:", err);
       setDialogTitle("Erro");
@@ -161,6 +213,7 @@ export default function PartDashboard() {
             <p className="text-2xl font-bold">{data.totalParts}</p>
           </div>
         </section>
+
         {/* Filtros e botão */}
         <div className="flex justify-between items-center mb-4">
           <Categories
@@ -173,18 +226,22 @@ export default function PartDashboard() {
             </ButtonPrimary>
           )}
         </div>
+
         {/* Grid de Peças */}
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {isLoading ? (
             <Loading />
           ) : (
             parts
+
               .filter((p) => !selectedCategory || p.type === selectedCategory)
+              
               .map((part, idx) => (
                 <motion.div key={idx} whileHover={{ scale: 1.03 }}>
                   <ProductCard
                     brand={part.brand}
                     name={part.name}
+
                     price={part.price}
                     image={part.imageUrl ? part.imageUrl : setupExemplo}
                     link={part.priceLink}
@@ -227,6 +284,7 @@ export default function PartDashboard() {
           )}
         </section>
       </main>
+
       <Footer />
 
       <Modal
@@ -269,6 +327,7 @@ export default function PartDashboard() {
           <select
             name="type"
             value={selectedPartType}
+
             onChange={(e) => {
               setSelectedPartType(e.target.value);
               handleChange(e);
@@ -277,23 +336,13 @@ export default function PartDashboard() {
             className="border-gray-300 rounded p-2 border"
           >
             <option value="">Selecione o tipo</option>
-            {[
-              "CPU",
-              "GPU",
-              "RAM",
-              "SSD",
-              "PSU",
-              "CASE",
-              "MOTHERBOARD",
-              "COOLER",
-            ].map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
+
+            {["CPU", "GPU", "RAM", "SSD", "PSU", "CASE", "MOTHERBOARD", "COOLER"].map(t => (
+              <option key={t} value={t}>{t}</option>
+
             ))}
           </select>
 
-          {/* campos específicos ficam aqui */}
           <PartFormFields
             selectedPartType={selectedPartType}
             partBeingEdited={formData}
