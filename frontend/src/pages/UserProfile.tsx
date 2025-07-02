@@ -22,7 +22,7 @@ const formatDate = (isoDate?: string | Date) => {
 };
 
 export default function UserProfile() {
-  const { user, token, logout } = useAuth();
+  const { user, token, logout, setUser } = useAuth();
   const [previewPic, setPreviewPic] = useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -97,6 +97,12 @@ export default function UserProfile() {
           },
         }
       );
+      setUser((prevUser) => ({
+        ...prevUser!,
+        name: editedName,
+        email: editedEmail,
+        profilePictureUrl: picFile ? previewPic! : prevUser?.profilePictureUrl,
+      }));
 
       setMessage("Informações salvas com sucesso!");
       setCurrentPassword("");
