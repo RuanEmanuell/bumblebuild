@@ -2,7 +2,7 @@ import React from "react";
 
 type CustomCheckboxProps = {
   id: string;
-  label: string;
+  label: React.ReactNode;
   required?: boolean;
   checked?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;

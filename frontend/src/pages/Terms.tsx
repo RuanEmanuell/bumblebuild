@@ -1,5 +1,6 @@
 import HeaderCustom from '../components/Header';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
 export default function Terms() {
     return (
@@ -49,7 +50,8 @@ export default function Terms() {
                     <h2 className="text-xl font-semibold mt-6">5. Contato</h2>
                     <p>
                         Caso tenha dúvidas, sugestões ou precise de suporte, entre em contato conosco
-                        através da página de <strong>Contato</strong>.
+                        através da página 
+                        <Link to="/about" className="font-bold"> Sobre</Link>.
                     </p>
 
                     <h2 className="text-xl font-semibold mt-6">6. Uso de Marcas e Links Externos</h2>
