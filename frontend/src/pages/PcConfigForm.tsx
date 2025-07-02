@@ -6,7 +6,7 @@ import { ProductCard } from '../components/ProductCard';
 import { ButtonPrimary, ButtonSecondary } from '../components/Button';
 import setupExemplo from "../assets/setupexemplo.jpg";
 
-interface Product {
+export interface Product {
   id?: number;
   name: string;
   price: any;
@@ -47,7 +47,6 @@ const PcConfigForm: React.FC = () => {
     configuration: Product[];
     message?: string;
   }
-
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
