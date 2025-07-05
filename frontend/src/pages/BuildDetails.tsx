@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import { ProductCard } from '../components/ProductCard';
 import { ButtonPrimary, ButtonSecondary } from '../components/Button';
 import setupExemplo from "../assets/setupexemplo.jpg";
+import Dialog from '../components/Dialog';
 
 interface Product {
   id?: number;
@@ -36,6 +37,17 @@ export default function BuildDetails() {
   const [newName, setNewName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [buildPrice, setBuildPrice] = useState<any>(0);
+  const [dialogData, setDialogData] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    onConfirm?: () => void;
+  }>({
+    open: false,
+    title: "",
+    message: "",
+  });
+
 
   useEffect(() => {
     const fetchBuildDetails = async () => {
@@ -72,7 +84,15 @@ export default function BuildDetails() {
   }, [id]);
 
   const handleUpdateName = async () => {
-    if (!newName.trim()) return alert("O nome da montagem não pode ser vazio.");
+    if (!newName.trim()) {
+      setDialogData({
+        open: true,
+        title: "Erro",
+        message: "O nome da montagem não pode ser vazio.",
+        onConfirm: () => setDialogData(prev => ({ ...prev, open: false })),
+      });
+      return;
+    }
 
     try {
       const token = localStorage.getItem('token');
@@ -85,32 +105,49 @@ export default function BuildDetails() {
           },
         }
       );
-      alert("Nome atualizado com sucesso!");
+
       setBuild((prev) => prev ? { ...prev, name: newName } : null);
-      setIsEditing(false); //volta ao modo de visualização
+      setIsEditing(false);
+
+      setDialogData({
+        open: true,
+        title: "Sucesso",
+        message: "Nome atualizado com sucesso!",
+        onConfirm: () => setDialogData(prev => ({ ...prev, open: false })),
+      });
     } catch (err) {
       console.error("Erro ao atualizar nome:", err);
-      alert("Erro ao atualizar o nome.");
+      setDialogData({
+        open: true,
+        title: "Erro",
+        message: "Erro ao atualizar o nome.",
+        onConfirm: () => setDialogData(prev => ({ ...prev, open: false })),
+      });
     }
   };
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm(`Tem certeza que deseja excluir a montagem "${build?.name}"?`);
-    if (!confirmDelete) return;
-
-    try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`${import.meta.env.VITE_API_URL}/builds/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      alert("Montagem excluída com sucesso!");
-      navigate("/history");
-    } catch (err) {
-      console.error("Erro ao excluir montagem:", err);
-      alert("Não foi possível excluir a montagem.");
-    }
+    setDialogData({
+      open: true,
+      title: "Confirmar exclusão",
+      message: `Tem certeza que deseja excluir a montagem "${build?.name}"?`,
+      onConfirm: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          await axios.delete(`${import.meta.env.VITE_API_URL}/builds/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          navigate("/history");
+        } catch (err) {
+          console.error("Erro ao excluir montagem:", err);
+          alert("Não foi possível excluir a montagem.");
+        } finally {
+          setDialogData(prev => ({ ...prev, open: false }));
+        }
+      }
+    });
   };
 
   return (
@@ -183,6 +220,15 @@ export default function BuildDetails() {
           <p className="text-gray-600">Montagem não encontrada.</p>
         )}
       </main>
+      <Dialog
+        open={dialogData.open}
+        title={dialogData.title}
+        message={dialogData.message}
+        onClose={() => setDialogData(prev => ({ ...prev, open: false }))}
+        onConfirm={() => {
+          dialogData.onConfirm?.();
+        }}
+      />
 
       <Footer />
     </div>

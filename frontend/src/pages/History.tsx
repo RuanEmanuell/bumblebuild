@@ -86,7 +86,7 @@ export default function History() {
 
                                 <div className="flex gap-2">
                                     <Link to={`/build-details/${item.id}`}>
-                                        <ButtonPrimary className="min-w-[140px]">Ver Detalhes</ButtonPrimary>
+                                        <ButtonPrimary>Ver Detalhes</ButtonPrimary>
                                     </Link>
 
                                     <ButtonSecondary

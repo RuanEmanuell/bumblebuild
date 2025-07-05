@@ -231,7 +231,7 @@ const PcConfigForm: React.FC = () => {
         onClose={() => setShowLoginDialog(false)}
         onConfirm={() => {
           setShowLoginDialog(false);
-          window.location.href = "/login"; // ou use `navigate("/login")` com react-router
+          window.location.href = "/login";
         }}
       />
 
