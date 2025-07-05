@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 import { ProductCard } from '../components/ProductCard';
 import { ButtonPrimary, ButtonSecondary } from '../components/Button';
 import setupExemplo from "../assets/setupexemplo.jpg";
-
+import Dialog from '../components/Dialog';
 export interface Product {
   id?: number;
   name: string;
@@ -32,6 +32,7 @@ const PcConfigForm: React.FC = () => {
   const [responseMessage, setResponseMessage] = useState<string | null>('');
   const [buildName, setBuildName] = useState('');
   const [selectedPartIds, setSelectedPartIds] = useState<number[]>([]);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -96,7 +97,7 @@ const PcConfigForm: React.FC = () => {
       const token = localStorage.getItem('token');
 
       if (!token) {
-        alert('Você precisa estar logado para salvar a build.');
+        setShowLoginDialog(true);
         setSuccess(false);
         return;
       }
@@ -134,7 +135,7 @@ const PcConfigForm: React.FC = () => {
       let buildPrices = build.map(part => part.price);
       let totalBuildPrice = 0;
 
-      for(let i=0; i<buildPrices.length; i++){
+      for (let i = 0; i < buildPrices.length; i++) {
         totalBuildPrice += buildPrices[i];
       }
       setBuildPrice(totalBuildPrice);
@@ -223,6 +224,17 @@ const PcConfigForm: React.FC = () => {
 
 
       </main>
+      <Dialog
+        open={showLoginDialog}
+        title="Login necessário"
+        message="Você precisa estar logado para salvar a build. Deseja fazer login agora?"
+        onClose={() => setShowLoginDialog(false)}
+        onConfirm={() => {
+          setShowLoginDialog(false);
+          window.location.href = "/login"; // ou use `navigate("/login")` com react-router
+        }}
+      />
+
       <Footer />
     </div>
   );
