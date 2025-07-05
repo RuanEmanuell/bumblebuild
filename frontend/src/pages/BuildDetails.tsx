@@ -48,7 +48,6 @@ export default function BuildDetails() {
     message: "",
   });
 
-
   useEffect(() => {
     const fetchBuildDetails = async () => {
       try {
@@ -142,7 +141,12 @@ export default function BuildDetails() {
           navigate("/history");
         } catch (err) {
           console.error("Erro ao excluir montagem:", err);
-          alert("Não foi possível excluir a montagem.");
+          setDialogData({
+            open: true,
+            title: "Erro",
+            message: "Erro ao excluir montagem",
+            onConfirm: () => setDialogData(prev => ({ ...prev, open: false })),
+          });
         } finally {
           setDialogData(prev => ({ ...prev, open: false }));
         }
