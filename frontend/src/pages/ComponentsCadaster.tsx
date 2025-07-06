@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import HeaderCustom from "../components/Header";
 import Footer from "../components/Footer";
 import { ButtonHome } from "../components/ButtonHome";
+import Dialog from "../components/Dialog";
 
 type ComponentType =
   | "CPU"
@@ -16,6 +17,12 @@ export default function ComponentsCadaster() {
   const [step, setStep] = useState(1);
   const [type, setType] = useState<ComponentType | "">("");
   const [formData, setFormData] = useState<Record<string, any>>({});
+  const [dialogData, setDialogData] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+  } | null>(null);
+
 
   const handleChange = (
     e: React.ChangeEvent<any>
@@ -58,23 +65,27 @@ export default function ComponentsCadaster() {
           body: JSON.stringify(cpuData),
         });
 
-        if (!response.ok) {
-          throw new Error("Erro ao cadastrar CPU");
-        }
+        if (!response.ok) throw new Error("Erro ao cadastrar CPU");
 
         const result = await response.json();
         console.log("CPU cadastrada com sucesso:", result);
-        alert("CPU cadastrada com sucesso!");
-        // Você pode resetar o form aqui se quiser:
-        // setFormData({});
-        // setStep(1);
-        // setType('');
+
+        setDialogData({
+          open: true,
+          title: "Sucesso",
+          message: "CPU cadastrada com sucesso!",
+        });
       } catch (error) {
         console.error("Erro no cadastro:", error);
-        alert("Erro ao cadastrar CPU.");
+        setDialogData({
+          open: true,
+          title: "Erro",
+          message: "Erro ao cadastrar CPU.",
+        });
       }
     }
   };
+
 
   const renderFormFields = () => {
     switch (type) {
@@ -322,6 +333,16 @@ export default function ComponentsCadaster() {
           </AnimatePresence>
         </form>
       </main>
+      {dialogData && (
+        <Dialog
+          open={dialogData.open}
+          title={dialogData.title}
+          message={dialogData.message}
+          onConfirm={() => setDialogData(null)}
+          onClose={() => setDialogData(null)} 
+        />
+      )}
+
 
       <Footer />
     </div>
