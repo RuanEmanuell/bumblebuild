@@ -10,7 +10,8 @@ RUN npm install
 
 # Copia o restante do projeto
 COPY . .
-
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 # Copia os arquivos do Prisma (schema e migrations, se houver)
 COPY src/prisma ./src/prisma
 

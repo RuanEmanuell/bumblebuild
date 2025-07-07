@@ -13,7 +13,7 @@ import cooler from "./routes/cooler.routes";
 import build from "./routes/build.routes";
 import "./utils/cron";
 import path from "path";
-import { setupSwagger } from '../src/config/swagger';
+import { setupSwagger } from './config/swagger';
 
 const env = require("dotenv").config();
 const cors = require("cors");
