@@ -5,17 +5,6 @@ interface CoolerFormProps {
   onChange: (e: React.ChangeEvent<any>) => void;
 }
 
-const socketOptions = [
-  "LGA1200",
-  "LGA1700",
-  "LGA1851",
-  "AM4",
-  "AM5",
-  "TR4",
-  "sWRX8",
-  "LGA2066",
-];
-
 
 export default function CoolerForm({ formData, onChange }: CoolerFormProps) {
   return (
@@ -31,19 +20,14 @@ export default function CoolerForm({ formData, onChange }: CoolerFormProps) {
         <option value="Liquid">Liquid</option>
       </select>
 
-      <select
-        id="socketSupport"
+       <input
         name="socketSupport"
+        type="number"
+        placeholder="Socket do cooler"
         onChange={onChange}
-        value={formData.socket || ""}
+        value={formData.socketSupport || ""}
         className="border-gray-300 rounded p-2 border"
-      >
-        <option value="">Selecione o socket</option>
-        {socketOptions.map(sock => (
-          <option key={sock} value={sock}>{sock}</option>
-        ))}
-      </select>
-
+      />
 
       <input
         name="noiseLevel"

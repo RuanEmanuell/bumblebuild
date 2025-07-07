@@ -1,4 +1,3 @@
-import { StarHalf, StarOff } from "lucide-react";
 import { Star } from "react-feather";
 import { Card, CardContent } from "./Card";
 

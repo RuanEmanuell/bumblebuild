@@ -4,11 +4,11 @@ export class PartRatingService {
     static calculateCPURating(cpu: CPU): number {
         let score = 0;
 
-        score += cpu.cores * 1;
-        score += cpu.threads * 0.5;
-        score += cpu.frequency * 1.2;
+        score += cpu.cores * 0.4;
+        score += cpu.threads * 0.08;
+        score += cpu.frequency * 0.2;
 
-        if (!cpu.integratedGraphics) score -= 0.25;
+        if (!cpu.integratedGraphics) score -= 0.1;
 
         return Math.min(5, parseFloat(score.toFixed(2)));
     }
@@ -31,12 +31,15 @@ export class PartRatingService {
     static calculateRAMRating(ram: RAM): number {
         let score = 0;
 
-        score += ram.capacityGB * 0.3;
-        score += ram.frequency * 0.001;
-        score += ram.type.includes('DDR5') ? 0.5 : 0;
+        score += Math.min(ram.capacityGB, 32) * 0.08;
+
+        score += Math.min(ram.frequency, 6000) * 0.00025;
+
+        score += ram.type.includes('DDR5') ? 1 : 0;
 
         return Math.min(5, parseFloat(score.toFixed(2)));
     }
+
 
     static calculateSSDRating(ssd: SSD): number {
         let score = 0;
@@ -52,19 +55,32 @@ export class PartRatingService {
     static calculatePSURating(psu: PSU): number {
         let score = 0;
 
-        score += psu.powerW >= 650 ? 1 : 0.5;
-        score += psu.certification.includes('Gold') ? 1 : 0.5;
+        if (psu.powerW >= 850) score += 3;
+        else if (psu.powerW >= 750) score += 2;
+        else if (psu.powerW >= 600) score += 1;
+        else score += 0.5;
+
+        if (psu.certification.includes('Titanium')) score += 2;
+        else if (psu.certification.includes('Platinum')) score += 1.5;
+        else if (psu.certification.includes('Gold')) score += 1;
+        else if (psu.certification.includes('Bronze')) score += 0.5;
+
         score += psu.modular ? 1 : 0;
 
         return Math.min(5, parseFloat(score.toFixed(2)));
     }
 
+
     static calculateMotherboardRating(mobo: Motherboard): number {
         let score = 0;
 
-        score += mobo.maxRAM >= 64 ? 1 : 0.5;
+        score += mobo.maxRAM >= 128 ? 1.5 :
+                 mobo.maxRAM >= 64 ? 1 : 0.5;
+
         score += mobo.slots >= 4 ? 1 : 0.5;
-        score += mobo.size === 'ATX' ? 1 : 0.5;
+
+        score += mobo.size === 'ATX' ? 1 :
+                 mobo.size === 'Micro-ATX' ? 0.75 : 0.5;
 
         return Math.min(5, parseFloat(score.toFixed(2)));
     }
@@ -72,12 +88,13 @@ export class PartRatingService {
     static calculateCaseRating(pcCase: Case): number {
         let score = 0;
 
-        score += pcCase.supportedSizes.includes('ATX') ? 1 :
-            (pcCase.supportedSizes.includes('Micro-ATX') || pcCase.supportedSizes.includes('Mini-ITX')) ? 0.5 : 0;
+        if (pcCase.supportedSizes.includes('ATX')) score += 1.5;
+        else if (pcCase.supportedSizes.includes('Micro-ATX')) score += 1;
+        else if (pcCase.supportedSizes.includes('Mini-ITX')) score += 0.5;
 
         score += pcCase.maxGpuLengthMM >= 350 ? 1.5 :
-            pcCase.maxGpuLengthMM >= 300 ? 1 :
-                pcCase.maxGpuLengthMM >= 250 ? 0.5 : 0;
+            pcCase.maxGpuLengthMM >= 280 ? 1 :
+                pcCase.maxGpuLengthMM >= 220 ? 0.5 : 0;
 
         return Math.min(5, parseFloat(score.toFixed(2)));
     }
