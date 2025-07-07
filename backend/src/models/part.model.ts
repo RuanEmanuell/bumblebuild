@@ -27,6 +27,7 @@ export interface Part {
   imageUrl?: string;
   priceLink?: string;
   createdAt:  Date;
+  rating: number;
 
   cpu?: CPU;
   gpu?: GPU;
