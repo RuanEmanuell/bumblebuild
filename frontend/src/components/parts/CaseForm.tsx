@@ -5,16 +5,28 @@ interface CaseFormProps {
   onChange: (e: React.ChangeEvent<any>) => void;
 }
 
+const sizeOptions = [
+  "ATX",
+  "Micro-ATX",
+  "Mini-ITX",
+  "E-ATX",
+];
+
 export default function CaseForm({ formData, onChange }: CaseFormProps) {
   return (
     <>
-      <input
-        name="supportedSizes"
-        placeholder="Tamanhos suportados (ex: ATX, mATX)"
+      <select
+        id="size"
+        name="size"
         onChange={onChange}
-        value={formData.supportedSizes || ""}
+        value={formData.size || ""}
         className="border-gray-300 rounded p-2 border"
-      />
+      >
+        <option value="">Tamanhos suportados (ex: ATX, mATX)</option>
+        {sizeOptions.map(sz => (
+          <option key={sz} value={sz}>{sz}</option>
+        ))}
+      </select>
       <input
         name="maxGpuLengthMM"
         type="number"

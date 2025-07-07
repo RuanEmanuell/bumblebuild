@@ -44,7 +44,6 @@ const PartFormFields: React.FC<PartFormFieldsProps> & {
   }
 };
 
-// helper para montar payload nested create
 PartFormFields.buildPayload = (type, data) => {
   switch (type) {
     case "CPU":
@@ -56,26 +55,31 @@ PartFormFields.buildPayload = (type, data) => {
         tdp: Number(data.tdp),
         integratedGraphics: !!data.integratedGraphics,
       };
+
     case "GPU":
       return {
         memoryGB: Number(data.memoryGB),
         memoryType: data.memoryType,
         tdp: Number(data.tdp),
         lengthMM: Number(data.lengthMM),
+        gpuClock: Number(data.gpuClock),
+        memoryBus: Number(data.memoryBus),
       };
+
     case "RAM":
       return {
         capacityGB: Number(data.capacityGB),
         type: data.type,
         frequency: Number(data.frequency),
       };
+
     case "PSU":
-        console.log(data.certification)
       return {
         powerW: Number(data.powerW),
         certification: data.certification,
         modular: !!data.modular,
       };
+
     case "MOTHERBOARD":
       return {
         socket: data.socket,
@@ -84,27 +88,33 @@ PartFormFields.buildPayload = (type, data) => {
         size: data.size,
         slots: Number(data.slots),
       };
+
     case "SSD":
-        console.log(data.capacityGB)
       return {
         capacityGB: Number(data.capacityGB),
-        type : data.typeSSD,
-        readMBs : Number(data.readMBs) ,
-        writeMBs : Number(data.writeMBs),
+        type: data.typeSSD,
+        readMBs: Number(data.readMBs),
+        writeMBs: Number(data.writeMBs),
       };
-    case "CASE" :
+
+    case "CASE":
       return {
-        supportedSizes : data.supportedSizes,
-        maxGpuLengthMM : Number(data.maxGpuLengthMM) ,
+        supportedSizes: Array.isArray(data.supportedSizes) ? data.supportedSizes.join(",") : data.supportedSizes,
+        maxGpuLengthMM: Number(data.maxGpuLengthMM),
       };
-    case "COOLER" :
-      return{
-        type : data.coolerType,
-        socketSupport : data.socketSupport,
+
+    case "COOLER":
+      return {
+        type: data.type,                   
+        socketSupport: data.socketSupport, 
+        noiseLevel: Number(data.noiseLevel),
+        maxTdp: Number(data.maxTdp),
       };
+
     default:
       return {};
   }
 };
+
 
 export default PartFormFields;

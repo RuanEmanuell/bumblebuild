@@ -68,8 +68,10 @@ const parts = [
     "priceLink": "https://www.terabyteshop.com.br/produto/25350/cooler-processador-gamdias-boreas-e1-410-red-120mm-intel-amd-boreas-e1-410-red",
     "cooler": {
       "create": {
-        "type": "Air Cooler",
-        "socketSupport": "Intel & AMD"
+        "type": "Air",
+        "socketSupport": "Intel & AMD",
+        "noiseLevel": 31,
+        "maxTDP": 130
       }
     }
   },
@@ -80,8 +82,24 @@ const parts = [
     "priceLink": "https://www.ciapc.com.br/hardware/cooler/para-processador/air-cooler-120mm-thermalright-assassin-x-120-r-se-argb-black-assassin-x-120-r-se",
     "cooler": {
       "create": {
-        "type": "Air Cooler",
-        "socketSupport": "Intel LGA 1200/115x, AMD AM4"
+        "type": "Air",
+        "socketSupport": "Intel LGA 1200/115x, AMD AM4",
+        "noiseLevel": 25,
+        "maxTDP": 225
+      }
+    }
+  },
+  {
+    "name": "Gamer Black RGB 240mm",
+    "brand": "Rise Mode",
+    "type": "COOLER",
+    "priceLink": "https://www.kabum.com.br/produto/130043/water-cooler-rise-mode-gamer-black-rgb-240mm-amd-intel-preto-rm-wcb-02-rgb",
+    "cooler": {
+      "create": {
+        "type": "Liquid",
+        "socketSupport": "Intel LGA 115X/1200/1700, AMD AM4/AM5",
+        "noiseLevel": 32,
+        "maxTDP": 250
       }
     }
   },
@@ -159,7 +177,9 @@ const parts = [
         "memoryGB": 6,
         "memoryType": "GDDR6",
         "tdp": 75,
-        "lengthMM": 170
+        "lengthMM": 170,
+        "gpuClock": 2000,
+        "memoryBus": 96
       }
     }
   },
@@ -173,7 +193,9 @@ const parts = [
         "memoryGB": 4,
         "memoryType": "GDDR6",
         "tdp": 107,
-        "lengthMM": 170
+        "lengthMM": 170,
+        "gpuClock": 2800,
+        "memoryBus": 64
       }
     }
   },
@@ -313,6 +335,8 @@ const parts = [
         memoryType: "GDDR6",
         tdp: 130,
         lengthMM: 242,
+        "gpuClock": 1470,
+        "memoryBus": 96
       },
     },
   },
@@ -328,6 +352,8 @@ const parts = [
         memoryType: "GDDR6",
         tdp: 115,
         lengthMM: 251,
+        "gpuClock": 2460,
+        "memoryBus": 128
       },
     },
   },
@@ -343,6 +369,8 @@ const parts = [
         memoryType: "GDDR6",
         tdp: 270,
         lengthMM: 320,
+        "gpuClock": 2970,
+        "memoryBus": 256
       },
     },
   },
@@ -492,8 +520,10 @@ const parts = [
     priceLink: "https://www.amazon.com.br/Cooler-Hyper-Black-CoolerMaster-RR-212S-20PK-R1/dp/B07H25DYM3",
     cooler: {
       create: {
-        type: "Air Cooler",
+        type: "Air",
         socketSupport: "Intel LGA 1200/115x, AMD AM4",
+        "noiseLevel": 45,
+        "maxTDP": 150
       },
     },
   },
@@ -628,6 +658,8 @@ const parts = [
         memoryType: "GDDR6",
         tdp: 165,
         lengthMM: 269,
+        "gpuClock": 2755,
+        "memoryBus": 128
       },
     },
   },
@@ -643,6 +675,8 @@ const parts = [
         memoryType: "GDDR7",
         tdp: 140,
         lengthMM: 280,
+        "gpuClock": 2500,
+        "memoryBus": 128
       },
     },
   },
@@ -658,6 +692,8 @@ const parts = [
         memoryType: "GDDR7",
         tdp: 200,
         lengthMM: 261,
+        "gpuClock": 2512,
+        "memoryBus": 192
       },
     },
   },
@@ -673,6 +709,8 @@ const parts = [
         memoryType: "GDDR6",
         tdp: 225,
         lengthMM: 275,
+        "gpuClock": 2530,
+        "memoryBus": 129
       },
     },
   },
@@ -688,6 +726,8 @@ const parts = [
         memoryType: "GDDR6",
         tdp: 180,
         lengthMM: 267,
+        "gpuClock": 2500,
+        "memoryBus": 160
       },
     },
   },
@@ -803,6 +843,7 @@ const parts = [
       },
     },
   },
+
 ];
 
 (async () => {

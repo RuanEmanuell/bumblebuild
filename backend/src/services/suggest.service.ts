@@ -80,7 +80,10 @@ function tryDowngrade(
         )) &&
         (partType !== PartType.PSU || true)
       )
-      .sort((a, b) => b.price - a.price);
+      .sort((a, b) => {
+        if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+        return b.price - a.price;
+      })
 
     if (cheaperOptions.length > 0) {
       const cheaperPart = cheaperOptions[0];
@@ -121,9 +124,12 @@ export function suggestConfigurationWithBudget(
       p.price <= distribution.CPU &&
       (includeGPU ? true : (extractSpecificData(p) as CPU).integratedGraphics)
     )
-    .sort((a, b) => b.price - a.price);
+    .sort((a, b) => {
+      if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+      return b.price - a.price;
+    })
 
-        console.log(distribution);
+  console.log(possibleCpus);
 
   let cpu: Part | null = null;
   let motherboard: Part | null = null;
@@ -135,7 +141,10 @@ export function suggestConfigurationWithBudget(
       p.type === PartType.MOTHERBOARD &&
       p.price <= distribution.MOTHERBOARD &&
       checkCpuMotherboardCompatibility(cpuData, extractSpecificData(p) as Motherboard)
-    ).sort((a, b) => b.price - a.price);
+    ).sort((a, b) => {
+      if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+      return b.price - a.price;
+    })
 
     if (possibleMotherboards.length > 0) {
       cpu = cpuOption;
@@ -157,7 +166,10 @@ export function suggestConfigurationWithBudget(
     p.type === PartType.RAM &&
     p.price <= distribution.RAM &&
     checkRamMotherboardCompatibility(extractSpecificData(p) as RAM, motherboardData)
-  ).sort((a, b) => b.price - a.price)[0] || null;
+  ).sort((a, b) => {
+    if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+    return b.price - a.price;
+  })[0] || null;
 
   if (!ram) {
     console.log('❌ Nenhuma RAM compatível');
@@ -168,7 +180,10 @@ export function suggestConfigurationWithBudget(
   const gpu = includeGPU ? (
     parts.filter(p =>
       p.type === PartType.GPU && p.price <= distribution.GPU
-    ).sort((a, b) => b.price - a.price)[0] || null
+    ).sort((a, b) => {
+      if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+      return b.price - a.price;
+    })[0] || null
   ) : null;
 
   if (includeGPU && !gpu) {
@@ -186,7 +201,10 @@ export function suggestConfigurationWithBudget(
     p.type === PartType.PSU &&
     p.price <= distribution.PSU &&
     (gpu ? checkGpuPsuCompatibility(gpuData!, extractSpecificData(p) as PSU) : true)
-  ).sort((a, b) => b.price - a.price)[0] || null;
+  ).sort((a, b) => {
+    if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+    return b.price - a.price;
+  })[0] || null;
 
   if (!psu) {
     console.log('❌ Nenhuma PSU compatível');
@@ -198,7 +216,10 @@ export function suggestConfigurationWithBudget(
     p.type === PartType.CASE &&
     p.price <= distribution.CASE &&
     (gpu ? checkCaseCompatibility(extractSpecificData(p) as Case, motherboardData, gpuData!) : checkCaseCompatibility(extractSpecificData(p) as Case, motherboardData))
-  ).sort((a, b) => b.price - a.price)[0] || null;
+  ).sort((a, b) => {
+    if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+    return b.price - a.price;
+  })[0] || null;
 
   if (!casePC) {
     console.log('❌ Nenhum Case compatível');
@@ -209,7 +230,10 @@ export function suggestConfigurationWithBudget(
   const ssd = parts.filter(p =>
     p.type === PartType.SSD &&
     p.price <= distribution.SSD
-  ).sort((a, b) => b.price - a.price)[0] || null;
+  ).sort((a, b) => {
+    if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+    return b.price - a.price;
+  })[0] || null;
 
   if (!ssd) {
     console.log('❌ Nenhum SSD dentro do orçamento');

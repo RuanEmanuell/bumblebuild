@@ -26,7 +26,8 @@ export default function Home() {
         try {
             const resp = await fetch(`${import.meta.env.VITE_API_URL}/parts`);
             const list = await resp.json();
-            setParts(list);
+            const filteredList = list.filter((part: { price: number; }) => part.price > 0);
+            setParts(filteredList);
         } catch (err) {
             console.error("Erro ao buscar peças:", err);
         } finally {

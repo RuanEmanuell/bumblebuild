@@ -5,18 +5,33 @@ interface CPUFormProps {
   onChange: (e: React.ChangeEvent<any>) => void;
 }
 
+const socketOptions = [
+  "LGA1200",
+  "LGA1700",
+  "LGA1851",
+  "AM4",
+  "AM5",
+  "TR4",
+  "sWRX8",
+  "LGA2066",
+];
+
 export default function CPUForm({ formData, onChange }: CPUFormProps) {
   return (
     <>
-      {/* Especificações da CPU */}
-      <input
+      <select
+        id="socket"
         name="socket"
-        placeholder="Socket"
         onChange={onChange}
         value={formData.socket || ""}
         className="border-gray-300 rounded p-2 border"
         required
-      />
+      >
+        <option value="">Selecione o socket</option>
+        {socketOptions.map((sock) => (
+          <option key={sock} value={sock}>{sock}</option>
+        ))}
+      </select>
       <input
         name="cores"
         type="number"

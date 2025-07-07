@@ -7,6 +7,7 @@ const partService = new PartService();
 
 export class GPUController {
   async create(req: Request, res: Response) {
+    console.log("GPU CONTROLLER");
     const gpu = await gpuService.createGPU(req.body);
     res.status(201).json(gpu);
   }
