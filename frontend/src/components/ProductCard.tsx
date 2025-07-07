@@ -11,6 +11,36 @@ interface ProductProps {
   rating?: number;
 }
 
+function HalfStar(
+) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-yellow-400"
+    >
+      <defs>
+        <linearGradient id="halfGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="50%" stopColor="currentColor" />
+          <stop offset="50%" stopColor="transparent" />
+        </linearGradient>
+      </defs>
+      <path
+        fill="url(#halfGrad)"
+        stroke="currentColor"
+        d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+      />
+    </svg>
+  );
+}
+
+
 export function ProductCard({ brand, name, price, image, link, details, rating }: ProductProps) {
   const displayRating = rating ?? 0;
   return (
@@ -52,26 +82,28 @@ export function ProductCard({ brand, name, price, image, link, details, rating }
 }
 
 function renderStars(rating?: number | null) {
-  const value = rating ?? 0;
-  const fullStarsCount = Math.floor(value);
-  const hasHalfStar = value % 1 >= 0.5;
-  const emptyStarsCount = 5 - fullStarsCount - (hasHalfStar ? 1 : 0);
+  const score = rating ?? 0;
+  const fullStars = Math.floor(score);
+  const hasHalfStar = score % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-  return (
-    <div className="flex text-yellow-400">
-      {[...Array(fullStarsCount)].map((_, i) => (
-        <Star key={`full-${i}`} className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
-      ))}
-      {hasHalfStar && (
-        <Star
-          key="half"
-          className="w-4 h-4 fill-gradient-to-r from-yellow-400 to-transparent stroke-yellow-400"
-          style={{ clipPath: "polygon(0 0, 50% 0, 50% 100%, 0 100%)" }}
-        />
-      )}
-      {[...Array(emptyStarsCount)].map((_, i) => (
-        <Star key={`empty-${i}`} className="w-4 h-4 stroke-yellow-400" />
-      ))}
-    </div>
-  );
+  const stars = [];
+
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(
+      <Star key={`full-${i}`} className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
+    );
+  }
+
+  if (hasHalfStar) {
+    stars.push(<HalfStar key="half" />);
+  }
+
+  for (let i = 0; i < emptyStars; i++) {
+    stars.push(
+      <Star key={`empty-${i}`} className="w-4 h-4 stroke-yellow-400" />
+    );
+  }
+
+  return <div className="flex text-yellow-400">{stars}</div>;
 }
