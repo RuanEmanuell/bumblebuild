@@ -277,6 +277,7 @@ export default function PartDashboard() {
                     image={part.imageUrl ? part.imageUrl : setupExemplo}
                     link={part.priceLink}
                     details={getPartDetails(part)}
+                    rating={part.rating}
                   />
                   {user?.userType === "ADMIN" && (
                     <div className="flex justify-between mt-2">

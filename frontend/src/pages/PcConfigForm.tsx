@@ -6,6 +6,7 @@ import { ProductCard } from '../components/ProductCard';
 import { ButtonPrimary, ButtonSecondary } from '../components/Button';
 import setupExemplo from "../assets/setupexemplo.jpg";
 import Dialog from '../components/Dialog';
+
 export interface Product {
   id?: number;
   name: string;
@@ -14,6 +15,7 @@ export interface Product {
   category: string;
   brand?: string;
   priceLink?: string;
+  rating?: number;
 }
 
 interface FormErrors {
@@ -214,6 +216,7 @@ const PcConfigForm: React.FC = () => {
                   price={part.price}
                   image={part.imageUrl ? part.imageUrl : setupExemplo}
                   link={part.priceLink}
+                  rating={part.rating}
                 />
               ))}
             </div>
