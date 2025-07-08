@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
 
 function teste(req: Request, res: Response) {
-  console.log(req.user?.id); // Veja se aqui já dá erro ou não
+  console.log(req.user?.id);
 }

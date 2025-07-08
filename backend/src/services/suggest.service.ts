@@ -1,5 +1,5 @@
 import { Part, CPU, GPU, RAM, PSU, Motherboard, Case } from "../models/part.model";
-import { PartType, distributeBudget } from "../utils/distributeBudget";
+import { PartType, distributeBudget, redistributeBudgetWithoutGPU } from "../utils/distributeBudget";
 import {
   checkCpuMotherboardCompatibility,
   checkRamMotherboardCompatibility,
@@ -17,30 +17,6 @@ function extractSpecificData(part: Part): CPU | GPU | RAM | PSU | Motherboard | 
     case 'CASE': return part.case ?? null;
     default: return null;
   }
-}
-
-function redistributeBudgetWithoutGPU(distribution: Record<PartType, number>): Record<PartType, number> {
-  const gpuBudget = distribution.GPU;
-
-  const cpuWeight = 0.30;
-  const moboWeight = 0.25;
-  const ramWeight = 0.15;
-  const ssdWeight = 0.15;
-  const psuWeight = 0.10;
-  const caseWeight = 0.05;
-
-  const totalWeight = cpuWeight + ramWeight + ssdWeight + psuWeight;
-
-  distribution.CPU += gpuBudget * (cpuWeight / totalWeight);
-  distribution.MOTHERBOARD += gpuBudget * (moboWeight / totalWeight);
-  distribution.RAM += gpuBudget * (ramWeight / totalWeight);
-  distribution.SSD += gpuBudget * (ssdWeight / totalWeight);
-  distribution.PSU += gpuBudget * (psuWeight / totalWeight);
-  distribution.CASE += gpuBudget * (caseWeight / totalWeight);
-
-  distribution.GPU = 0;
-
-  return distribution;
 }
 
 function tryDowngrade(
@@ -112,6 +88,10 @@ export function suggestConfigurationWithBudget(
   budget: number,
   includeGPU: boolean = false
 ): { configuration: Part[]; message?: string } {
+
+  let erroEncontrado = false;
+  let message = '';
+
   let distribution = distributeBudget(budget);
 
   if (!includeGPU) {
@@ -128,8 +108,6 @@ export function suggestConfigurationWithBudget(
       if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
       return b.price - a.price;
     })
-
-  console.log(possibleCpus);
 
   let cpu: Part | null = null;
   let motherboard: Part | null = null;
@@ -157,15 +135,16 @@ export function suggestConfigurationWithBudget(
 
   if (!cpu || !motherboard) {
     console.log('❌ Não foi possível encontrar CPU e Motherboard compatíveis dentro do orçamento');
-    return { configuration: [], message: 'No compatible CPU and Motherboard fit the budget' };
+    erroEncontrado = true;
+    message = 'No compatible CPU and Motherboard fit the budget';
   }
 
-  const motherboardData = extractSpecificData(motherboard) as Motherboard;
+  const motherboardData = motherboard ? extractSpecificData(motherboard) as Motherboard : null;
 
   const ram = parts.filter(p =>
     p.type === PartType.RAM &&
     p.price <= distribution.RAM &&
-    checkRamMotherboardCompatibility(extractSpecificData(p) as RAM, motherboardData)
+    motherboardData && checkRamMotherboardCompatibility(extractSpecificData(p) as RAM, motherboardData)
   ).sort((a, b) => {
     if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
     return b.price - a.price;
@@ -173,9 +152,11 @@ export function suggestConfigurationWithBudget(
 
   if (!ram) {
     console.log('❌ Nenhuma RAM compatível');
-    return { configuration: [], message: 'No compatible RAM fits the budget' };
+    erroEncontrado = true;
+    message = 'No compatible RAM fits the budget';
+  } else {
+    console.log('RAM escolhida:', ram.name, ' - R$', ram.price);
   }
-  console.log('RAM escolhida:', ram.name, ' - R$', ram.price);
 
   const gpu = includeGPU ? (
     parts.filter(p =>
@@ -188,7 +169,8 @@ export function suggestConfigurationWithBudget(
 
   if (includeGPU && !gpu) {
     console.log('❌ Nenhuma GPU dentro do orçamento');
-    return { configuration: [], message: 'No GPU fits the budget' };
+    erroEncontrado = true;
+    message = 'No GPU fits the budget';
   }
 
   if (gpu) {
@@ -208,13 +190,16 @@ export function suggestConfigurationWithBudget(
 
   if (!psu) {
     console.log('❌ Nenhuma PSU compatível');
-    return { configuration: [], message: 'No compatible PSU fits the budget' };
+    erroEncontrado = true;
+    message = 'No compatible PSU fits the budget';
+  } else {
+    console.log('PSU escolhida:', psu.name, ' - R$', psu.price);
   }
-  console.log('PSU escolhida:', psu.name, ' - R$', psu.price);
 
   const casePC = parts.filter(p =>
     p.type === PartType.CASE &&
     p.price <= distribution.CASE &&
+    motherboardData &&
     (gpu ? checkCaseCompatibility(extractSpecificData(p) as Case, motherboardData, gpuData!) : checkCaseCompatibility(extractSpecificData(p) as Case, motherboardData))
   ).sort((a, b) => {
     if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
@@ -223,9 +208,11 @@ export function suggestConfigurationWithBudget(
 
   if (!casePC) {
     console.log('❌ Nenhum Case compatível');
-    return { configuration: [], message: 'No compatible Case fits the budget' };
+    erroEncontrado = true;
+    message = 'No compatible Case fits the budget';
+  } else {
+    console.log('Case escolhido:', casePC.name, ' - R$', casePC.price);
   }
-  console.log('Case escolhido:', casePC.name, ' - R$', casePC.price);
 
   const ssd = parts.filter(p =>
     p.type === PartType.SSD &&
@@ -237,9 +224,11 @@ export function suggestConfigurationWithBudget(
 
   if (!ssd) {
     console.log('❌ Nenhum SSD dentro do orçamento');
-    return { configuration: [], message: 'No SSD fits the budget' };
+    erroEncontrado = true;
+    message = 'No SSD fits the budget';
+  } else {
+    console.log('SSD escolhido:', ssd.name, ' - R$', ssd.price);
   }
-  console.log('SSD escolhido:', ssd.name, ' - R$', ssd.price);
 
   const finalConfiguration = [
     cpu,
@@ -249,7 +238,12 @@ export function suggestConfigurationWithBudget(
     psu,
     casePC,
     ssd
-  ];
+  ].filter(p => p !== null) as Part[];
+
+  if (erroEncontrado) {
+    console.log('❌ Erro detectado na montagem da configuração, retornando erro');
+    return { configuration: [], message };
+  }
 
   const totalCost = finalConfiguration.reduce((sum, p) => sum + p.price, 0);
 
@@ -275,5 +269,4 @@ export function suggestConfigurationWithBudget(
 
   return { configuration: finalConfiguration };
 }
-
 

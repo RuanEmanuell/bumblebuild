@@ -1,5 +1,5 @@
 export interface Case {
   id: number;
-  supportedSizes: string[]; 
+  supportedSizes: string; 
   maxGpuLengthMM: number;
 }

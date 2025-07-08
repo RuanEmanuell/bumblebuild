@@ -35,7 +35,9 @@ export function checkCaseCompatibility(
   motherboard: Motherboard,
   gpu?: GPU
 ): boolean {
-  const isMotherboardCompatible = casepc.supportedSizes.includes(motherboard.size);
+  const supportedSizesArray = casepc.supportedSizes.split(",").map(s => s.trim());
+  const isMotherboardCompatible = supportedSizesArray.includes(motherboard.size);
+
   if (gpu) {
     const isGpuCompatible = gpu.lengthMM <= casepc.maxGpuLengthMM;
     return isMotherboardCompatible && isGpuCompatible;
@@ -43,4 +45,3 @@ export function checkCaseCompatibility(
     return isMotherboardCompatible;
   }
 }
-

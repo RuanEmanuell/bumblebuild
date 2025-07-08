@@ -4,21 +4,24 @@ export class PartRatingService {
     static calculateCPURating(cpu: CPU): number {
         let score = 0;
 
-        score += cpu.cores * 0.4;
-        score += cpu.threads * 0.08;
-        score += cpu.frequency * 0.2;
+        const extraThreads = cpu.threads - cpu.cores;
+        const effectiveThreads = cpu.cores + Math.min(extraThreads, cpu.cores) * 0.5;
+
+        score += effectiveThreads * 0.3;
+        score += cpu.frequency * 0.4;
 
         if (!cpu.integratedGraphics) score -= 0.1;
 
         return Math.min(5, parseFloat(score.toFixed(2)));
     }
 
+
     static calculateGPURating(gpu: GPU): number {
         let score = 0;
 
         score += gpu.memoryGB * 0.1;
 
-        score += gpu.memoryType === 'GDDR7' ? 1.5 : gpu.memoryType === 'GDDR6' ? 1 : 0;
+        score += gpu.memoryType === 'GDDR7' ? 1 : gpu.memoryType === 'GDDR6' ? 0.5 : 0;
 
         score += gpu.memoryBus / 256;
 
@@ -44,13 +47,14 @@ export class PartRatingService {
     static calculateSSDRating(ssd: SSD): number {
         let score = 0;
 
-        score += ssd.capacityGB * 0.01;
-        score += ssd.readMBs / 1000;
-        score += ssd.writeMBs / 1000;
-        score += ssd.type === 'NVMe' ? 1 : 0;
+        score += ssd.capacityGB * 0.003;
+        score += ssd.readMBs / 3000;
+        score += ssd.writeMBs / 3000;
+        score += ssd.type === 'NVMe' ? 1.5 : 0;
 
         return Math.min(5, parseFloat(score.toFixed(2)));
     }
+
 
     static calculatePSURating(psu: PSU): number {
         let score = 0;
@@ -75,12 +79,12 @@ export class PartRatingService {
         let score = 0;
 
         score += mobo.maxRAM >= 128 ? 1.5 :
-                 mobo.maxRAM >= 64 ? 1 : 0.5;
+            mobo.maxRAM >= 64 ? 1 : 0.5;
 
         score += mobo.slots >= 4 ? 1 : 0.5;
 
         score += mobo.size === 'ATX' ? 1 :
-                 mobo.size === 'Micro-ATX' ? 0.75 : 0.5;
+            mobo.size === 'Micro-ATX' ? 0.75 : 0.5;
 
         return Math.min(5, parseFloat(score.toFixed(2)));
     }
