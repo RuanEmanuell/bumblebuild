@@ -46,6 +46,8 @@ model Part {
   imageUrl    String?
   priceLink   String?
   createdAt   DateTime     @default(now())
+  rating      Float?
+
   cpu         CPU?         @relation("CPUToPart")
   case        Case?        @relation("CaseToPart")
   cooler      Cooler?      @relation("CoolerToPart")
@@ -70,12 +72,14 @@ model CPU {
 }
 
 model GPU {
-  id         Int    @id
-  memoryGB   Int
-  memoryType String
-  tdp        Int
-  lengthMM   Float
-  part       Part   @relation("GPUToPart", fields: [id], references: [id])
+  id               Int     @id
+  memoryGB         Int
+  memoryType       String
+  tdp              Int
+  lengthMM         Float
+  gpuClock         Float
+  memoryBus        Int
+  part             Part     @relation("GPUToPart", fields: [id], references: [id])
 }
 
 model RAM {
@@ -111,10 +115,12 @@ model Case {
 }
 
 model Cooler {
-  id            Int    @id
+  id            Int     @id
   type          String
   socketSupport String
-  part          Part   @relation("CoolerToPart", fields: [id], references: [id])
+  noiseLevel    Int    
+  maxTdp        Int   
+  part          Part    @relation("CoolerToPart", fields: [id], references: [id])
 }
 
 model Motherboard {

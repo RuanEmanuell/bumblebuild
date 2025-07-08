@@ -7,7 +7,6 @@ export class PartController {
   async create(req: Request, res: Response): Promise<Response> {
     try {
       const novapart = await partService.createPart(req.body);
-      console.log(novapart);
       return res.status(201).json({ message: "Peça criada com sucesso!", part: novapart });
     } catch (error: any) {
       console.error(error);

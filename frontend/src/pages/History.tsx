@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import HeaderCustom from "../components/Header";
 import Footer from "../components/Footer";
 import { ButtonPrimary, ButtonSecondary } from '../components/Button';
+import Dialog from '../components/Dialog';
 
 export default function History() {
     interface Build {
@@ -15,6 +16,16 @@ export default function History() {
     const [history, setHistory] = useState<Build[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [dialogData, setDialogData] = useState<{
+        open: boolean;
+        title: string;
+        message: string;
+        onConfirm?: () => void;
+    }>({
+        open: false,
+        title: "",
+        message: "",
+    });
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -38,23 +49,33 @@ export default function History() {
     }, []);
 
     const handleDeleteBuild = async (id: number, name: string) => {
-        const confirmDelete = window.confirm(`Tem certeza que deseja excluir a montagem "${name}"?`);
-        if (!confirmDelete) return;
-
-        try {
-            const token = localStorage.getItem("token");
-            await axios.delete(`${import.meta.env.VITE_API_URL}/builds/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            //remove da lista
-            setHistory(prev => prev.filter(b => b.id !== id));
-        } catch (err) {
-            console.error("Erro ao excluir montagem:", err);
-            alert("Não foi possível excluir a montagem. Tente novamente.");
-        }
+        setDialogData({
+            open: true,
+            title: "Confirmar exclusão",
+            message: `Tem certeza que deseja excluir a montagem "${name}"?`,
+            onConfirm: async () => {
+                try {
+                    const token = localStorage.getItem('token');
+                    await axios.delete(`${import.meta.env.VITE_API_URL}/builds/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    //remove da lista
+                    setHistory(prev => prev.filter(b => b.id !== id));
+                } catch (err) {
+                    console.error("Erro ao excluir montagem:", err);
+                    setDialogData({
+                        open: true,
+                        title: "Erro",
+                        message: "Erro ao excluir montagem",
+                        onConfirm: () => setDialogData(prev => ({ ...prev, open: false })),
+                    });
+                } finally {
+                    setDialogData(prev => ({ ...prev, open: false }));
+                }
+            }
+        });
     };
 
     return (
@@ -86,7 +107,7 @@ export default function History() {
 
                                 <div className="flex gap-2">
                                     <Link to={`/build-details/${item.id}`}>
-                                        <ButtonPrimary className="min-w-[140px]">Ver Detalhes</ButtonPrimary>
+                                        <ButtonPrimary>Ver Detalhes</ButtonPrimary>
                                     </Link>
 
                                     <ButtonSecondary
@@ -102,7 +123,15 @@ export default function History() {
 
                 )}
             </main>
-
+            <Dialog
+                open={dialogData.open}
+                title={dialogData.title}
+                message={dialogData.message}
+                onClose={() => setDialogData(prev => ({ ...prev, open: false }))}
+                onConfirm={() => {
+                    dialogData.onConfirm?.();
+                }}
+            />
             <Footer />
         </div>
     );

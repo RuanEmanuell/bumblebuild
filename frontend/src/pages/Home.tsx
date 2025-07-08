@@ -1,34 +1,39 @@
 import { Link } from 'react-router-dom';
 import { ButtonHome } from "../components/ButtonHome";
 import Footer from '../components/Footer';
-
-//imagens dos produtos
-import setupExemplo from "../assets/setupexemplo.jpg";
-import setupZe from "../assets/pc_do_ze.jpg";
 import pcIcon from "../assets/pc.png";
 import HeaderCustom from '../components/Header';
 import { useAuth } from '../hooks/useAuth';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { ProductCard } from '../components/ProductCard';
+import { useEffect, useState } from 'react';
+import Loading from '../components/Loading';
 
 export default function Home() {
     const { user } = useAuth();
+    const [parts, setParts] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const sampleProducts = [
-        { name: "Pc do Ruan Emanuel", price: "R$ 5993", stars: 4.6, image: setupExemplo, category: "GPU" },
-        { name: "Pc da Alyne", price: "R$ 3992", stars: 4.2, image: setupExemplo, category: "SSD" },
-        { name: "Pc Do Gabriel", price: "R$ 4920", stars: 4.4, image: setupExemplo, category: "CPU" },
-        { name: "Pc do Maurao", price: "R$ 6000", stars: 5.0, image: setupExemplo, category: "RAM" },
-        { name: "Pc do Ze Patolino", price: "R$ 0", stars: 0.5, image: setupZe, category: "COOLER" },
-        { name: "PC do Bolsonaro", price: "R$ 2230", stars: 3.3, image: setupExemplo, category: "MOTHERBOARD" }
-    ];
+    useEffect(() => {
+        fetchParts();
+    }, []);
 
-    /*
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-    const filteredProducts = selectedCategory
-        ? sampleProducts.filter(p => p.category === selectedCategory)
-        : sampleProducts;
-    */
-
+    async function fetchParts() {
+        try {
+            const resp = await fetch(`${import.meta.env.VITE_API_URL}/parts`);
+            const list = await resp.json();
+            const filteredList = list.filter((part: { price: number; }) => part.price > 0);
+            setParts(filteredList);
+        } catch (err) {
+            console.error("Erro ao buscar peças:", err);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     return (
         <div className="bg-white text-black min-h-screen flex flex-col">
@@ -45,7 +50,6 @@ export default function Home() {
                     </h2>
                     <Link
                         to="/pc-registration"
-                        state={{ pecasDisponiveis: sampleProducts }}
                     >
                         <ButtonHome className="bg-black text-white px-6 py-3 rounded-xl text-sm font-bold hover:underline">
                             Montar meu PC →
@@ -59,48 +63,66 @@ export default function Home() {
                 />
             </section>
 
-            {/*
-            <Categories
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-            />
-
-            <section className="px-6 md:px-12 py-8">
-                <h3 className="text-xl font-semibold mb-6">
-                    {selectedCategory ? `Produtos de ${selectedCategory}` : "Em destaque"}
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {filteredProducts.map((product, index) => (
-                        <motion.div key={index} whileHover={{ scale: 1.03 }}>
-                            <ProductCard
-                                name={product.name}
-                                price={product.price}
-                                stars={product.stars}
-                                image={product.image}
-                            />
-                        </motion.div>
-                    ))}
+            <div className="px-6 pb-12">
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold">Algumas peças em destaque</h3>
+                    <Link
+                        to="/parts"
+                        className="text-sm font-bold text-textYellow hover:underline"
+                    >
+                        Ver mais
+                    </Link>
                 </div>
-            </section>
-            */}
-
-            {/*
-            <section className="px-6 md:px-12 py-8 bg-gray-100">
-                <h3 className="text-xl font-semibold mb-4">Histórico de Montagens</h3>
-                <ul className="space-y-4">
-                    <li className="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-                        <p className="font-semibold">Build Ryzen Gamer</p>
-                        <p className="text-sm text-gray-600">Data: 2024-03-12</p>
-                        <p className="text-sm text-gray-700">Configuração: Ryzen 5 + RTX 3060</p>
-                    </li>
-                    <li className="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-                        <p className="font-semibold">Setup Streaming</p>
-                        <p className="text-sm text-gray-600">Data: 2024-01-05</p>
-                        <p className="text-sm text-gray-700">Configuração: i7 + 32GB RAM</p>
-                    </li>
-                </ul>
-            </section>
-           */}
+                <Swiper
+                    modules={[Navigation, Pagination]}
+                    spaceBetween={16}
+                    slidesPerView={1}
+                    navigation
+                    pagination={{ clickable: true }}
+                    breakpoints={{
+                        640: { slidesPerView: 1.5 },
+                        768: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
+                    }}
+                    className="swiper-custom-yellow"
+                >
+                    {isLoading ? (
+                        <Loading />
+                    ) : (
+                        [...parts]
+                            .sort(() => Math.random() - 0.5)
+                            .slice(0, 10)
+                            .map((part, idx) => (
+                                <SwiperSlide key={part.id || idx}>
+                                    <ProductCard
+                                        key={idx}
+                                        brand={part.brand || 'Marca Desconhecida'}
+                                        name={part.name}
+                                        price={part.price}
+                                        image={part.imageUrl}
+                                        link={part.priceLink}
+                                    />
+                                </SwiperSlide>
+                            ))
+                    )}
+                </Swiper>
+                <style>
+                {`
+                  .swiper-custom-yellow .swiper-button-next,
+                  .swiper-custom-yellow .swiper-button-prev {
+                    color: var(--primary);
+                  }
+                  .swiper-custom-yellow .swiper-pagination-bullet {
+                    background: var(--primary);
+                    opacity: 0.5;
+                  }
+                  .swiper-custom-yellow .swiper-pagination-bullet-active {
+                    background: var(--primary);
+                    opacity: 1;
+                  }
+                `}
+                </style>
+            </div>
 
             <Footer />
         </div>

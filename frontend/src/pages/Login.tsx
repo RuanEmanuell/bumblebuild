@@ -7,6 +7,7 @@ import CustomCheckbox from "../components/CustomCheckbox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
+import { Link } from "react-router-dom";
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -104,7 +105,7 @@ export default function Auth() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-primary p-4 sm:p-0">
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       <div className="w-full max-w-md md:max-w-lg p-6 md:p-8 bg-white rounded-2xl shadow-lg">
         <div className="flex justify-center mb-6">
           <LogoSecondary size={logoSize} />
@@ -171,10 +172,20 @@ export default function Auth() {
           {!isLogin && (
             <CustomCheckbox
               id="terms"
-              label="Aceito os termos"
               required
               checked={isChecked}
               onChange={(e) => setIsChecked(e.target.checked)}
+              label={
+                <>
+                  Aceito os{" "}
+                    <Link
+                    to="/terms"
+                    className="text-primary font-bold"
+                    >
+                    termos
+                    </Link>
+                </>
+              }
             />
           )}
 

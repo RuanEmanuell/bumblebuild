@@ -205,7 +205,7 @@ export class PartRepository {
 
         if (!link) continue;
 
-        const result = await this.scraperService.getPartInfo([link]); // pega preço + imagem
+        const result = await this.scraperService.getPartInfo([link]); 
 
         const precoString = result.price;
         const image = result.image;
@@ -221,7 +221,7 @@ export class PartRepository {
             where: { id: part.id },
             data: { 
               price: priceNum,
-              imageUrl: image || part.imageUrl, // atualiza imagem se tiver nova
+              imageUrl: image || part.imageUrl,
             },
           });
           console.log(`Preço da peça ${part.name} atualizado para R$ ${priceNum}`);

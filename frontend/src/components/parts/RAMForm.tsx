@@ -16,13 +16,16 @@ export default function RAMForm({ formData, onChange }: RAMFormProps) {
         value={formData.capacityGB || ""}
         className="border-gray-300 rounded p-2 border"
       />
-      <input
+      <select
         name="type"
-        placeholder="Tipo (DDR4, DDR5...)"
-        onChange={onChange}
         value={formData.type || ""}
         className="border-gray-300 rounded p-2 border"
-      />
+        onChange={onChange}
+      >
+        <option value="">Selecione o tipo</option>
+        <option value="DDR4">DDR4</option>
+        <option value="DDR5">DDR5</option>
+      </select>
       <input
         name="frequency"
         type="number"
