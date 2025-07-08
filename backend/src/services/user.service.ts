@@ -102,7 +102,8 @@ export class UserService {
 
     await userRepository.saveRecoveryToken(user.id, token, expiration);
 
-    const link = `http://localhost:5173/reset-password?token=${token}`;
+    const link = `https://bumblebuild.com.br/reset-password?token=${token}`;
+
 
     const transporter = nodemailer.createTransport(
       sgTransport({

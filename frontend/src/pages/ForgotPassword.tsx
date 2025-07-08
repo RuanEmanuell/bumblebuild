@@ -13,7 +13,7 @@ export default function ForgotPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/users/recuperar-senha`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/users/`, {
         email,
       });
 

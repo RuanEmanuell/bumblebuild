@@ -201,9 +201,9 @@ export default function Auth() {
 
           {isLogin && (
             <div className="text-center mt-4">
-              <a href="/forgot-password" className="text-primary hover:underline">
+              <Link to="/forgot-password" className="text-primary hover:underline">
                 Esqueci minha senha
-              </a>
+              </Link>
             </div>
           )}
         </form>
