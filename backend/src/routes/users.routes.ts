@@ -8,8 +8,16 @@ const userController = new UserController();
 
 /**
  * @swagger
+ * tags:
+ *   - name: Users
+ *     description: Endpoints relacionados a usuários
+ */
+
+/**
+ * @swagger
  * /users/create:
  *   post:
+ *     tags: [Users]
  *     summary: Cria um novo usuário
  *     requestBody:
  *       required: true
@@ -40,6 +48,7 @@ router.post("/create", async (req: Request, res: Response) => {
  * @swagger
  * /users/login:
  *   post:
+ *     tags: [Users]
  *     summary: Realiza o login do usuário
  *     requestBody:
  *       required: true
@@ -67,6 +76,7 @@ router.post("/login", async (req: Request, res: Response) => {
  * @swagger
  * /users/logout:
  *   post:
+ *     tags: [Users]
  *     summary: Faz logout do usuário
  *     responses:
  *       200:
@@ -80,6 +90,7 @@ router.post("/logout", async (req: Request, res: Response) => {
  * @swagger
  * /users/recuperar-senha:
  *   post:
+ *     tags: [Users]
  *     summary: Envia e-mail de recuperação de senha
  *     requestBody:
  *       required: true
@@ -104,6 +115,7 @@ router.post("/recuperar-senha", async (req: Request, res: Response) => {
  * @swagger
  * /users/redefinir-senha:
  *   post:
+ *     tags: [Users]
  *     summary: Redefine a senha do usuário com token
  *     requestBody:
  *       required: true
@@ -131,6 +143,7 @@ router.post("/redefinir-senha", async (req: Request, res: Response) => {
  * @swagger
  * /users/logado:
  *   get:
+ *     tags: [Users]
  *     summary: Retorna dados do usuário logado
  *     security:
  *       - bearerAuth: []
@@ -150,6 +163,7 @@ router.get(
  * @swagger
  * /users/edit/{id}:
  *   put:
+ *     tags: [Users]
  *     summary: Atualiza dados do usuário (inclui imagem de perfil)
  *     security:
  *       - bearerAuth: []

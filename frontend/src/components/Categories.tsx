@@ -7,6 +7,7 @@ import ssdIcon from "../assets/icons/ssd.png";
 import motherboardIcon from "../assets/icons/motherboard.png";
 import coolerIcon from "../assets/icons/cooler.png";
 import psuIcon from "../assets/icons/psu.png";
+import caseIcon from "../assets/icons/case.png";
 
 const categories = [
   { name: "Processador", value: "CPU", icon: cpuIcon },
@@ -15,7 +16,8 @@ const categories = [
   { name: "SSD", value: "SSD", icon: ssdIcon },
   { name: "Placa mãe", value: "MOTHERBOARD", icon: motherboardIcon },
   { name: "Cooler", value: "COOLER", icon: coolerIcon },
-  { name: "Fonte", value : "PSU", icon : psuIcon }
+  { name: "Fonte", value : "PSU", icon : psuIcon },
+  { name: "Gabinete", value : "CASE", icon : caseIcon}
 ];
 
 interface CategoriesProps {

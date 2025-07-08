@@ -10,8 +10,16 @@ const buildController = new BuildController();
 
 /**
  * @swagger
+ * tags:
+ *   - name: Build
+ *     description: Endpoints relacionados montagem
+ */
+
+/**
+ * @swagger
  * /builds/suggest:
  *   post:
+ *     tags: [Build]
  *     summary: Sugere uma configuração com base no orçamento informado
  *     requestBody:
  *       required: true
@@ -74,6 +82,7 @@ router.post('/suggest', async (req: any, res: any) => {
  * @swagger
  * /builds/create:
  *   post:
+ *     tags: [Build]
  *     summary: Cria uma nova build para o usuário autenticado
  *     security:
  *       - bearerAuth: []
@@ -135,6 +144,7 @@ router.post('/create', authenticateToken, async (req: any, res: any) => {
  * @swagger
  * /builds/all:
  *   get:
+ *     tags: [Build]
  *     summary: Lista as builds do usuário autenticado
  *     security:
  *       - bearerAuth: []
@@ -168,6 +178,7 @@ router.get('/all', async (req: any, res: any) => {
  * @swagger
  * /builds/{id}:
  *   put:
+ *     tags: [Build]
  *     summary: Atualiza uma build existente
  *     security:
  *       - bearerAuth: []
@@ -246,6 +257,7 @@ router.put('/:id', authenticateToken, async (req: any, res: any) => {
  * @swagger
  * /builds/{id}:
  *   delete:
+ *     tags: [Build]
  *     summary: Remove uma build do usuário autenticado
  *     security:
  *       - bearerAuth: []
@@ -288,6 +300,7 @@ router.delete('/:id', authenticateToken, async (req: any, res: any) => {
  * @swagger
  * /builds/history:
  *   get:
+ *     tags: [Build]
  *     summary: Retorna o histórico de builds do usuário
  *     security:
  *       - bearerAuth: []
@@ -308,6 +321,7 @@ router.get('/history', authenticateToken, async (req, res) => {
  * @swagger
  * /builds/{id}:
  *   get:
+ *     tags: [Build]
  *     summary: Retorna os detalhes de uma build específica do usuário autenticado
  *     security:
  *       - bearerAuth: []
@@ -348,6 +362,5 @@ router.get('/:id', authenticateToken, async (req: any, res: any) => {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 });
-
 
 export default router;
