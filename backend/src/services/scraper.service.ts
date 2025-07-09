@@ -28,28 +28,41 @@ export class ScraperService {
           if (link !== '' && page) {
             await page.goto(link, { waitUntil: 'domcontentloaded' });
 
-            let priceLink = '0.0';
+            const rawPrice = await page.evaluate(() => {
+              const candidates = Array.from(document.querySelectorAll("span, div, p, strong, h1, h2, h3, h4, h5, h6"));
 
-            const prices = await page.$$eval('div, span, p, strong', elements => {
-              return elements
+              const prices = candidates
                 .map(el => {
-                  const text = el.textContent?.trim() || '';
+                  const text = el.textContent?.trim() || "";
                   const style = window.getComputedStyle(el);
                   const fontSize = parseFloat(style.fontSize) || 0;
-                  return { text, fontSize };
+                  const isStrikethrough = style.textDecoration.includes("line-through");
+                  const isHidden = el.getAttribute("aria-hidden") === "true";
+                  return { text, fontSize, isStrikethrough, isHidden };
                 })
-                .filter(item => item.text.startsWith('R$') && item.fontSize > 10)
-                .sort((a, b) => b.fontSize - a.fontSize);
+                .filter(item =>
+                  item.text.startsWith("R$") &&
+                  !item.isStrikethrough &&
+                  !item.isHidden &&
+                  item.fontSize > 10 &&
+                  /\d/.test(item.text)
+                )
+                .sort((a, b) => {
+                  const fontDiff = b.fontSize - a.fontSize;
+                  if (fontDiff !== 0) return fontDiff;
+                  return a.text.length - b.text.length;
+                });
+
+              return prices.length > 0 ? prices[0].text : null;
             });
 
-            if (prices.length > 0) {
-              const rawPrice = prices[0].text;
-              const numericText = rawPrice
-                .replace('R$', '')
-                .replace(/\./g, '')
-                .replace(',', '.')
+            let priceLink = "0.0";
+            if (rawPrice) {
+              priceLink = rawPrice
+                .replace("R$", "")
+                .replace(/\./g, "")
+                .replace(",", ".")
                 .trim();
-              priceLink = numericText;
             }
 
             const imageLink = await page.$$eval('img', imgs => {
